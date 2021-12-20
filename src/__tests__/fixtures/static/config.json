@@ -1,0 +1,114 @@
+{
+  "i18n": {
+    "structure": "multiple_files",
+    "locales": [
+      "en",
+      "fr",
+      "pt"
+    ]
+  },
+  "collections": [
+    {
+      "name": "no_18n_folder_collection",
+      "folder": "src/__tests__/fixtures/static/content/no_18n_folder_collection",
+      "fields": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "body"
+        }
+      ]
+    },
+    {
+      "name": "no_18n_files_collection",
+      "files": [
+        {
+          "name": "home",
+          "file": "src/__tests__/fixtures/static/content/no_18n_files_collection/home.md",
+          "fields": [
+            {
+              "name": "title"
+            },
+            {
+              "name": "body"
+            }
+          ]
+        },
+        {
+          "name": "aboout",
+          "file": "src/__tests__/fixtures/static/content/no_18n_files_collection/about.md",
+          "fields": [
+            {
+              "name": "title"
+            },
+            {
+              "name": "body"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "multiple_files_folder_collection",
+      "i18n": true,
+      "folder": "src/__tests__/fixtures/static/content/multiple_files_folder_collection",
+      "fields": [
+        {
+          "name": "title",
+          "i18n": true
+        },
+        {
+          "name": "body",
+          "i18n": true
+        }
+      ]
+    },
+    {
+      "name": "multiple_folders_folder_collection",
+      "i18n": {
+        "structure": "multiple_folders"
+      },
+      "folder": "src/__tests__/fixtures/static/content/multiple_folders_folder_collection",
+      "fields": [
+        {
+          "name": "title",
+          "i18n": true
+        },
+        {
+          "name": "body",
+          "i18n": true
+        }
+      ]
+    },
+    {
+      "name": "single_file_files_collection",
+      "files": [
+        {
+          "name": "home",
+          "file": "src/__tests__/fixtures/static/content/single_file_files_collection/home.md",
+          "fields": [
+            {
+              "name": "title"
+            },
+            {
+              "name": "body"
+            }
+          ]
+        },
+        {
+          "name": "about",
+          "file": "src/__tests__/fixtures/static/content/single_file_files_collection/about.md",
+          "fields": [
+            {
+              "name": "title"
+            },
+            {
+              "name": "body"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

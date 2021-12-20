@@ -1,0 +1,46 @@
+{
+    "[javascript]": {
+      "editor.formatOnSave": false
+    },
+    "[javascriptreact]": {
+      "editor.formatOnSave": false
+    },
+    "[typescript]": {
+      "editor.formatOnSave": false
+    },
+    "[typescriptreact]": {
+      "editor.formatOnSave": false
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.fontLigatures": true,
+    "editor.formatOnSave": true,
+    "editor.gotoLocation.multipleTypeDefinitions": "goto",
+    "editor.snippetSuggestions": "none",
+    "editor.suggest.showSnippets": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "recentlyUsed",
+    "editor.tabSize": 2,
+    "emmet.excludeLanguages": ["typescript", "typescriptreact", "javascript", "javascriptreact"],
+    "emmet.showAbbreviationSuggestions": false,
+    "emmet.showExpandedAbbreviation": "never",
+    "eslint.lintTask.enable": true,
+    "eslint.packageManager": "npm",
+    "eslint.workingDirectories": [{
+      "mode": "auto"
+    }],
+    "files.autoSave": "off",
+    "javascript.referencesCodeLens.enabled": true,
+    "javascript.referencesCodeLens.showOnAllFunctions": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "references.preferredLocation": "view",
+    "typescript.implementationsCodeLens.enabled": true,
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.referencesCodeLens.showOnAllFunctions": true,
+    "typescript.suggest.paths": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "yaml.format.enable": true,
+    "yaml.validate": false
+  }

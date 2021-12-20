@@ -1,0 +1,63 @@
+backend:
+  name: git-gateway
+
+local_backend:
+  url: http://localhost:3001/api/v1
+
+media_folder: public/media/uploads
+
+locale: en
+
+i18n:
+  structure: multiple_files
+  locales: [en, fr, pt]
+
+collections:
+  - name: pages
+    label: Pages
+    folder: content/pages
+    create: true
+    i18n: true
+    fields:
+      - name: title
+        label: Title
+        widget: string
+        i18n: true
+      - name: body
+        label: Body
+        widget: markdown
+        i18n: true
+  - name: guide_tags
+    label: Guide tags
+    folder: content/guide_tags
+    create: true
+    i18n: true
+    fields:
+      - name: title
+        label: Title
+        widget: string
+        i18n: true
+  - name: guides
+    label: Guides
+    folder: content/guides
+    create: true
+    i18n: true
+    fields:
+      - name: title
+        label: Title
+        widget: string
+        i18n: true
+      - name: body
+        label: Body
+        widget: markdown
+        i18n: true
+      - name: guide_tags
+        label: Guide tags
+        widget: relation
+        multiple: true
+        collection: guide_tags
+        value_field: "{{slug}}"
+        search_fields:
+          - title
+        display_fields:
+          - title

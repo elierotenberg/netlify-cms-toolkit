@@ -1,0 +1,176 @@
+[
+  {
+    "collection": "multiple_files_folder_collection",
+    "location": "content/multiple_files_folder_collection/multiple-files-folder-collection-item-1.en.md",
+    "slug": "multiple-files-folder-collection-item-1",
+    "locale": "en",
+    "data": {
+      "title": "Multiple Files Folder Collection Item 1"
+    },
+    "raw": "---\ntitle: Multiple Files Folder Collection Item 1\n---\nMultiple Files Folder Collection Item 1 (en)"
+  },
+  {
+    "collection": "multiple_files_folder_collection",
+    "location": "content/multiple_files_folder_collection/multiple-files-folder-collection-item-1.fr.md",
+    "slug": "multiple-files-folder-collection-item-1",
+    "locale": "fr",
+    "data": {
+      "title": "Multiple Files Folder Collection Item 1 (fr)"
+    },
+    "raw": "---\ntitle: Multiple Files Folder Collection Item 1 (fr)\n---\nMultiple Files Folder Collection Item 1 (fr)"
+  },
+  {
+    "collection": "multiple_files_folder_collection",
+    "location": "content/multiple_files_folder_collection/multiple-files-folder-collection-item-1.pt.md",
+    "slug": "multiple-files-folder-collection-item-1",
+    "locale": "pt",
+    "data": {
+      "title": "Multiple Files Folder Collection Item 1 (pt)"
+    },
+    "raw": "---\ntitle: Multiple Files Folder Collection Item 1 (pt)\n---\nMultiple Files Folder Collection Item 1 (pt)"
+  },
+  {
+    "collection": "multiple_files_folder_collection",
+    "location": "content/multiple_files_folder_collection/multiple-files-folder-collection-item-2.en.md",
+    "slug": "multiple-files-folder-collection-item-2",
+    "locale": "en",
+    "data": {
+      "title": "Multiple Files Folder Collection Item 2"
+    },
+    "raw": "---\ntitle: Multiple Files Folder Collection Item 2\n---\nMultiple Files Folder Collection Item 2 (en)"
+  },
+  {
+    "collection": "multiple_files_folder_collection",
+    "location": "content/multiple_files_folder_collection/multiple-files-folder-collection-item-2.fr.md",
+    "slug": "multiple-files-folder-collection-item-2",
+    "locale": "fr",
+    "data": {
+      "title": "Multiple Files Folder Collection Item 2 (fr)"
+    },
+    "raw": "---\ntitle: Multiple Files Folder Collection Item 2 (fr)\n---\nMultiple Files Folder Collection Item 2 (fr)"
+  },
+  {
+    "collection": "multiple_files_folder_collection",
+    "location": "content/multiple_files_folder_collection/multiple-files-folder-collection-item-2.pt.md",
+    "slug": "multiple-files-folder-collection-item-2",
+    "locale": "pt",
+    "data": {
+      "title": "Multiple Files Folder Collection Item 2 (pt)"
+    },
+    "raw": "---\ntitle: Multiple Files Folder Collection Item 2 (pt)\n---\nMultiple Files Folder Collection Item 2 (pt)"
+  },
+  {
+    "collection": "multiple_folders_folder_collection",
+    "location": "content/multiple_folders_folder_collection/en/multiple-folders-folder-collection-item-1.md",
+    "slug": "multiple-folders-folder-collection-item-1",
+    "locale": "en",
+    "data": {
+      "title": "Multiple Folders Folder Collection Item 1"
+    },
+    "raw": "---\ntitle: Multiple Folders Folder Collection Item 1\n---\nMultiple Folders Folder Collection Item 1 (en)"
+  },
+  {
+    "collection": "multiple_folders_folder_collection",
+    "location": "content/multiple_folders_folder_collection/en/multiple-folders-folder-collection-item-2.md",
+    "slug": "multiple-folders-folder-collection-item-2",
+    "locale": "en",
+    "data": {
+      "title": "Multiple Folders Folder Collection Item 2"
+    },
+    "raw": "---\ntitle: Multiple Folders Folder Collection Item 2\n---\nMultiple Folders Folder Collection Item 2 (en)"
+  },
+  {
+    "collection": "multiple_folders_folder_collection",
+    "location": "content/multiple_folders_folder_collection/fr/multiple-folders-folder-collection-item-1.md",
+    "slug": "multiple-folders-folder-collection-item-1",
+    "locale": "fr",
+    "data": {
+      "title": "Multiple Folders Folder Collection Item 1 (fr)"
+    },
+    "raw": "---\ntitle: Multiple Folders Folder Collection Item 1 (fr)\n---\nMultiple Folders Folder Collection Item 1 (fr)"
+  },
+  {
+    "collection": "multiple_folders_folder_collection",
+    "location": "content/multiple_folders_folder_collection/fr/multiple-folders-folder-collection-item-2.md",
+    "slug": "multiple-folders-folder-collection-item-2",
+    "locale": "fr",
+    "data": {
+      "title": "Multiple Folders Folder Collection Item 2 (fr)"
+    },
+    "raw": "---\ntitle: Multiple Folders Folder Collection Item 2 (fr)\n---\nMultiple Folders Folder Collection Item 2 (fr)"
+  },
+  {
+    "collection": "multiple_folders_folder_collection",
+    "location": "content/multiple_folders_folder_collection/pt/multiple-folders-folder-collection-item-1.md",
+    "slug": "multiple-folders-folder-collection-item-1",
+    "locale": "pt",
+    "data": {
+      "title": "Multiple Folders Folder Collection Item 1 (pt)"
+    },
+    "raw": "---\ntitle: Multiple Folders Folder Collection Item 1 (pt)\n---\nMultiple Folders Folder Collection Item 1 (pt)"
+  },
+  {
+    "collection": "multiple_folders_folder_collection",
+    "location": "content/multiple_folders_folder_collection/pt/multiple-folders-folder-collection-item-2.md",
+    "slug": "multiple-folders-folder-collection-item-2",
+    "locale": "pt",
+    "data": {
+      "title": "Multiple Folders Folder Collection Item 2 (pt)"
+    },
+    "raw": "---\ntitle: Multiple Folders Folder Collection Item 2 (pt)\n---\nMultiple Folders Folder Collection Item 2 (pt)"
+  },
+  {
+    "collection": "no_18n_files_collection",
+    "location": "content/no_18n_files_collection/about.md",
+    "slug": "about",
+    "data": {
+      "title": "About"
+    },
+    "raw": "---\ntitle: About\n---\nAbout"
+  },
+  {
+    "collection": "no_18n_files_collection",
+    "location": "content/no_18n_files_collection/home.md",
+    "slug": "home",
+    "data": {
+      "title": "Home"
+    },
+    "raw": "---\ntitle: Home\n---\nHome"
+  },
+  {
+    "collection": "no_18n_folder_collection",
+    "location": "content/no_18n_folder_collection/no-18n-folder-collection-item-1.md",
+    "slug": "no-18n-folder-collection-item-1",
+    "data": {
+      "title": "No 18n Folder Collection Item 1"
+    },
+    "raw": "---\ntitle: No 18n Folder Collection Item 1\n---\nNo 18n Folder Collection Item 1"
+  },
+  {
+    "collection": "no_18n_folder_collection",
+    "location": "content/no_18n_folder_collection/no-18n-folder-collection-item-2.md",
+    "slug": "no-18n-folder-collection-item-2",
+    "data": {
+      "title": "No 18n Folder Collection Item 2"
+    },
+    "raw": "---\ntitle: No 18n Folder Collection Item 2\n---\nNo 18n Folder Collection Item 2"
+  },
+  {
+    "collection": "single_file_files_collection",
+    "location": "content/single_file_files_collection/about.md",
+    "slug": "about",
+    "data": {
+      "title": "About"
+    },
+    "raw": "---\ntitle: About\n---\nabout"
+  },
+  {
+    "collection": "single_file_files_collection",
+    "location": "content/single_file_files_collection/home.md",
+    "slug": "home",
+    "data": {
+      "title": "home"
+    },
+    "raw": "---\ntitle: home\n---\nHome"
+  }
+]

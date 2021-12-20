@@ -1,0 +1,1 @@
+/* Used by Jest to mock .md files. */

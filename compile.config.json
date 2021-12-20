@@ -1,0 +1,6 @@
+{
+  "loader": "../src/__tests__/fixtures/dummy-loader",
+  "indexFile": "content/index.ts",
+  "cmsConfigFile": "public/admin/config.yml",
+  "verbose": true
+}
