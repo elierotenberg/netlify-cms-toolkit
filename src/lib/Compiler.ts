@@ -29,15 +29,15 @@ const compile = async (config: Config): Promise<void> => {
     );
   }
 
-  log(config, `All done!`);
+  log(config, `Content index file written.`);
 };
 
 export const run = async (config: Config): Promise<void> => {
   if (!config.watch) {
     await compile(config);
   } else {
-    const onChange = async (event: unknown): Promise<void> => {
-      log(config, event);
+    const onChange = async (...event: unknown[]): Promise<void> => {
+      log(config, ...event.slice(0, 2));
       await compile(config);
     };
     log(config, `Watching...`);

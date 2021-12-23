@@ -55,6 +55,7 @@ collections:
         label: Guide tags
         widget: relation
         multiple: true
+        required: false
         collection: guide_tags
         value_field: "{{slug}}"
         search_fields:

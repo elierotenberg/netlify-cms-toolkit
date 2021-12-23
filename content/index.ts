@@ -83,6 +83,18 @@ export const contents = [
   } as const,
   {
     collection: `guides`,
+    location: `guides/about-animals-and-plants.fr.md`,
+    slug: `about-animals-and-plants`,
+    locale: `fr`,
+    raw: null,
+    data: {
+      title: `\u00C0 propos d'animaux et de plantes`,
+      guide_tags: [`animals`, `plants`],
+    } as const,
+    Component: load(import(`./guides/about-animals-and-plants.fr.md`)),
+  } as const,
+  {
+    collection: `guides`,
     location: `guides/about-animals.en.md`,
     slug: `about-animals`,
     locale: `en`,
@@ -152,6 +164,28 @@ export const contents = [
       guide_tags: [`plants`],
     } as const,
     Component: load(import(`./guides/about-plants.pt.md`)),
+  } as const,
+  {
+    collection: `pages`,
+    location: `pages/rich-text-example.en.md`,
+    slug: `rich-text-example`,
+    locale: `en`,
+    raw: null,
+    data: {
+      title: `Rich text example`,
+    } as const,
+    Component: load(import(`./pages/rich-text-example.en.md`)),
+  } as const,
+  {
+    collection: `pages`,
+    location: `pages/rich-text-example.fr.md`,
+    slug: `rich-text-example`,
+    locale: `fr`,
+    raw: null,
+    data: {
+      title: `Exemple de texte riche`,
+    } as const,
+    Component: load(import(`./pages/rich-text-example.fr.md`)),
   } as const,
 ] as const;
 

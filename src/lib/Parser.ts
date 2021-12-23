@@ -175,3 +175,13 @@ export const parseContents = async (
     .flat()
     .sort((a, b) => a.location.localeCompare(b.location));
 };
+
+export const parseFolders = (cmsConfig: CmsConfig): string[] =>
+  cmsConfig.collections
+    .map(tagCollection)
+    .reduce(
+      (paths, collection) =>
+        collection.kind === `folder` ? [...paths, collection.folder] : paths,
+      [] as string[],
+    )
+    .sort((a, b) => a.localeCompare(b));
