@@ -18,12 +18,12 @@ type AbstractFilter<Content extends AbstractContent> = Partial<
 > &
   DeepPartial<Content>;
 
-const matchFilter = <
+const match = <
   Content extends AbstractContent,
   Filter extends AbstractFilter<Content>,
 >(
-  content: Content,
   filter: Filter,
+  content: Content,
 ): content is Extract<Content, Filter> => {
   for (const key of [
     `collection`,
@@ -50,6 +50,13 @@ const matchFilter = <
   return true;
 };
 
+type Match<Content extends AbstractContent> = <
+  Filter extends AbstractFilter<Content>,
+>(
+  filter: Filter,
+  content: Content,
+) => content is Extract<Content, Filter>;
+
 type FindAllContents<Content extends AbstractContent> = <
   Filter extends AbstractFilter<Content>,
 >(
@@ -65,6 +72,7 @@ type FindUniqueContent<Content extends AbstractContent> = <
 type Runtime<Content extends AbstractContent> = {
   readonly findAll: FindAllContents<Content>;
   readonly findUnique: FindUniqueContent<Content>;
+  readonly match: Match<Content>;
 };
 
 export const createRuntime = <Content extends AbstractContent>(
@@ -76,7 +84,7 @@ export const createRuntime = <Content extends AbstractContent>(
     filter: Filter,
   ) =>
     contents.reduce((contents, content) => {
-      if (matchFilter(content, filter)) {
+      if (match(filter, content)) {
         return [...contents, content];
       }
       return contents;
@@ -100,5 +108,9 @@ export const createRuntime = <Content extends AbstractContent>(
   return {
     findAll,
     findUnique,
+    match,
   };
 };
+
+export type CreateFilter<Content extends AbstractContent> =
+  AbstractFilter<Content>;
