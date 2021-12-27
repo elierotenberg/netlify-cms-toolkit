@@ -32,7 +32,7 @@ Options:
       --config                  Path to JSON config file
       --help                    Show help                              [boolean]
       --cwd                     Working directory (defaults to proces.cwd)
-                                          [boolean] [default: (generated-value)]
+                                                                       [boolean]
   -i, --schema                  Netlify config file (config.yml)
                                                              [string] [required]
   -o, --outFolder               Output folder                [string] [required]
@@ -40,6 +40,8 @@ Options:
                                                       [boolean] [default: false]
       --saveEmitResult          Save intermediate emit results
                                                       [boolean] [default: false]
+      --useLockfile             Use lock file to avoid write conflicts
+                                                       [boolean] [default: true]
   -r, --raw                     Include raw contents  [boolean] [default: false]
       --markdownLoader          Loader module (e.g. 'next/dynamic')
                                                              [string] [required]

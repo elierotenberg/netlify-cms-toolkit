@@ -18,8 +18,8 @@ const main = async (): Promise<void> => {
           yargs
             .option(`cwd`, {
               describe: `Working directory (defaults to proces.cwd)`,
-              type: `boolean`,
-              default: process.cwd,
+              type: `string`,
+              default: process.cwd(),
             })
             .option(`schema`, {
               alias: `i`,
@@ -42,6 +42,11 @@ const main = async (): Promise<void> => {
               describe: `Save intermediate emit results`,
               type: `boolean`,
               default: false,
+            })
+            .option(`useLockfile`, {
+              describe: `Use lock file to avoid write conflicts`,
+              type: `boolean`,
+              default: true,
             })
             .option(`raw`, {
               alias: `r`,
