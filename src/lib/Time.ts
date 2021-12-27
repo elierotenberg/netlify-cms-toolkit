@@ -1,5 +1,11 @@
+import prettyMs from "pretty-ms";
+
+import { Logger } from "./Logger";
+
 export const sleep = (delayMs: number): Promise<void> =>
   new Promise((resolve) => setTimeout(() => resolve(), delayMs));
+
+export const forever = (): Promise<never> => new Promise(() => null);
 
 type Deferred<T> = {
   readonly resolve: (t: T) => void;
@@ -147,3 +153,38 @@ export const limited = <Params extends unknown[] = []>(
   fn: (...params: Params) => Promise<void>,
   delayMs: number,
 ): ((...params: Params) => void) => debounced(throttled(fn), delayMs);
+
+export class Chrono {
+  private readonly start: Date;
+  private events: {
+    readonly label: string;
+    readonly date: Date;
+  }[];
+
+  public constructor() {
+    this.start = new Date();
+    this.events = [];
+  }
+
+  public readonly mark = (label: string): void => {
+    this.events.push({ label, date: new Date() });
+  };
+
+  public readonly report = (logger: Logger): void => {
+    for (let k = 0; k < this.events.length; k++) {
+      const event = this.events[k];
+      const prevEventDate = k > 0 ? this.events[k - 1].date : this.start;
+      logger.log(
+        `${event.label}: ${prettyMs(
+          event.date.getTime() - prevEventDate.getTime(),
+        )}`,
+      );
+    }
+    if (this.events.length > 0) {
+      const lastEvent = this.events[this.events.length - 1];
+      logger.log(
+        `Total: ${prettyMs(lastEvent.date.getTime() - this.start.getTime())}`,
+      );
+    }
+  };
+}

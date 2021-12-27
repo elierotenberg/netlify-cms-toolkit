@@ -1,49 +1,44 @@
+import { expectType } from "tsd";
+
 import { createRuntime } from "../lib/runtime";
 
-import { contents } from "./fixtures/static";
+import { Content, contents } from "./fixtures/out";
 
 describe(`runtime`, () => {
   test(`findAll, findUnique`, () => {
-    const { findAll, findUnique } = createRuntime(contents);
+    const { findAll, findUnique, match } = createRuntime(contents);
 
     expect(findAll({ locale: `en` })).toEqual(
       contents.filter((content) => content.locale === `en`),
     );
 
-    expect(findAll({ slug: `home` })).toEqual(
-      contents.filter((content) => content.slug === `home`),
+    expect(findAll({ slug: `about-animals` })).toEqual(
+      contents.filter((content) => content.slug === `about-animals`),
     );
 
-    expect(
-      findAll({
-        locale: `en`,
-        collection: `multiple_folders_folder_collection`,
-        slug: `multiple-files-folder-collection-item-1`,
-      } as never),
-    ).toEqual([]);
+    const matchGuideTag = match({ collection: `guideTags` });
 
-    expect(
+    expectType<
+      (
+        content: Content,
+      ) => content is Extract<Content, { collection: `guideTags` }>
+    >(matchGuideTag);
+
+    type Guide = Extract<Content, { collection: `guides` }>;
+
+    const getGuideTitle = <G extends Guide>(guide: G): G[`props`][`title`] =>
+      guide.props.title;
+
+    const title = getGuideTitle(
       findUnique({
-        collection: `multiple_folders_folder_collection`,
+        collection: `guides`,
         locale: `en`,
-        slug: `multiple-folders-folder-collection-item-1`,
+        slug: `about-animals-and-plants`,
       }),
-    ).toEqual(
-      contents.find(
-        (content) =>
-          content.collection === `multiple_folders_folder_collection` &&
-          content.locale === `en` &&
-          content.slug === `multiple-folders-folder-collection-item-1`,
-      ),
     );
 
-    expect(() =>
-      findUnique({
-        locale: `en`,
-        collection: `multiple_folders_folder_collection`,
-        slug: `multiple-files-folder-collection-item-1`,
-      } as never),
-    ).toThrow();
+    expectType<`About animals and plants`>(title);
+    expect(title).toEqual(`About animals and plants`);
   });
 });
 

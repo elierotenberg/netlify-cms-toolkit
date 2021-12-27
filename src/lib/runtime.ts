@@ -1,61 +1,64 @@
+import { isRecord } from "./util";
+
 type AbstractContent = {
+  readonly sourceLocation: string;
   readonly collection: string;
-  readonly location: string;
   readonly slug: string;
   readonly locale: null | string;
+  readonly props: Record<string, unknown>;
   readonly raw: null | string;
-  readonly data: Record<string, unknown>;
 };
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
 
-type AbstractFilter<Content extends AbstractContent> = Partial<
-  Omit<Content, `data`> & {
-    readonly data: Partial<Content[`data`]>;
-  }
-> &
-  DeepPartial<Content>;
+type AbstractFilter<Content extends AbstractContent> = DeepPartial<Content>;
 
-const match = <
-  Content extends AbstractContent,
-  Filter extends AbstractFilter<Content>,
->(
-  filter: Filter,
-  content: Content,
-): content is Extract<Content, Filter> => {
-  for (const key of [
-    `collection`,
-    `location`,
-    `slug`,
-    `locale`,
-    `raw`,
-  ] as const) {
-    if (typeof filter[key] !== `undefined`) {
-      if (content[key] !== filter[key]) {
+const matchRaw = (filter: unknown, value: unknown): boolean => {
+  if (typeof filter === `undefined`) {
+    return true;
+  }
+  if (Array.isArray(filter)) {
+    if (!Array.isArray(value)) {
+      return false;
+    }
+    if (filter.length !== value.length) {
+      return false;
+    }
+    for (let k = 0; k < filter.length; k++) {
+      if (!matchRaw(filter[k], value[k])) {
         return false;
       }
     }
+    return true;
   }
-  if (typeof filter[`data`] !== `undefined`) {
-    for (const key of Object.keys(filter[`data`])) {
-      if (typeof filter.data[key] !== `undefined`) {
-        if (filter.data[key] !== content.data[key]) {
-          return false;
-        }
+  if (isRecord(filter)) {
+    if (!isRecord(value)) {
+      return false;
+    }
+    for (const key of Object.keys(filter)) {
+      if (!matchRaw(filter[key], value[key])) {
+        return false;
       }
     }
+    return true;
   }
-  return true;
+  return filter === value;
 };
+
+const match =
+  <Content extends AbstractContent, Filter extends AbstractFilter<Content>>(
+    filter: Filter,
+  ) =>
+  (content: Content): content is Extract<Content, Filter> =>
+    matchRaw(filter, content);
 
 type Match<Content extends AbstractContent> = <
   Filter extends AbstractFilter<Content>,
 >(
   filter: Filter,
-  content: Content,
-) => content is Extract<Content, Filter>;
+) => (content: Content) => content is Extract<Content, Filter>;
 
 type FindAllContents<Content extends AbstractContent> = <
   Filter extends AbstractFilter<Content>,
@@ -82,13 +85,10 @@ export const createRuntime = <Content extends AbstractContent>(
     Filter extends AbstractFilter<Content>,
   >(
     filter: Filter,
-  ) =>
-    contents.reduce((contents, content) => {
-      if (match(filter, content)) {
-        return [...contents, content];
-      }
-      return contents;
-    }, [] as Extract<Content, Filter>[]);
+  ) => {
+    const matchFilter = match<Content, Filter>(filter);
+    return contents.filter(matchFilter);
+  };
 
   const findUnique: FindUniqueContent<Content> = <
     Filter extends AbstractFilter<Content>,
@@ -111,6 +111,3 @@ export const createRuntime = <Content extends AbstractContent>(
     match,
   };
 };
-
-export type CreateFilter<Content extends AbstractContent> =
-  AbstractFilter<Content>;

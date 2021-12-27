@@ -1,12 +1,8 @@
-import { z } from "zod";
-
-export const Content = z.object({
-  collection: z.string(),
-  location: z.string(),
-  slug: z.string(),
-  locale: z.string().optional(),
-  data: z.record(z.unknown()),
-  raw: z.string().optional(),
-});
-
-export type Content = z.infer<typeof Content>;
+export type Content = {
+  readonly sourceLocation: string;
+  readonly collection: string;
+  readonly slug: string;
+  readonly locale: null | string;
+  readonly props: unknown;
+  readonly raw: null | string;
+};

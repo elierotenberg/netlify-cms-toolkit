@@ -63,7 +63,7 @@
   },
   "include": [
     "**/*.ts",
-    "*.d.ts",
+    "**/*.d.ts",
   ],
   "exclude": [
     "node_modules",

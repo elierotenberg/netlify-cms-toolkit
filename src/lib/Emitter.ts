@@ -1,10 +1,20 @@
-import { basename, resolve } from "path";
+import { join, resolve } from "path";
 
-import { ESLint } from "eslint";
+import { z } from "zod";
 import { ts } from "ts-morph";
+import { paramCase } from "change-case";
+import { ESLint } from "eslint";
 
-import { Content } from "./Content";
-import { Config } from "./Config";
+import {
+  CollectionAstNode,
+  ContentAstNode,
+  FieldAstNode,
+  ParseResult,
+} from "./Parser";
+import { Collection, Field } from "./Schema";
+import { pushStackFrame, pushWarning, Stack, Warning } from "./Stack";
+import { Logger } from "./Logger";
+import { applyCasing, Casing } from "./util";
 
 const {
   createArrayLiteralExpression,
@@ -14,8 +24,8 @@ const {
   createImportClause,
   createImportDeclaration,
   createIndexedAccessTypeNode,
-  createKeywordTypeNode,
   createModifier,
+  createKeywordTypeNode,
   createNoSubstitutionTemplateLiteral,
   createNull,
   createObjectLiteralExpression,
@@ -39,76 +49,321 @@ const {
   EmitHint,
 } = ts;
 
-const createAsConst = (expression: ts.Expression): ts.Expression =>
+const Asset = z.object({
+  path: z.string(),
+  source: z.string(),
+});
+
+type Asset = z.infer<typeof Asset>;
+
+type Context = {
+  readonly warnings: Warning[];
+  readonly markdownAssets: Asset[];
+};
+
+const pushMarkdownAsset = (ctx: Context, markdownAsset: Asset): void => {
+  ctx.markdownAssets.push(markdownAsset);
+};
+
+type EmitterOptions = {
+  readonly outFolder: string;
+  readonly markdownLoader: string;
+  readonly raw?: boolean;
+  readonly eslintConfig?: string;
+  readonly markdownPropertyCasing?: Casing;
+  readonly propertyCasing?: Casing;
+};
+
+const EmitResult = z.object({
+  index: Asset,
+  markdownAssets: z.array(Asset),
+});
+
+type EmitResult = z.infer<typeof EmitResult>;
+
+type FieldStackFrame =
+  | {
+      readonly kind: `field`;
+      readonly field: Field;
+    }
+  | {
+      readonly kind: `discriminator`;
+      readonly value: string;
+    };
+
+type FieldStack = {
+  readonly collection: Collection;
+  readonly slug: string;
+  readonly locale: null | string;
+  readonly path: FieldStackFrame[];
+};
+
+const pushFieldStack = (
+  fieldStack: FieldStack,
+  FieldStackFrame: FieldStackFrame,
+): FieldStack => ({
+  ...fieldStack,
+  path: [...fieldStack.path, FieldStackFrame],
+});
+
+const createMarkdownAssetPath = (
+  ctx: Context,
+  stack: Stack,
+  { collection, slug, locale, path }: FieldStack,
+): string => {
+  const parts = [collection.name];
+  if (slug) {
+    parts.push(slug);
+  }
+  if (locale) {
+    parts.push(locale);
+  }
+  for (const fieldStackFrame of path) {
+    if (fieldStackFrame.kind === `field`) {
+      parts.push(fieldStackFrame.field.name);
+    } else {
+      parts.push(fieldStackFrame.value);
+    }
+  }
+  const basePath = join(`assets`, ...parts.map((part) => paramCase(part)));
+  const fullPath = `${basePath}.md`;
+  if (
+    ctx.markdownAssets.some((markdownAsset) => markdownAsset.path === fullPath)
+  ) {
+    pushWarning(ctx, {
+      message: `Markdown asset name conflict`,
+      stack,
+      details: { fullPath },
+    });
+    let k = 0;
+    while (
+      ctx.markdownAssets.some(
+        (markdownAsset) => markdownAsset.path === `${basePath}_${k}.md`,
+      )
+    ) {
+      k++;
+    }
+    return `${basePath}_${k}.md`;
+  }
+  return fullPath;
+};
+
+const createAsConstExpression = (expression: ts.Expression): ts.Expression =>
   createAsExpression(expression, createTypeReferenceNode(`const`));
 
-const createJsonAsConst = (json: string): ts.Expression =>
-  createAsConst(ts.parseJsonText(``, json).statements[0].expression);
+const createJsonExpression = (value: unknown): ts.Expression =>
+  ts.parseJsonText(``, JSON.stringify(value, null, 2)).statements[0].expression;
 
-const createContentInitializerExpression = (
-  { collection, data, location, slug, locale, raw }: Content,
+const createLoaderImportExpression = (
   loaderIdentifier: ts.Identifier,
+  relativeFileName: string,
 ): ts.Expression =>
-  createAsConst(
-    createObjectLiteralExpression(
-      [
-        createPropertyAssignment(`collection`, createStringLiteral(collection)),
-        createPropertyAssignment(`location`, createStringLiteral(location)),
-        createPropertyAssignment(`slug`, createStringLiteral(slug)),
-        createPropertyAssignment(
-          `locale`,
-          typeof locale === `string`
-            ? createStringLiteral(locale)
-            : createNull(),
-        ),
-        createPropertyAssignment(
-          `raw`,
-          typeof raw === `string`
-            ? createNoSubstitutionTemplateLiteral(raw)
-            : createNull(),
-        ),
-        createPropertyAssignment(
-          `data`,
-          createJsonAsConst(JSON.stringify(data, null, 2)),
-        ),
-        createPropertyAssignment(
-          `Component`,
-          createCallExpression(loaderIdentifier, undefined, [
-            createCallExpression(
-              createToken(SyntaxKind.ImportKeyword) as ts.Expression,
-              undefined,
-              [createStringLiteral(`./${location}`)],
-            ),
-          ]),
-        ),
-      ],
-      true,
+  createCallExpression(loaderIdentifier, undefined, [
+    createCallExpression(
+      createToken(SyntaxKind.ImportKeyword) as ts.Expression,
+      undefined,
+      [createStringLiteral(`./${relativeFileName}`)],
     ),
+  ]);
+
+const applyMarkdownPropertyCasing = (
+  opts: EmitterOptions,
+  identifier: string,
+): string =>
+  applyCasing(
+    opts.markdownPropertyCasing ?? opts.propertyCasing ?? `preserve`,
+    identifier,
   );
 
-const createContentoutSourceRaw = (
-  config: Config,
-  contents: Content[],
-): string => {
-  const loaderIdentifier = createIdentifier(`load`);
-  const loaderImportStatement = createImportDeclaration(
-    undefined,
-    undefined,
-    createImportClause(false, loaderIdentifier, undefined),
-    createStringLiteral(config.loader),
+const applyPropertyCasing = (
+  opts: EmitterOptions,
+  identifier: string,
+): string => applyCasing(opts.propertyCasing ?? `preserve`, identifier);
+
+const createFieldNodeExpression = (
+  opts: EmitterOptions,
+  ctx: Context,
+  parentStack: Stack,
+  parentFieldStack: FieldStack,
+  field: FieldAstNode,
+): ts.Expression => {
+  const stack = pushStackFrame(parentStack, {
+    fn: `createFieldNodeExpression`,
+    params: { field },
+  });
+  const fieldStack = pushFieldStack(parentFieldStack, {
+    kind: `field`,
+    field: field.field,
+  });
+  if (field.field.widget === `markdown`) {
+    const path = createMarkdownAssetPath(ctx, stack, fieldStack);
+    const source = field.value;
+    if (typeof source !== `string`) {
+      pushWarning(ctx, {
+        message: `markdown field should be a string`,
+        stack,
+        details: { field },
+      });
+      return createNull();
+    }
+    const markdownAsset: Asset = {
+      path,
+      source,
+    };
+    pushMarkdownAsset(ctx, markdownAsset);
+    return createLoaderImportExpression(createIdentifier(`loadMarkdown`), path);
+  }
+  if (field.field.widget === `list`) {
+    return createArrayLiteralExpression(
+      field.arrayChildren?.map((childFieldNode, index) =>
+        createFieldNodeExpression(
+          opts,
+          ctx,
+          stack,
+          pushFieldStack(fieldStack, {
+            kind: `discriminator`,
+            value: `${index}`,
+          }),
+          childFieldNode,
+        ),
+      ) ?? [],
+    );
+  }
+  if (field.field.widget === `object`) {
+    return createObjectLiteralExpression(
+      Object.entries(field.objectChildren ?? {}).reduce(
+        (properties, [key, childFieldNode]) => [
+          ...properties,
+          createPropertyAssignment(
+            childFieldNode.field.widget === `markdown`
+              ? applyMarkdownPropertyCasing(opts, key)
+              : applyPropertyCasing(opts, key),
+            createFieldNodeExpression(
+              opts,
+              ctx,
+              stack,
+              pushFieldStack(fieldStack, { kind: `discriminator`, value: key }),
+              childFieldNode,
+            ),
+          ),
+        ],
+        [] as ts.PropertyAssignment[],
+      ),
+    );
+  }
+
+  return createJsonExpression(field.value);
+};
+
+const createContentNodeExpression = (
+  opts: EmitterOptions,
+  ctx: Context,
+  parentStack: Stack,
+  content: ContentAstNode,
+): ts.Expression => {
+  const stack = pushStackFrame(parentStack, {
+    fn: `createContentNodeExpression`,
+    params: { content },
+  });
+
+  return createObjectLiteralExpression([
+    createPropertyAssignment(
+      `sourceLocation`,
+      createStringLiteral(content.sourceLocation),
+    ),
+    createPropertyAssignment(
+      `collection`,
+      createStringLiteral(applyPropertyCasing(opts, content.collection.name)),
+    ),
+    createPropertyAssignment(`slug`, createStringLiteral(content.slug)),
+    createPropertyAssignment(
+      `locale`,
+      content.locale === null
+        ? createNull()
+        : createStringLiteral(content.locale),
+    ),
+    createPropertyAssignment(
+      `props`,
+      createFieldNodeExpression(
+        opts,
+        ctx,
+        stack,
+        {
+          collection: content.collection,
+          slug: content.slug,
+          locale: content.locale,
+          path: [],
+        },
+        content.rootFieldNode,
+      ),
+    ),
+    createPropertyAssignment(
+      `raw`,
+      opts.raw
+        ? createNoSubstitutionTemplateLiteral(content.sourceRaw)
+        : createNull(),
+    ),
+  ]);
+};
+
+const createCollectionNodeExpressions = (
+  opts: EmitterOptions,
+  ctx: Context,
+  parentStack: Stack,
+  collection: CollectionAstNode,
+): ts.Expression[] => {
+  const stack = pushStackFrame(parentStack, {
+    fn: `createCollectionNodeExpression`,
+    params: {
+      collection,
+    },
+  });
+  return collection.contents.map((content) =>
+    createContentNodeExpression(opts, ctx, stack, content),
+  );
+};
+
+const createContentsExpression = (
+  opts: EmitterOptions,
+  ctx: Context,
+  parentStack: Stack,
+  collections: CollectionAstNode[],
+): ts.Expression => {
+  const stack = pushStackFrame(parentStack, {
+    fn: `createCollectionsExpression`,
+    params: {
+      collections,
+    },
+  });
+
+  return createAsConstExpression(
+    createArrayLiteralExpression(
+      collections.flatMap((collection) =>
+        createCollectionNodeExpressions(opts, ctx, stack, collection),
+      ),
+    ),
+  );
+};
+
+const createIndexTsNodes = (
+  opts: EmitterOptions,
+  ctx: Context,
+  parentStack: Stack,
+  collections: CollectionAstNode[],
+): ts.Node[] => {
+  const stack = pushStackFrame(parentStack, {
+    fn: `createIndextsNode`,
+    params: { collections },
+  });
+  const loadMarkdownIdentifier = createIdentifier(`loadMarkdown`);
+  const loadMarkdownImportStatement = createImportDeclaration(
+    [],
+    [],
+    createImportClause(false, loadMarkdownIdentifier, undefined),
+    createStringLiteral(opts.markdownLoader),
   );
 
   const contentsIdentifier = createIdentifier(`contents`);
-
-  const contentsIntializerExpression = createAsConst(
-    createArrayLiteralExpression(
-      contents.map((content) =>
-        createContentInitializerExpression(content, loaderIdentifier),
-      ),
-      true,
-    ),
-  );
-
   const contentsDeclarationStatement = createVariableStatement(
     [createModifier(SyntaxKind.ExportKeyword)],
     createVariableDeclarationList(
@@ -117,7 +372,7 @@ const createContentoutSourceRaw = (
           contentsIdentifier,
           undefined,
           undefined,
-          contentsIntializerExpression,
+          createContentsExpression(opts, ctx, stack, collections),
         ),
       ],
       NodeFlags.Const,
@@ -125,9 +380,8 @@ const createContentoutSourceRaw = (
   );
 
   const contentTypeIdentifier = createIdentifier(`Content`);
-
   const contentTypeDeclaration = createTypeAliasDeclaration(
-    undefined,
+    [],
     [createModifier(SyntaxKind.ExportKeyword)],
     contentTypeIdentifier,
     undefined,
@@ -137,47 +391,93 @@ const createContentoutSourceRaw = (
     ),
   );
 
-  const sourceFile = createSourceFile(
-    basename(config.indexFile),
-    ``,
-    ScriptTarget.Latest,
-  );
-  const printer = createPrinter();
-
-  const printNodeStatement = (node: ts.Node): string =>
-    `${printer.printNode(EmitHint.Unspecified, node, sourceFile)};`;
-
   return [
-    `/** This file was automatically generated by netlify-cms-toolkit **/`,
-    `/** Any changes will be overwritten, do not edit it!             **/`,
-    printNodeStatement(loaderImportStatement),
-    ``,
-    printNodeStatement(contentsDeclarationStatement),
-    ``,
-    printNodeStatement(contentTypeDeclaration),
-  ].join(`\n`);
+    loadMarkdownImportStatement,
+    contentsDeclarationStatement,
+    contentTypeDeclaration,
+  ];
 };
 
-export const createContentIndexFileSource = async (
-  config: Config,
-  contents: Content[],
+const formatSource = async (
+  opts: EmitterOptions,
+  filePath: string,
+  rawSource: string,
 ): Promise<string> => {
-  const rawSource = createContentoutSourceRaw(config, contents);
-
   const eslint = new ESLint({
     fix: true,
-    overrideConfigFile: config.eslintrc,
+    overrideConfigFile: opts.eslintConfig,
   });
 
   const [result] = await eslint.lintText(rawSource, {
-    filePath: resolve(config.cwd, config.indexFile),
+    filePath,
   });
 
   if (!result.output) {
     const fmt = await eslint.loadFormatter();
     const message = fmt.format([result]);
-    throw new Error(message);
+    throw new Error(`${message}\n${rawSource}`);
   }
 
   return result.output;
+};
+
+const indexPrelude = `
+/***********************************************/
+/*                                             */
+/*   This file was generated by as script.     */
+/*  DO NOT EDIT manually as any changes will   */
+/*               be overwritten.               */
+/*                                             */
+/***********************************************/
+`
+  .split(`\n`)
+  .filter((line) => line.length > 0)
+  .join(`\n`);
+
+export const emit = async (
+  cwd: string,
+  opts: EmitterOptions,
+  parseResult: ParseResult,
+): Promise<EmitResult> => {
+  const ctx: Context = {
+    warnings: [],
+    markdownAssets: [],
+  };
+  const stack = pushStackFrame([], { fn: `emit`, params: { parseResult } });
+  const indexPath = resolve(cwd, opts.outFolder, `index.ts`);
+  const indexTsFile = createSourceFile(indexPath, ``, ScriptTarget.Latest);
+  const tsPrinter = createPrinter();
+
+  const printTsNodeStatement = (node: ts.Node): string =>
+    `${tsPrinter.printNode(EmitHint.Unspecified, node, indexTsFile)};\n`;
+
+  const indexTsNodes = createIndexTsNodes(
+    opts,
+    ctx,
+    stack,
+    parseResult.collections,
+  )
+    .map(printTsNodeStatement)
+    .join(`\n`);
+
+  const indexRawSource = [indexPrelude, indexTsNodes].join(`\n`);
+
+  const indexSource = await formatSource(opts, indexPath, indexRawSource);
+
+  return {
+    index: {
+      path: indexPath,
+      source: indexSource,
+    },
+    markdownAssets: ctx.markdownAssets,
+  };
+};
+
+export const prettyPrintEmitResult = (
+  result: EmitResult,
+  logger: Logger,
+): void => {
+  logger.log(
+    `Index and ${result.markdownAssets.length} markdown assets emitted.`,
+  );
 };

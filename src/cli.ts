@@ -3,58 +3,90 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-import { run } from "./lib/Compiler";
-import { parseArgv } from "./lib/Config";
+import { compile } from "./lib/Compiler";
+import { CompilerOptions } from "./lib/CompilerOptions";
+import { casings } from "./lib/util";
 
 const main = async (): Promise<void> => {
   await Promise.resolve(
     yargs(hideBin(process.argv))
+      .config()
       .command(
         `compile`,
         `Compile contents and generate index file`,
         (yargs) =>
           yargs
-            .option(`configFile`, {
-              alias: `c`,
-              describe: `Configuration file`,
+            .option(`cwd`, {
+              describe: `Working directory (defaults to proces.cwd)`,
+              type: `boolean`,
+              default: process.cwd,
+            })
+            .option(`schema`, {
+              alias: `i`,
+              describe: `Netlify config file (config.yml)`,
+              type: `string`,
+              demandOption: true,
+            })
+            .option(`outFolder`, {
+              alias: `o`,
+              describe: `Output folder`,
+              type: `string`,
+              demandOption: true,
+            })
+            .option(`saveParseResult`, {
+              describe: `Save intermediate parse results`,
+              type: `boolean`,
+              default: false,
+            })
+            .option(`saveEmitResult`, {
+              describe: `Save intermediate emit results`,
+              type: `boolean`,
+              default: false,
+            })
+            .option(`raw`, {
+              alias: `r`,
+              describe: `Include raw contents `,
+              type: `boolean`,
+              default: false,
+            })
+            .option(`markdownLoader`, {
+              describe: `Loader module (e.g. 'next/dynamic')`,
+              type: `string`,
+              demandOption: true,
+            })
+            .option(`eslintConfig`, {
+              describe: `Custom eslint config fig (e.g. .eslintrc.js)`,
               type: `string`,
             })
-            .option(`noEmit`, {
-              describe: `Don't emit index file (only print to stdout).`,
-              type: `boolean`,
+            .option(`markdownPropertyCasing`, {
+              describe: `Casing convention for markdown property naming`,
+              choices: casings,
+              default: `preserve`,
+            })
+            .option(`propertyCasing`, {
+              describe: `Casing convention for non-markdown property naming`,
+              choices: casings,
             })
             .option(`watch`, {
               alias: `w`,
-              describe: `Watch mode`,
+              describe: `Recompile on changes`,
               type: `boolean`,
+              default: false,
             })
-            .option(`eslintrc`, {
-              describe: `Location of eslint config file (defaults to automatic resolution)`,
-              type: `string`,
-            })
-            .option(`raw`, {
-              describe: `Include raw contents`,
+            .option(`silent`, {
+              alias: `s`,
+              describe: `Suppress console output`,
               type: `boolean`,
+              default: false,
             })
-            .option(`loader`, {
-              describe: `Loader module (e.g. 'next/dynamic')`,
-              type: `string`,
-            })
-            .option(`indexFile`, {
-              alias: `i`,
-              describe: `Index file`,
-              type: `string`,
-            })
-            .option(`verbose`, {
-              alias: `v`,
-              describe: `Verbose mode`,
+            .option(`dryRun`, {
+              describe: `Dry run (don't write output files)`,
               type: `boolean`,
+              default: false,
             }),
         async (argv) => {
-          console.log({ argv });
-          const config = await parseArgv(argv);
-          console.log({ config });
-          await run(config);
+          const config = CompilerOptions.parse(argv);
+          await compile(config, console);
         },
       )
       .demandCommand()

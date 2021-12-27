@@ -1,28 +1,46 @@
-import { join } from "path";
+import { readFile } from "fs/promises";
 
-import { parseCmsConfig, parseContents } from "../lib/Parser";
+import { load } from "js-yaml";
 
-import { ctx } from "./fixtures/static/config";
-import { expectToMatchJsonFile, root } from "./utils";
+import { parse, prettyPrintParseResult } from "../lib/Parser";
+import { Schema } from "../lib/Schema";
+import { createStringArrayLogger } from "../lib/Logger";
+import { withCompilerLock } from "../lib/Lock";
+
+import {
+  compilerOptions,
+  expectToMatchJsonFile,
+  expectToMatchRawFile,
+  pkgPath,
+} from "./utils";
 
 describe(`Parser`, () => {
-  test(`parseCmsConfig`, async () => {
-    const config = await parseCmsConfig(ctx);
+  test(`parse`, async () => {
+    await withCompilerLock(compilerOptions, async () => {
+      const cwd = pkgPath(`.`);
+      const schemaRaw = load(
+        await readFile(pkgPath(`public/admin/config.yml`), {
+          encoding: `utf-8`,
+        }),
+      );
+      const schema = Schema.parse(schemaRaw);
 
-    await expectToMatchJsonFile(
-      config,
-      join(root, `src`, `__tests__`, `fixtures`, `static`, `config.json`),
-    );
-  });
-  test(`parseContents`, async () => {
-    const cmsConfig = await parseCmsConfig(ctx);
+      const result = await parse(cwd, schema);
 
-    const contents = await parseContents(ctx, cmsConfig);
+      await expectToMatchJsonFile(
+        result,
+        pkgPath(`src/__tests__/fixtures/out/parser.out.json`),
+      );
 
-    await expectToMatchJsonFile(
-      contents,
-      join(root, `src`, `__tests__`, `fixtures`, `static`, `contents.json`),
-    );
+      const logger = createStringArrayLogger();
+
+      prettyPrintParseResult(result, logger);
+
+      await expectToMatchRawFile(
+        logger.toString(),
+        pkgPath(`src/__tests__/fixtures/out/parser.log`),
+      );
+    });
   });
 });
 

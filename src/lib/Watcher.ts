@@ -1,130 +1,119 @@
-import { resolve, dirname } from "path";
+import { join, resolve } from "path";
+import { readFile } from "fs/promises";
 
 import { FSWatcher } from "chokidar";
+import { load } from "js-yaml";
 
-import { parseCmsConfig, parseContents, parseFolders } from "./Parser";
-import { Content } from "./Content";
 import { createAsyncCounter, limited } from "./Time";
-import { Config } from "./Config";
+import { Schema, TaggedCollection, tagCollection } from "./Schema";
+import { CompilerOptions } from "./CompilerOptions";
+import { withCompilerLock } from "./Lock";
 
 const ON_CHANGE_DELAY_MS = 0;
+
+const getCollectionWatchedPaths = (collection: TaggedCollection): string[] => {
+  if (collection.kind === `folder`) {
+    return [join(collection.folder, `**/*.{md,yml,yaml}`)];
+  }
+  if (collection.kind === `files`) {
+    return collection.files.map((file) => file.file);
+  }
+  return [];
+};
+
+const getCollectionsWatchedPaths = (schema: Schema): string[] =>
+  schema.collections.flatMap((collection) =>
+    getCollectionWatchedPaths(tagCollection(collection)),
+  );
+
+const diffPaths = (
+  prevPaths: string[],
+  nextPaths: string[],
+): {
+  readonly add: string[];
+  readonly remove: string[];
+} => ({
+  add: nextPaths.filter((nextPath) => !prevPaths.includes(nextPath)),
+  remove: prevPaths.filter((prevPath) => !nextPaths.includes(prevPath)),
+});
+
 type Watcher = {
   readonly await: () => Promise<void>;
   readonly stop: () => Promise<void>;
 };
 
-export const watch = async (
-  config: Config,
-  onChangeRaw: (...event: unknown[]) => Promise<void>,
-): Promise<Watcher> => {
+export const watch = (
+  opts: CompilerOptions,
+  onChangeRaw: (event: unknown, path: string) => Promise<void>,
+): Watcher => {
   let isStopped = false;
   const counter = createAsyncCounter();
-  const onChange = limited(async (...event: unknown[]) => {
+  const onCollectionsChange = limited(async (event: unknown, path: string) => {
     if (isStopped) {
       return;
     }
     counter.incr();
-    await onChangeRaw(...event);
+    await onChangeRaw(event, path);
     counter.decr();
   }, ON_CHANGE_DELAY_MS);
-  const configWatcher = new FSWatcher({ awaitWriteFinish: true });
-  const foldersWatcher = new FSWatcher({ awaitWriteFinish: true });
-  const contentsWatcher = new FSWatcher({ awaitWriteFinish: true });
 
-  let prevContents: Content[] = [];
-  let prevFolders: string[] = [];
+  const schemaWatcher = new FSWatcher({
+    awaitWriteFinish: { pollInterval: 100, stabilityThreshold: 500 },
+    cwd: opts.cwd,
+  });
 
-  const getFolderAbsoluteLocation = (path: string): string =>
-    resolve(config.cwd, path);
+  const collectionsWatcher = new FSWatcher({
+    awaitWriteFinish: { pollInterval: 100, stabilityThreshold: 500 },
+    cwd: opts.cwd,
+  });
 
-  const getContentAbsoluteLocation = (content: Content): string =>
-    resolve(dirname(resolve(config.cwd, config.indexFile)), content.location);
+  const prevCollectionsWatchedPaths: string[] = [];
 
-  const updateFolders = (nextFolders: string[]): boolean => {
-    let isDirty = false;
-    for (const prevFolder of prevFolders) {
-      if (!nextFolders.includes(prevFolder)) {
-        foldersWatcher.unwatch(getFolderAbsoluteLocation(prevFolder));
-        isDirty = true;
-      }
-    }
-
-    for (const nextFolder of nextFolders) {
-      if (!prevFolders.includes(nextFolder)) {
-        foldersWatcher.add(getFolderAbsoluteLocation(nextFolder));
-        isDirty = true;
-      }
-    }
-
-    prevFolders = nextFolders;
-
-    return isDirty;
-  };
-
-  const updateContents = (nextContents: Content[]): boolean => {
-    let isDirty = false;
-    for (const prevContent of prevContents) {
-      if (
-        !nextContents.some(
-          (nextContent) => nextContent.location === prevContent.location,
-        )
-      ) {
-        contentsWatcher.unwatch(getContentAbsoluteLocation(prevContent));
-        isDirty = true;
-      }
-    }
-
-    for (const nextContent of nextContents) {
-      if (
-        !prevContents.some(
-          (prevContent) => prevContent.location === nextContent.location,
-        )
-      ) {
-        contentsWatcher.add(getContentAbsoluteLocation(nextContent));
-        isDirty = true;
-      }
-    }
-
-    prevContents = nextContents;
-
-    return isDirty;
-  };
-
-  const onConfigChange = async (...event: unknown[]): Promise<void> => {
+  const onSchemaChange = async (
+    event: unknown,
+    path: string,
+  ): Promise<void> => {
     if (isStopped) {
       return;
     }
-    const cmsConfig = await parseCmsConfig(config);
+    const schema = await withCompilerLock(opts, async () =>
+      Schema.parse(
+        load(
+          await readFile(resolve(opts.cwd, opts.schema), {
+            encoding: `utf8`,
+          }),
+        ),
+      ),
+    );
     if (isStopped) {
       return;
     }
-
-    const nextContents = await parseContents(config, cmsConfig);
-
-    if (isStopped) {
-      return;
+    const nextCollectionsWatchedPaths = getCollectionsWatchedPaths(schema);
+    const diff = diffPaths(
+      prevCollectionsWatchedPaths,
+      nextCollectionsWatchedPaths,
+    );
+    for (const path of diff.add) {
+      collectionsWatcher.add(path);
     }
-
-    const nextFolders = parseFolders(cmsConfig);
-
-    updateContents(nextContents);
-    updateFolders(nextFolders);
-
-    onChange(...event);
+    for (const path of diff.remove) {
+      collectionsWatcher.unwatch(path);
+    }
+    if (diff.add.length > 0 || diff.remove.length > 0) {
+      onCollectionsChange(event, path);
+    }
   };
 
-  configWatcher.add(resolve(config.cwd, config.cmsConfigFile));
-  configWatcher.on(`all`, onConfigChange);
-  foldersWatcher.on(`all`, onChange);
-  contentsWatcher.on(`all`, onChange);
+  schemaWatcher.on(`all`, onSchemaChange);
+  schemaWatcher.add(opts.schema);
+
+  collectionsWatcher.on(`all`, onCollectionsChange);
 
   return {
     await: () => counter.await(),
-    stop: async () => {
+    stop: () => {
       isStopped = true;
-      await counter.await();
-      await configWatcher.close();
-      await contentsWatcher.close();
+      return counter.await();
     },
   };
 };

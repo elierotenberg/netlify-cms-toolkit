@@ -1,0 +1,12 @@
+en:
+  welcome: Welcome!
+  error: "**An error has occured.**"
+  success: "*Everything went well!*"
+fr:
+  welcome: Bienvenue !
+  error: "**Une erreur s'est produite.**"
+  success: "*Tout s'est bien passé !*"
+pt:
+  welcome: Welcome!
+  error: An error has occured.
+  success: Everything went well!

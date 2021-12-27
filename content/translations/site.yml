@@ -1,0 +1,10 @@
+en:
+  name: Official Netlify CMS Toolkit Website
+  shortName: ONCTK-EN
+  url: http://localhost:3000
+fr:
+  url: http://localhost:3000
+  name: Site web officiel Netlify CMS Toolkit
+  shortName: ONCTK-FR
+pt:
+  url: http://localhost:3000

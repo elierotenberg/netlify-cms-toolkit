@@ -1,0 +1,15 @@
+{
+  "markdownLoader": "../dummy-loader",
+  "outFolder": "src/__tests__/fixtures/out",
+  "schema": "public/admin/config.yml",
+  "silent": false,
+  "saveEmitResult": true,
+  "saveParseResult": true,
+  "dryRun": false,
+  "raw": false,
+  "watch": false,
+  "eslintConfig": ".eslintrc.js",
+  "markdownPropertyCasing": "pascalCase",
+  "propertyCasing": "camelCase",
+  "useLockfile": true
+}

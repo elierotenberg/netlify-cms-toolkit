@@ -62,3 +62,73 @@ collections:
           - title
         display_fields:
           - title
+  - name: questionnaires
+    label: Questionnaires
+    folder: content/questionnaires
+    create: true
+    i18n: true
+    fields:
+      - name: title
+        label: Title
+        widget: string
+        i18n: true
+      - name: prologue
+        label: Prologue
+        widget: markdown
+        i18n: true
+      - name: epilogue
+        label: Epilogue
+        widget: markdown
+        i18n: true
+      - name: items
+        label: Items
+        widget: list
+        i18n: true
+        fields:
+          - name: title
+            label: Title
+            widget: string
+            i18n: true
+          - name: description
+            label: description
+            widget: markdown
+            i18n: true
+  - name: translations
+    label: Translations
+    i18n:
+      structure: single_file
+    files:
+      - name: site
+        label: Site
+        file: content/translations/site.yml
+        i18n: true
+        fields:
+          - name: name
+            label: Name
+            widget: string
+            i18n: true
+          - name: shortName
+            label: Short Name
+            widget: string
+            i18n: true
+          - name: url
+            label: URL
+            widget: string
+            i18n: duplicate
+      - name: interactions
+        label: Interactions
+        file: content/translations/interactions.yml
+        i18n: true
+        fields:
+          - name: welcome
+            label: Welcome
+            widget: string
+            i18n: true
+          - name: error
+            label: Error
+            widget: markdown
+            i18n: true
+          - name: success
+            label: Success
+            widget: markdown
+            i18n: true
