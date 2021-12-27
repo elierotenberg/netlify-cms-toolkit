@@ -17,6 +17,7 @@ export const CompilerOptions = z.object({
   silent: z.boolean().optional(),
   dryRun: z.boolean().optional(),
   useLockfile: z.boolean().optional(),
+  exitOnError: z.boolean().optional(),
 });
 
 export type CompilerOptions = z.infer<typeof CompilerOptions>;

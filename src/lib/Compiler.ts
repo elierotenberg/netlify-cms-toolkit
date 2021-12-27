@@ -116,12 +116,23 @@ export const compile = async (
     return await compileOnce(opts, logger);
   }
 
-  watch(opts, async (event, file) => {
-    if (!opts.silent) {
-      console.log(event, file);
-      await compileOnce(opts, logger);
-    }
-  });
+  watch(
+    opts,
+    async (event, file) => {
+      if (!opts.silent) {
+        console.log(event, file);
+        await compileOnce(opts, logger);
+      }
+    },
+    (error) => {
+      if (!opts.silent) {
+        logger.error(error);
+      }
+      if (opts.exitOnError) {
+        process.exit(1);
+      }
+    },
+  );
 
   return await forever();
 };

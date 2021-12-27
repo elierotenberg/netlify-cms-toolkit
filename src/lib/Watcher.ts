@@ -45,16 +45,21 @@ type Watcher = {
 export const watch = (
   opts: CompilerOptions,
   onChangeRaw: (event: unknown, path: string) => Promise<void>,
+  onError: (error: unknown) => void,
 ): Watcher => {
   let isStopped = false;
   const counter = createAsyncCounter();
   const onCollectionsChange = limited(async (event: unknown, path: string) => {
-    if (isStopped) {
-      return;
+    try {
+      if (isStopped) {
+        return;
+      }
+      counter.incr();
+      await onChangeRaw(event, path);
+      counter.decr();
+    } catch (error) {
+      onError(error);
     }
-    counter.incr();
-    await onChangeRaw(event, path);
-    counter.decr();
   }, ON_CHANGE_DELAY_MS);
 
   const schemaWatcher = new FSWatcher({
@@ -73,34 +78,38 @@ export const watch = (
     event: unknown,
     path: string,
   ): Promise<void> => {
-    if (isStopped) {
-      return;
-    }
-    const schema = await withCompilerLock(opts, async () =>
-      Schema.parse(
-        load(
-          await readFile(resolve(opts.cwd, opts.schema), {
-            encoding: `utf8`,
-          }),
+    try {
+      if (isStopped) {
+        return;
+      }
+      const schema = await withCompilerLock(opts, async () =>
+        Schema.parse(
+          load(
+            await readFile(resolve(opts.cwd, opts.schema), {
+              encoding: `utf8`,
+            }),
+          ),
         ),
-      ),
-    );
-    if (isStopped) {
-      return;
-    }
-    const nextCollectionsWatchedPaths = getCollectionsWatchedPaths(schema);
-    const diff = diffPaths(
-      prevCollectionsWatchedPaths,
-      nextCollectionsWatchedPaths,
-    );
-    for (const path of diff.add) {
-      collectionsWatcher.add(path);
-    }
-    for (const path of diff.remove) {
-      collectionsWatcher.unwatch(path);
-    }
-    if (diff.add.length > 0 || diff.remove.length > 0) {
-      onCollectionsChange(event, path);
+      );
+      if (isStopped) {
+        return;
+      }
+      const nextCollectionsWatchedPaths = getCollectionsWatchedPaths(schema);
+      const diff = diffPaths(
+        prevCollectionsWatchedPaths,
+        nextCollectionsWatchedPaths,
+      );
+      for (const path of diff.add) {
+        collectionsWatcher.add(path);
+      }
+      for (const path of diff.remove) {
+        collectionsWatcher.unwatch(path);
+      }
+      if (diff.add.length > 0 || diff.remove.length > 0) {
+        onCollectionsChange(event, path);
+      }
+    } catch (error) {
+      onError(error);
     }
   };
 

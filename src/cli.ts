@@ -78,6 +78,11 @@ const main = async (): Promise<void> => {
               type: `boolean`,
               default: false,
             })
+            .option(`exitOnError`, {
+              describe: `Exit on error in watch mode`,
+              type: `boolean`,
+              default: true,
+            })
             .option(`silent`, {
               alias: `s`,
               describe: `Suppress console output`,

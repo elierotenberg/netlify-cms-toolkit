@@ -544,16 +544,27 @@ const parseCollection = async (
         cwd: resolve(cwd, collection.folder),
       });
       return mapAsync(paths, async (path) => {
-        const sourceLocation = resolve(cwd, collection.folder, path);
-        const sourceRaw = await readFile(sourceLocation, { encoding: `utf-8` });
-        return parseFolderCollectionFile(
-          schema,
-          ctx,
-          stack,
-          collection,
-          relative(cwd, sourceLocation),
-          sourceRaw,
-        );
+        try {
+          const sourceLocation = resolve(cwd, collection.folder, path);
+          const sourceRaw = await readFile(sourceLocation, {
+            encoding: `utf-8`,
+          });
+          return parseFolderCollectionFile(
+            schema,
+            ctx,
+            stack,
+            collection,
+            relative(cwd, sourceLocation),
+            sourceRaw,
+          );
+        } catch (error) {
+          pushWarning(ctx, {
+            message: error.message,
+            details: error,
+            stack,
+          });
+          return [];
+        }
       }).then((nodes) => nodes.flat().sort(sortContentNodes));
     },
     files: async (collection) => {

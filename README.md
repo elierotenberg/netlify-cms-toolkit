@@ -54,6 +54,8 @@ Options:
                                 naming
                    [choices: "preserve", "camelCase", "pascalCase", "snakeCase"]
   -w, --watch                   Recompile on changes  [boolean] [default: false]
+      --exitOnError             Exit on error in watch mode
+                                                       [boolean] [default: true]
   -s, --silent                  Suppress console output
                                                       [boolean] [default: false]
       --dryRun                  Dry run (don't write output files)

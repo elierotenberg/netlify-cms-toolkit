@@ -11,5 +11,6 @@
   "eslintConfig": ".eslintrc.js",
   "markdownPropertyCasing": "pascalCase",
   "propertyCasing": "camelCase",
-  "useLockfile": true
+  "useLockfile": true,
+  "exitOnError": false
 }

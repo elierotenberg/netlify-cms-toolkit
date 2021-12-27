@@ -1,4 +1,4 @@
-type LogFn = (line: string) => void;
+type LogFn = (...args: unknown[]) => void;
 
 export type Logger = {
   trace: LogFn;
@@ -24,8 +24,11 @@ export const createStringArrayLogger = (): MemoryLogger => {
 
   const createLogFn =
     (kind: string): LogFn =>
-    (line) => {
-      const [head, ...tail] = line.split(`\n`);
+    (...args) => {
+      const [head, ...tail] = args
+        .map((arg) => `${arg}`)
+        .join(``)
+        .split(`\n`);
       lines.push(`${`[${kind}]`.padEnd(8)}${head}`);
       for (const line of tail) {
         lines.push(indent(8, line));
