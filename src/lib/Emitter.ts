@@ -18,6 +18,7 @@ import { applyCasing, Casing } from "./util";
 
 const {
   createArrayLiteralExpression,
+  createArrowFunction,
   createAsExpression,
   createCallExpression,
   createIdentifier,
@@ -159,10 +160,17 @@ const createLoaderImportExpression = (
   relativeFileName: string,
 ): ts.Expression =>
   createCallExpression(loaderIdentifier, undefined, [
-    createCallExpression(
-      createToken(SyntaxKind.ImportKeyword) as ts.Expression,
+    createArrowFunction(
+      [],
+      [],
+      [],
       undefined,
-      [createStringLiteral(`./${relativeFileName}`)],
+      createToken(SyntaxKind.EqualsGreaterThanToken),
+      createCallExpression(
+        createToken(SyntaxKind.ImportKeyword) as ts.Expression,
+        undefined,
+        [createStringLiteral(`./${relativeFileName}`)],
+      ),
     ),
   ]);
 
