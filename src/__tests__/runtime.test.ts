@@ -1,13 +1,9 @@
 import { expectType } from "tsd";
 
-import { createRuntime } from "../lib/runtime";
-
-import { Content, contents } from "./fixtures/out";
+import { Content, contents, findAll, findUnique, match } from "./fixtures/out";
 
 describe(`runtime`, () => {
   test(`findAll, findUnique`, () => {
-    const { findAll, findUnique, match } = createRuntime(contents);
-
     expect(findAll({ locale: `en` })).toEqual(
       contents.filter((content) => content.locale === `en`),
     );

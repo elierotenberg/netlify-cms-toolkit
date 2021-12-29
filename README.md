@@ -71,8 +71,7 @@ Compiled `index.ts` provides a very robust and safe framework for working with c
 For example, you can create a `BlogPost` React component that will render contents from a folder collection:
 
 ```tsx
-import { contents, Content } from "contents/out";
-import { createRuntime } from "netlify-cms-toolkit/build/lib/runtime";
+import { contents, Content, findAll, findUnique } from "contents/out";
 
 type BlogPostContent = Extract<Content, { collection: "blog_posts" }>;
 

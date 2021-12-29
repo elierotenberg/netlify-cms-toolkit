@@ -1,23 +1,9 @@
 {
   "name": "netlify-cms-toolkit",
-  "version": "0.0.1-rc4",
+  "version": "0.0.1-rc5",
   "private": false,
   "main": "build/cli.js",
   "bin": "build/cli.js",
-  "exports": {
-    "./lib": "./build/lib/lib.js",
-    "./runtime": "./build/lib/runtime.js"
-  },
-  "typesVersions": {
-    "*": {
-      "./lib": [
-        "./build/lib/lib.d.ts"
-      ],
-      "./runtime": [
-        "./build/lib/runtime.d.ts"
-      ]
-    }
-  },
   "scripts": {
     "clean": "rm -rf build",
     "netlify:proxy": "PORT=3001 netlify-cms-proxy-server",
