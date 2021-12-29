@@ -389,7 +389,7 @@ type DeepPartial<T> = {
 
 type AbstractFilter<Content extends AbstractContent> = DeepPartial<Content>;
 
-const abstractMatchRaw = (filter: unknown, value: unknown): boolean => {
+const matchRaw = (filter: unknown, value: unknown): boolean => {
   if (typeof filter === `undefined`) {
     return true;
   }
@@ -401,7 +401,7 @@ const abstractMatchRaw = (filter: unknown, value: unknown): boolean => {
       return false;
     }
     for (let k = 0; k < filter.length; k++) {
-      if (!abstractMatchRaw(filter[k], value[k])) {
+      if (!matchRaw(filter[k], value[k])) {
         return false;
       }
     }
@@ -412,7 +412,7 @@ const abstractMatchRaw = (filter: unknown, value: unknown): boolean => {
       return false;
     }
     for (const key of Object.keys(filter)) {
-      if (!abstractMatchRaw(filter[key], value[key])) {
+      if (!matchRaw(filter[key], value[key])) {
         return false;
       }
     }
@@ -421,18 +421,12 @@ const abstractMatchRaw = (filter: unknown, value: unknown): boolean => {
   return filter === value;
 };
 
-const abstractMatch =
+const match =
   <Content extends AbstractContent, Filter extends AbstractFilter<Content>>(
     filter: Filter,
   ) =>
   (content: Content): content is Extract<Content, Filter> =>
-    abstractMatchRaw(filter, content);
-
-type Match<Content extends AbstractContent> = <
-  Filter extends AbstractFilter<Content>,
->(
-  filter: Filter,
-) => (content: Content) => content is Extract<Content, Filter>;
+    matchRaw(filter, content);
 
 type FindAllContents<Content extends AbstractContent> = <
   Filter extends AbstractFilter<Content>,
@@ -449,10 +443,9 @@ type FindUniqueContent<Content extends AbstractContent> = <
 type Runtime<Content extends AbstractContent> = {
   readonly findAll: FindAllContents<Content>;
   readonly findUnique: FindUniqueContent<Content>;
-  readonly match: Match<Content>;
 };
 
-const createAbstractRuntime = <Content extends AbstractContent>(
+const createRuntime = <Content extends AbstractContent>(
   contents: readonly Content[],
 ): Runtime<Content> => {
   const findAll: FindAllContents<Content> = <
@@ -460,7 +453,7 @@ const createAbstractRuntime = <Content extends AbstractContent>(
   >(
     filter: Filter,
   ) => {
-    const matchFilter = abstractMatch<Content, Filter>(filter);
+    const matchFilter = match<Content, Filter>(filter);
     return contents.filter(matchFilter);
   };
 
@@ -482,8 +475,10 @@ const createAbstractRuntime = <Content extends AbstractContent>(
   return {
     findAll,
     findUnique,
-    match: abstractMatch,
   };
 };
 
-export const { findUnique, findAll, match } = createAbstractRuntime(contents);
+const runtime = createRuntime(contents);
+
+export const findAll = runtime.findAll;
+export const findUnique = runtime.findUnique;

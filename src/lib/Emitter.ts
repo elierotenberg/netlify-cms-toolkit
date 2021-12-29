@@ -444,7 +444,10 @@ const headerRawSource = `
   .join(`\n`);
 
 const exportRuntimeRawSource = `
-export const { findUnique, findAll, match } = createAbstractRuntime(contents);
+const runtime = createRuntime(contents);
+
+export const findAll = runtime.findAll;
+export const findUnique = runtime.findUnique;
 `;
 
 export const emit = async (
@@ -481,7 +484,7 @@ export const emit = async (
   const indexRawSource = [
     headerRawSource,
     indexTsNodes,
-    runtimeRawSource.replace(`export { createAbstractRuntime };`, ``),
+    runtimeRawSource.replace(`export { createRuntime };`, ``),
     exportRuntimeRawSource,
   ].join(`\n`);
 

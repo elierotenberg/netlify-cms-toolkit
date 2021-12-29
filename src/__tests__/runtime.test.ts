@@ -1,6 +1,6 @@
 import { expectType } from "tsd";
 
-import { Content, contents, findAll, findUnique, match } from "./fixtures/out";
+import { Content, contents, findAll, findUnique } from "./fixtures/out";
 
 describe(`runtime`, () => {
   test(`findAll, findUnique`, () => {
@@ -8,17 +8,13 @@ describe(`runtime`, () => {
       contents.filter((content) => content.locale === `en`),
     );
 
-    expect(findAll({ slug: `about-animals` })).toEqual(
+    const animals = findAll({ slug: `about-animals` });
+
+    expect(animals).toEqual(
       contents.filter((content) => content.slug === `about-animals`),
     );
 
-    const matchGuideTag = match({ collection: `guideTags` });
-
-    expectType<
-      (
-        content: Content,
-      ) => content is Extract<Content, { collection: `guideTags` }>
-    >(matchGuideTag);
+    expectType<Extract<Content, { slug: `about-animals` }>[]>(animals);
 
     type Guide = Extract<Content, { collection: `guides` }>;
 
