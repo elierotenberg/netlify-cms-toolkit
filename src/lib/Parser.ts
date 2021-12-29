@@ -284,27 +284,20 @@ const parseMeta = (
   });
 };
 
-const getDefaultMarkdownFieldName = (fields: Field[]): null | string => {
-  const markdownFields = fields.filter((field) => field.widget === `markdown`);
-  if (markdownFields.length === 1) {
-    return markdownFields[0].name;
-  }
-  return null;
-};
-
-const inlineDefaultMarkdownField = (
+const inlineMarkdownBody = (
   fields: Field[],
   meta: Meta,
   sourceRaw: string,
 ): Meta => {
-  const defaultMarkdownFieldName = getDefaultMarkdownFieldName(fields);
-  if (!defaultMarkdownFieldName) {
-    return meta;
+  if (
+    fields.some((field) => field.widget === `markdown` && field.name === `body`)
+  ) {
+    return {
+      ...meta,
+      body: sourceRaw,
+    };
   }
-  return {
-    ...meta,
-    [defaultMarkdownFieldName]: sourceRaw,
-  };
+  return meta;
 };
 
 const parseSourceLocation = (
@@ -363,7 +356,7 @@ const parseFolderCollectionFile = (
       ctx,
       stack,
       collection,
-      inlineDefaultMarkdownField(collection.fields, meta, sourceRaw),
+      inlineMarkdownBody(collection.fields, meta, sourceRaw),
       {
         name: `root`,
         widget: `object`,
@@ -502,7 +495,7 @@ const parseFilesCollectionFile = (
     ctx,
     stack,
     collection,
-    inlineDefaultMarkdownField(item.fields, meta, sourceRaw),
+    inlineMarkdownBody(item.fields, meta, sourceRaw),
     {
       name: `root`,
       widget: `object`,
