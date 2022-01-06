@@ -5,7 +5,7 @@
 /*               be overwritten.               */
 /*                                             */
 /***********************************************/
-import loadMarkdown from "../dummy-loader";
+import loadMarkdown from "../../dummy-loader";
 
 export const contents = [
   {
@@ -64,10 +64,7 @@ export const contents = [
     props: {
       title: `About animals and plants`,
       Body: loadMarkdown(
-        () =>
-          import(
-            `./assets/guides/about-animals-and-plants/en/root/body/body.md`
-          ),
+        () => import(`./guides/about-animals-and-plants/en/root/body/body.md`),
       ),
       guideTags: [`animals`, `plants`],
     },
@@ -81,10 +78,7 @@ export const contents = [
     props: {
       title: `\u00C0 propos d'animaux et de plantes`,
       Body: loadMarkdown(
-        () =>
-          import(
-            `./assets/guides/about-animals-and-plants/fr/root/body/body.md`
-          ),
+        () => import(`./guides/about-animals-and-plants/fr/root/body/body.md`),
       ),
       guideTags: [`animals`, `plants`],
     },
@@ -98,7 +92,7 @@ export const contents = [
     props: {
       title: `About animals`,
       Body: loadMarkdown(
-        () => import(`./assets/guides/about-animals/en/root/body/body.md`),
+        () => import(`./guides/about-animals/en/root/body/body.md`),
       ),
       guideTags: [`animals`],
     },
@@ -112,7 +106,7 @@ export const contents = [
     props: {
       title: `\u00C0 propos d'animaux`,
       Body: loadMarkdown(
-        () => import(`./assets/guides/about-animals/fr/root/body/body.md`),
+        () => import(`./guides/about-animals/fr/root/body/body.md`),
       ),
       guideTags: [`animals`],
     },
@@ -126,7 +120,7 @@ export const contents = [
     props: {
       title: `Sobre animais`,
       Body: loadMarkdown(
-        () => import(`./assets/guides/about-animals/pt/root/body/body.md`),
+        () => import(`./guides/about-animals/pt/root/body/body.md`),
       ),
       guideTags: [`animals`],
     },
@@ -140,7 +134,7 @@ export const contents = [
     props: {
       title: `About plants`,
       Body: loadMarkdown(
-        () => import(`./assets/guides/about-plants/en/root/body/body.md`),
+        () => import(`./guides/about-plants/en/root/body/body.md`),
       ),
       guideTags: [`plants`],
     },
@@ -154,7 +148,7 @@ export const contents = [
     props: {
       title: `\u00C0 propos des plantes`,
       Body: loadMarkdown(
-        () => import(`./assets/guides/about-plants/fr/root/body/body.md`),
+        () => import(`./guides/about-plants/fr/root/body/body.md`),
       ),
       guideTags: [`plants`],
     },
@@ -168,7 +162,7 @@ export const contents = [
     props: {
       title: `Sobre plantas`,
       Body: loadMarkdown(
-        () => import(`./assets/guides/about-plants/pt/root/body/body.md`),
+        () => import(`./guides/about-plants/pt/root/body/body.md`),
       ),
       guideTags: [`plants`],
     },
@@ -182,7 +176,7 @@ export const contents = [
     props: {
       title: `Rich text example`,
       Body: loadMarkdown(
-        () => import(`./assets/pages/rich-text-example/en/root/body/body.md`),
+        () => import(`./pages/rich-text-example/en/root/body/body.md`),
       ),
     },
     raw: null,
@@ -195,7 +189,7 @@ export const contents = [
     props: {
       title: `Exemple de texte riche`,
       Body: loadMarkdown(
-        () => import(`./assets/pages/rich-text-example/fr/root/body/body.md`),
+        () => import(`./pages/rich-text-example/fr/root/body/body.md`),
       ),
     },
     raw: null,
@@ -210,13 +204,13 @@ export const contents = [
       Prologue: loadMarkdown(
         () =>
           import(
-            `./assets/questionnaires/questionnaire-1/en/root/prologue/prologue.md`
+            `./questionnaires/questionnaire-1/en/root/prologue/prologue.md`
           ),
       ),
       Epilogue: loadMarkdown(
         () =>
           import(
-            `./assets/questionnaires/questionnaire-1/en/root/epilogue/epilogue.md`
+            `./questionnaires/questionnaire-1/en/root/epilogue/epilogue.md`
           ),
       ),
       items: [
@@ -225,7 +219,7 @@ export const contents = [
           Description: loadMarkdown(
             () =>
               import(
-                `./assets/questionnaires/questionnaire-1/en/root/items/items/0/items-child/description/description.md`
+                `./questionnaires/questionnaire-1/en/root/items/items/0/items-child/description/description.md`
               ),
           ),
         },
@@ -234,7 +228,7 @@ export const contents = [
           Description: loadMarkdown(
             () =>
               import(
-                `./assets/questionnaires/questionnaire-1/en/root/items/items/1/items-child/description/description.md`
+                `./questionnaires/questionnaire-1/en/root/items/items/1/items-child/description/description.md`
               ),
           ),
         },
@@ -252,13 +246,13 @@ export const contents = [
       Prologue: loadMarkdown(
         () =>
           import(
-            `./assets/questionnaires/questionnaire-1/fr/root/prologue/prologue.md`
+            `./questionnaires/questionnaire-1/fr/root/prologue/prologue.md`
           ),
       ),
       Epilogue: loadMarkdown(
         () =>
           import(
-            `./assets/questionnaires/questionnaire-1/fr/root/epilogue/epilogue.md`
+            `./questionnaires/questionnaire-1/fr/root/epilogue/epilogue.md`
           ),
       ),
       items: [
@@ -267,7 +261,7 @@ export const contents = [
           Description: loadMarkdown(
             () =>
               import(
-                `./assets/questionnaires/questionnaire-1/fr/root/items/items/0/items-child/description/description.md`
+                `./questionnaires/questionnaire-1/fr/root/items/items/0/items-child/description/description.md`
               ),
           ),
         },
@@ -276,7 +270,7 @@ export const contents = [
           Description: loadMarkdown(
             () =>
               import(
-                `./assets/questionnaires/questionnaire-1/fr/root/items/items/1/items-child/description/description.md`
+                `./questionnaires/questionnaire-1/fr/root/items/items/1/items-child/description/description.md`
               ),
           ),
         },
@@ -292,11 +286,10 @@ export const contents = [
     props: {
       welcome: `Welcome!`,
       Error: loadMarkdown(
-        () => import(`./assets/translations/interactions/en/en/error/error.md`),
+        () => import(`./translations/interactions/en/en/error/error.md`),
       ),
       Success: loadMarkdown(
-        () =>
-          import(`./assets/translations/interactions/en/en/success/success.md`),
+        () => import(`./translations/interactions/en/en/success/success.md`),
       ),
     },
     raw: null,
@@ -309,11 +302,10 @@ export const contents = [
     props: {
       welcome: `Bienvenue !`,
       Error: loadMarkdown(
-        () => import(`./assets/translations/interactions/fr/fr/error/error.md`),
+        () => import(`./translations/interactions/fr/fr/error/error.md`),
       ),
       Success: loadMarkdown(
-        () =>
-          import(`./assets/translations/interactions/fr/fr/success/success.md`),
+        () => import(`./translations/interactions/fr/fr/success/success.md`),
       ),
     },
     raw: null,
@@ -326,11 +318,10 @@ export const contents = [
     props: {
       welcome: `Welcome!`,
       Error: loadMarkdown(
-        () => import(`./assets/translations/interactions/pt/pt/error/error.md`),
+        () => import(`./translations/interactions/pt/pt/error/error.md`),
       ),
       Success: loadMarkdown(
-        () =>
-          import(`./assets/translations/interactions/pt/pt/success/success.md`),
+        () => import(`./translations/interactions/pt/pt/success/success.md`),
       ),
     },
     raw: null,

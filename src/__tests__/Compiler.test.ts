@@ -12,7 +12,7 @@ describe(`Compiler`, () => {
 
     const tmpCompilerOptions: CompilerOptions = {
       ...compilerOptions,
-      outFolder: `${compilerOptions.outFolder}.tmp`,
+      outFolder: `${compilerOptions.outFolder}.test`,
     };
 
     await compile(tmpCompilerOptions, logger);

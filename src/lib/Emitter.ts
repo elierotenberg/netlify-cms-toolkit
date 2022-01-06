@@ -127,7 +127,7 @@ const createMarkdownAssetPath = (
       parts.push(fieldStackFrame.value);
     }
   }
-  const basePath = join(`assets`, ...parts.map((part) => paramCase(part)));
+  const basePath = join(...parts.map((part) => paramCase(part)));
   const fullPath = `${basePath}.md`;
   if (
     ctx.markdownAssets.some((markdownAsset) => markdownAsset.path === fullPath)
@@ -460,7 +460,7 @@ export const emit = async (
     markdownAssets: [],
   };
   const stack = pushStackFrame([], { fn: `emit`, params: { parseResult } });
-  const indexPath = resolve(cwd, opts.outFolder, `index.ts`);
+  const indexPath = resolve(cwd, opts.outFolder, `assets.next`, `index.ts`);
   const indexTsFile = createSourceFile(indexPath, ``, ScriptTarget.Latest);
   const tsPrinter = createPrinter();
 

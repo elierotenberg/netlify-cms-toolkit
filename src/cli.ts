@@ -5,6 +5,7 @@ import { hideBin } from "yargs/helpers";
 
 import { compile } from "./lib/Compiler";
 import { CompilerOptions } from "./lib/CompilerOptions";
+import { createSilentLogger } from "./lib/Logger";
 import { casings } from "./lib/util";
 
 const main = async (): Promise<void> => {
@@ -96,7 +97,8 @@ const main = async (): Promise<void> => {
             }),
         async (argv) => {
           const config = CompilerOptions.parse(argv);
-          await compile(config, console);
+          const logger = config.silent ? createSilentLogger() : console;
+          await compile(config, logger);
         },
       )
       .demandCommand()

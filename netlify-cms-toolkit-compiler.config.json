@@ -1,5 +1,5 @@
 {
-  "markdownLoader": "../dummy-loader",
+  "markdownLoader": "../../dummy-loader",
   "outFolder": "src/__tests__/fixtures/out",
   "schema": "public/admin/config.yml",
   "silent": false,

@@ -1,0 +1,2892 @@
+{
+  "warnings": [
+    {
+      "stack": [
+        {
+          "fn": "parseField",
+          "params": {
+            "collection": {
+              "kind": "files",
+              "name": "translations",
+              "i18n": {
+                "structure": "single_file"
+              },
+              "files": [
+                {
+                  "name": "site",
+                  "file": "content/translations/site.yml",
+                  "i18n": true,
+                  "fields": [
+                    {
+                      "name": "name",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "shortName",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "url",
+                      "i18n": "duplicate",
+                      "widget": "string"
+                    }
+                  ]
+                },
+                {
+                  "name": "interactions",
+                  "file": "content/translations/interactions.yml",
+                  "i18n": true,
+                  "fields": [
+                    {
+                      "name": "welcome",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "error",
+                      "i18n": true,
+                      "widget": "markdown"
+                    },
+                    {
+                      "name": "success",
+                      "i18n": true,
+                      "widget": "markdown"
+                    }
+                  ]
+                }
+              ]
+            },
+            "field": {
+              "name": "pt",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "name",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "shortName",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "url": "http://localhost:3000"
+            }
+          }
+        },
+        {
+          "fn": "parseFilesCollectionFile",
+          "params": {
+            "collection": "translations",
+            "file": "content/translations/site.yml",
+            "sourceLocation": "content/translations/site.yml"
+          }
+        },
+        {
+          "fn": "parseCollection",
+          "params": {
+            "collection": "translations"
+          }
+        },
+        {
+          "fn": "parseCollections",
+          "params": {}
+        }
+      ],
+      "message": "Property 'name' not found",
+      "details": {
+        "value": {
+          "url": "http://localhost:3000"
+        }
+      }
+    },
+    {
+      "stack": [
+        {
+          "fn": "parseField",
+          "params": {
+            "collection": {
+              "kind": "files",
+              "name": "translations",
+              "i18n": {
+                "structure": "single_file"
+              },
+              "files": [
+                {
+                  "name": "site",
+                  "file": "content/translations/site.yml",
+                  "i18n": true,
+                  "fields": [
+                    {
+                      "name": "name",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "shortName",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "url",
+                      "i18n": "duplicate",
+                      "widget": "string"
+                    }
+                  ]
+                },
+                {
+                  "name": "interactions",
+                  "file": "content/translations/interactions.yml",
+                  "i18n": true,
+                  "fields": [
+                    {
+                      "name": "welcome",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "error",
+                      "i18n": true,
+                      "widget": "markdown"
+                    },
+                    {
+                      "name": "success",
+                      "i18n": true,
+                      "widget": "markdown"
+                    }
+                  ]
+                }
+              ]
+            },
+            "field": {
+              "name": "pt",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "name",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "shortName",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "url": "http://localhost:3000"
+            }
+          }
+        },
+        {
+          "fn": "parseFilesCollectionFile",
+          "params": {
+            "collection": "translations",
+            "file": "content/translations/site.yml",
+            "sourceLocation": "content/translations/site.yml"
+          }
+        },
+        {
+          "fn": "parseCollection",
+          "params": {
+            "collection": "translations"
+          }
+        },
+        {
+          "fn": "parseCollections",
+          "params": {}
+        }
+      ],
+      "message": "Property 'shortName' not found",
+      "details": {
+        "value": {
+          "url": "http://localhost:3000"
+        }
+      }
+    }
+  ],
+  "schema": {
+    "i18n": {
+      "structure": "multiple_files",
+      "locales": [
+        "en",
+        "fr",
+        "pt"
+      ]
+    },
+    "locale": "en",
+    "collections": [
+      {
+        "name": "pages",
+        "i18n": true,
+        "folder": "content/pages",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          },
+          {
+            "name": "body",
+            "i18n": true,
+            "widget": "markdown"
+          }
+        ]
+      },
+      {
+        "name": "guide_tags",
+        "i18n": true,
+        "folder": "content/guide_tags",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          }
+        ]
+      },
+      {
+        "name": "guides",
+        "i18n": true,
+        "folder": "content/guides",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          },
+          {
+            "name": "body",
+            "i18n": true,
+            "widget": "markdown"
+          },
+          {
+            "name": "guide_tags",
+            "widget": "relation"
+          }
+        ]
+      },
+      {
+        "name": "questionnaires",
+        "i18n": true,
+        "folder": "content/questionnaires",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          },
+          {
+            "name": "prologue",
+            "i18n": true,
+            "widget": "markdown"
+          },
+          {
+            "name": "epilogue",
+            "i18n": true,
+            "widget": "markdown"
+          },
+          {
+            "name": "items",
+            "i18n": true,
+            "widget": "list",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "description",
+                "i18n": true,
+                "widget": "markdown"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "translations",
+        "i18n": {
+          "structure": "single_file"
+        },
+        "files": [
+          {
+            "name": "site",
+            "file": "content/translations/site.yml",
+            "i18n": true,
+            "fields": [
+              {
+                "name": "name",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "shortName",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "url",
+                "i18n": "duplicate",
+                "widget": "string"
+              }
+            ]
+          },
+          {
+            "name": "interactions",
+            "file": "content/translations/interactions.yml",
+            "i18n": true,
+            "fields": [
+              {
+                "name": "welcome",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "error",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "success",
+                "i18n": true,
+                "widget": "markdown"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "collections": [
+    {
+      "collection": {
+        "kind": "folder",
+        "name": "guide_tags",
+        "i18n": true,
+        "folder": "content/guide_tags",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          }
+        ]
+      },
+      "contents": [
+        {
+          "sourceLocation": "content/guide_tags/animals.en.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guide_tags",
+            "i18n": true,
+            "folder": "content/guide_tags",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              }
+            ]
+          },
+          "slug": "animals",
+          "locale": "en",
+          "sourceRaw": "---\ntitle: Animals\n---\n",
+          "meta": {
+            "title": "Animals"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "title": "Animals"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Animals"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guide_tags/animals.fr.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guide_tags",
+            "i18n": true,
+            "folder": "content/guide_tags",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              }
+            ]
+          },
+          "slug": "animals",
+          "locale": "fr",
+          "sourceRaw": "---\ntitle: Animaux\n---\n",
+          "meta": {
+            "title": "Animaux"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "title": "Animaux"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Animaux"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guide_tags/animals.pt.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guide_tags",
+            "i18n": true,
+            "folder": "content/guide_tags",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              }
+            ]
+          },
+          "slug": "animals",
+          "locale": "pt",
+          "sourceRaw": "---\ntitle: Animais\n---\n",
+          "meta": {
+            "title": "Animais"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "title": "Animais"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Animais"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guide_tags/plants.en.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guide_tags",
+            "i18n": true,
+            "folder": "content/guide_tags",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              }
+            ]
+          },
+          "slug": "plants",
+          "locale": "en",
+          "sourceRaw": "---\ntitle: Plants\n---\n",
+          "meta": {
+            "title": "Plants"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "title": "Plants"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Plants"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guide_tags/plants.fr.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guide_tags",
+            "i18n": true,
+            "folder": "content/guide_tags",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              }
+            ]
+          },
+          "slug": "plants",
+          "locale": "fr",
+          "sourceRaw": "---\ntitle: Plantes\n---\n",
+          "meta": {
+            "title": "Plantes"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "title": "Plantes"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Plantes"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guide_tags/plants.pt.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guide_tags",
+            "i18n": true,
+            "folder": "content/guide_tags",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              }
+            ]
+          },
+          "slug": "plants",
+          "locale": "pt",
+          "sourceRaw": "---\ntitle: Plantas\n---\n",
+          "meta": {
+            "title": "Plantas"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "title": "Plantas"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Plantas"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collection": {
+        "kind": "folder",
+        "name": "guides",
+        "i18n": true,
+        "folder": "content/guides",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          },
+          {
+            "name": "body",
+            "i18n": true,
+            "widget": "markdown"
+          },
+          {
+            "name": "guide_tags",
+            "widget": "relation"
+          }
+        ]
+      },
+      "contents": [
+        {
+          "sourceLocation": "content/guides/about-animals-and-plants.en.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-animals-and-plants",
+          "locale": "en",
+          "sourceRaw": "---\ntitle: About animals and plants\nguide_tags:\n  - animals\n  - plants\n---\nThis guide is about animals and plants.",
+          "meta": {
+            "title": "About animals and plants",
+            "guide_tags": [
+              "animals",
+              "plants"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "About animals and plants",
+              "guide_tags": [
+                "animals",
+                "plants"
+              ],
+              "body": "---\ntitle: About animals and plants\nguide_tags:\n  - animals\n  - plants\n---\nThis guide is about animals and plants."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "About animals and plants"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: About animals and plants\nguide_tags:\n  - animals\n  - plants\n---\nThis guide is about animals and plants."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "animals",
+                  "plants"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guides/about-animals-and-plants.fr.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-animals-and-plants",
+          "locale": "fr",
+          "sourceRaw": "---\ntitle: À propos d'animaux et de plantes\nguide_tags:\n  - animals\n  - plants\n---\nCe guide est à propos d'animaux et de plantes.",
+          "meta": {
+            "title": "À propos d'animaux et de plantes",
+            "guide_tags": [
+              "animals",
+              "plants"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "À propos d'animaux et de plantes",
+              "guide_tags": [
+                "animals",
+                "plants"
+              ],
+              "body": "---\ntitle: À propos d'animaux et de plantes\nguide_tags:\n  - animals\n  - plants\n---\nCe guide est à propos d'animaux et de plantes."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "À propos d'animaux et de plantes"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: À propos d'animaux et de plantes\nguide_tags:\n  - animals\n  - plants\n---\nCe guide est à propos d'animaux et de plantes."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "animals",
+                  "plants"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guides/about-animals.en.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-animals",
+          "locale": "en",
+          "sourceRaw": "---\ntitle: About animals\nguide_tags:\n  - animals\n---\nThis guide is about animals.",
+          "meta": {
+            "title": "About animals",
+            "guide_tags": [
+              "animals"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "About animals",
+              "guide_tags": [
+                "animals"
+              ],
+              "body": "---\ntitle: About animals\nguide_tags:\n  - animals\n---\nThis guide is about animals."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "About animals"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: About animals\nguide_tags:\n  - animals\n---\nThis guide is about animals."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "animals"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guides/about-animals.fr.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-animals",
+          "locale": "fr",
+          "sourceRaw": "---\ntitle: À propos d'animaux\nguide_tags:\n  - animals\n---\nCe guide est à propos d'animaux.",
+          "meta": {
+            "title": "À propos d'animaux",
+            "guide_tags": [
+              "animals"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "À propos d'animaux",
+              "guide_tags": [
+                "animals"
+              ],
+              "body": "---\ntitle: À propos d'animaux\nguide_tags:\n  - animals\n---\nCe guide est à propos d'animaux."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "À propos d'animaux"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: À propos d'animaux\nguide_tags:\n  - animals\n---\nCe guide est à propos d'animaux."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "animals"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guides/about-animals.pt.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-animals",
+          "locale": "pt",
+          "sourceRaw": "---\ntitle: Sobre animais\nguide_tags:\n  - animals\n---\nEste guia é sobre animais.",
+          "meta": {
+            "title": "Sobre animais",
+            "guide_tags": [
+              "animals"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "Sobre animais",
+              "guide_tags": [
+                "animals"
+              ],
+              "body": "---\ntitle: Sobre animais\nguide_tags:\n  - animals\n---\nEste guia é sobre animais."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Sobre animais"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: Sobre animais\nguide_tags:\n  - animals\n---\nEste guia é sobre animais."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "animals"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guides/about-plants.en.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-plants",
+          "locale": "en",
+          "sourceRaw": "---\ntitle: About plants\nguide_tags:\n  - plants\n---\nThis guide is about plants.",
+          "meta": {
+            "title": "About plants",
+            "guide_tags": [
+              "plants"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "About plants",
+              "guide_tags": [
+                "plants"
+              ],
+              "body": "---\ntitle: About plants\nguide_tags:\n  - plants\n---\nThis guide is about plants."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "About plants"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: About plants\nguide_tags:\n  - plants\n---\nThis guide is about plants."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "plants"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guides/about-plants.fr.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-plants",
+          "locale": "fr",
+          "sourceRaw": "---\ntitle: À propos des plantes\nguide_tags:\n  - plants\n---\nCe guide parle des plantes.",
+          "meta": {
+            "title": "À propos des plantes",
+            "guide_tags": [
+              "plants"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "À propos des plantes",
+              "guide_tags": [
+                "plants"
+              ],
+              "body": "---\ntitle: À propos des plantes\nguide_tags:\n  - plants\n---\nCe guide parle des plantes."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "À propos des plantes"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: À propos des plantes\nguide_tags:\n  - plants\n---\nCe guide parle des plantes."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "plants"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/guides/about-plants.pt.md",
+          "collection": {
+            "kind": "folder",
+            "name": "guides",
+            "i18n": true,
+            "folder": "content/guides",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "guide_tags",
+                "widget": "relation"
+              }
+            ]
+          },
+          "slug": "about-plants",
+          "locale": "pt",
+          "sourceRaw": "---\ntitle: Sobre plantas\nguide_tags:\n  - plants\n---\nEste guia é sobre plantas.",
+          "meta": {
+            "title": "Sobre plantas",
+            "guide_tags": [
+              "plants"
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                }
+              ]
+            },
+            "value": {
+              "title": "Sobre plantas",
+              "guide_tags": [
+                "plants"
+              ],
+              "body": "---\ntitle: Sobre plantas\nguide_tags:\n  - plants\n---\nEste guia é sobre plantas."
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Sobre plantas"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: Sobre plantas\nguide_tags:\n  - plants\n---\nEste guia é sobre plantas."
+              },
+              "guide_tags": {
+                "field": {
+                  "name": "guide_tags",
+                  "widget": "relation"
+                },
+                "value": [
+                  "plants"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collection": {
+        "kind": "folder",
+        "name": "pages",
+        "i18n": true,
+        "folder": "content/pages",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          },
+          {
+            "name": "body",
+            "i18n": true,
+            "widget": "markdown"
+          }
+        ]
+      },
+      "contents": [
+        {
+          "sourceLocation": "content/pages/rich-text-example.en.md",
+          "collection": {
+            "kind": "folder",
+            "name": "pages",
+            "i18n": true,
+            "folder": "content/pages",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              }
+            ]
+          },
+          "slug": "rich-text-example",
+          "locale": "en",
+          "sourceRaw": "---\ntitle: Rich text example\n---\n# Heading\n\n> Quote\n\n![](/public/media/uploads/wikipedia-logo-version-2.svg)",
+          "meta": {
+            "title": "Rich text example"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                }
+              ]
+            },
+            "value": {
+              "title": "Rich text example",
+              "body": "---\ntitle: Rich text example\n---\n# Heading\n\n> Quote\n\n![](/public/media/uploads/wikipedia-logo-version-2.svg)"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Rich text example"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: Rich text example\n---\n# Heading\n\n> Quote\n\n![](/public/media/uploads/wikipedia-logo-version-2.svg)"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/pages/rich-text-example.fr.md",
+          "collection": {
+            "kind": "folder",
+            "name": "pages",
+            "i18n": true,
+            "folder": "content/pages",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "body",
+                "i18n": true,
+                "widget": "markdown"
+              }
+            ]
+          },
+          "slug": "rich-text-example",
+          "locale": "fr",
+          "sourceRaw": "---\ntitle: Exemple de texte riche\n---\n# Titre\n\n> Citation\n\n![](/public/media/uploads/wikipedia-logo-version-2.svg)",
+          "meta": {
+            "title": "Exemple de texte riche"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                }
+              ]
+            },
+            "value": {
+              "title": "Exemple de texte riche",
+              "body": "---\ntitle: Exemple de texte riche\n---\n# Titre\n\n> Citation\n\n![](/public/media/uploads/wikipedia-logo-version-2.svg)"
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Exemple de texte riche"
+              },
+              "body": {
+                "field": {
+                  "name": "body",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "---\ntitle: Exemple de texte riche\n---\n# Titre\n\n> Citation\n\n![](/public/media/uploads/wikipedia-logo-version-2.svg)"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collection": {
+        "kind": "folder",
+        "name": "questionnaires",
+        "i18n": true,
+        "folder": "content/questionnaires",
+        "fields": [
+          {
+            "name": "title",
+            "i18n": true,
+            "widget": "string"
+          },
+          {
+            "name": "prologue",
+            "i18n": true,
+            "widget": "markdown"
+          },
+          {
+            "name": "epilogue",
+            "i18n": true,
+            "widget": "markdown"
+          },
+          {
+            "name": "items",
+            "i18n": true,
+            "widget": "list",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "description",
+                "i18n": true,
+                "widget": "markdown"
+              }
+            ]
+          }
+        ]
+      },
+      "contents": [
+        {
+          "sourceLocation": "content/questionnaires/questionnaire-1.en.md",
+          "collection": {
+            "kind": "folder",
+            "name": "questionnaires",
+            "i18n": true,
+            "folder": "content/questionnaires",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "prologue",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "epilogue",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "items",
+                "i18n": true,
+                "widget": "list",
+                "fields": [
+                  {
+                    "name": "title",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "description",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "questionnaire-1",
+          "locale": "en",
+          "sourceRaw": "---\ntitle: Questionnaire 1\nprologue: You should fill this questionnaire.\nepilogue: Thank you for filling the questionnaire!\nitems:\n  - title: First name\n    description: Your first name.\n  - title: Last Name\n    description: Your last name.\n---\n",
+          "meta": {
+            "title": "Questionnaire 1",
+            "prologue": "You should fill this questionnaire.",
+            "epilogue": "Thank you for filling the questionnaire!",
+            "items": [
+              {
+                "title": "First name",
+                "description": "Your first name."
+              },
+              {
+                "title": "Last Name",
+                "description": "Your last name."
+              }
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "prologue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "epilogue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "items",
+                  "i18n": true,
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "title",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "description",
+                      "i18n": true,
+                      "widget": "markdown"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": {
+              "title": "Questionnaire 1",
+              "prologue": "You should fill this questionnaire.",
+              "epilogue": "Thank you for filling the questionnaire!",
+              "items": [
+                {
+                  "title": "First name",
+                  "description": "Your first name."
+                },
+                {
+                  "title": "Last Name",
+                  "description": "Your last name."
+                }
+              ]
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Questionnaire 1"
+              },
+              "prologue": {
+                "field": {
+                  "name": "prologue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "You should fill this questionnaire."
+              },
+              "epilogue": {
+                "field": {
+                  "name": "epilogue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "Thank you for filling the questionnaire!"
+              },
+              "items": {
+                "field": {
+                  "name": "items",
+                  "i18n": true,
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "title",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "description",
+                      "i18n": true,
+                      "widget": "markdown"
+                    }
+                  ]
+                },
+                "value": [
+                  {
+                    "title": "First name",
+                    "description": "Your first name."
+                  },
+                  {
+                    "title": "Last Name",
+                    "description": "Your last name."
+                  }
+                ],
+                "arrayChildren": [
+                  {
+                    "field": {
+                      "name": "items.child",
+                      "widget": "object",
+                      "i18n": true,
+                      "fields": [
+                        {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        }
+                      ]
+                    },
+                    "value": {
+                      "title": "First name",
+                      "description": "Your first name."
+                    },
+                    "objectChildren": {
+                      "title": {
+                        "field": {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        "value": "First name"
+                      },
+                      "description": {
+                        "field": {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        },
+                        "value": "Your first name."
+                      }
+                    }
+                  },
+                  {
+                    "field": {
+                      "name": "items.child",
+                      "widget": "object",
+                      "i18n": true,
+                      "fields": [
+                        {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        }
+                      ]
+                    },
+                    "value": {
+                      "title": "Last Name",
+                      "description": "Your last name."
+                    },
+                    "objectChildren": {
+                      "title": {
+                        "field": {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        "value": "Last Name"
+                      },
+                      "description": {
+                        "field": {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        },
+                        "value": "Your last name."
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/questionnaires/questionnaire-1.fr.md",
+          "collection": {
+            "kind": "folder",
+            "name": "questionnaires",
+            "i18n": true,
+            "folder": "content/questionnaires",
+            "fields": [
+              {
+                "name": "title",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "prologue",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "epilogue",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "items",
+                "i18n": true,
+                "widget": "list",
+                "fields": [
+                  {
+                    "name": "title",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "description",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "questionnaire-1",
+          "locale": "fr",
+          "sourceRaw": "---\ntitle: Questionnaire 1\nprologue: Vous devriez remplir ce questionnaire.\nepilogue: Merci d'avoir répondu à ce questionnaire !\nitems:\n  - title: Prénom\n    description: Votre prénom.\n  - title: Nom de famille\n    description: Votre nom de famille.\n---\n",
+          "meta": {
+            "title": "Questionnaire 1",
+            "prologue": "Vous devriez remplir ce questionnaire.",
+            "epilogue": "Merci d'avoir répondu à ce questionnaire !",
+            "items": [
+              {
+                "title": "Prénom",
+                "description": "Votre prénom."
+              },
+              {
+                "title": "Nom de famille",
+                "description": "Votre nom de famille."
+              }
+            ]
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "root",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "prologue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "epilogue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "items",
+                  "i18n": true,
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "title",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "description",
+                      "i18n": true,
+                      "widget": "markdown"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": {
+              "title": "Questionnaire 1",
+              "prologue": "Vous devriez remplir ce questionnaire.",
+              "epilogue": "Merci d'avoir répondu à ce questionnaire !",
+              "items": [
+                {
+                  "title": "Prénom",
+                  "description": "Votre prénom."
+                },
+                {
+                  "title": "Nom de famille",
+                  "description": "Votre nom de famille."
+                }
+              ]
+            },
+            "objectChildren": {
+              "title": {
+                "field": {
+                  "name": "title",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Questionnaire 1"
+              },
+              "prologue": {
+                "field": {
+                  "name": "prologue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "Vous devriez remplir ce questionnaire."
+              },
+              "epilogue": {
+                "field": {
+                  "name": "epilogue",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "Merci d'avoir répondu à ce questionnaire !"
+              },
+              "items": {
+                "field": {
+                  "name": "items",
+                  "i18n": true,
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "title",
+                      "i18n": true,
+                      "widget": "string"
+                    },
+                    {
+                      "name": "description",
+                      "i18n": true,
+                      "widget": "markdown"
+                    }
+                  ]
+                },
+                "value": [
+                  {
+                    "title": "Prénom",
+                    "description": "Votre prénom."
+                  },
+                  {
+                    "title": "Nom de famille",
+                    "description": "Votre nom de famille."
+                  }
+                ],
+                "arrayChildren": [
+                  {
+                    "field": {
+                      "name": "items.child",
+                      "widget": "object",
+                      "i18n": true,
+                      "fields": [
+                        {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        }
+                      ]
+                    },
+                    "value": {
+                      "title": "Prénom",
+                      "description": "Votre prénom."
+                    },
+                    "objectChildren": {
+                      "title": {
+                        "field": {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        "value": "Prénom"
+                      },
+                      "description": {
+                        "field": {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        },
+                        "value": "Votre prénom."
+                      }
+                    }
+                  },
+                  {
+                    "field": {
+                      "name": "items.child",
+                      "widget": "object",
+                      "i18n": true,
+                      "fields": [
+                        {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        }
+                      ]
+                    },
+                    "value": {
+                      "title": "Nom de famille",
+                      "description": "Votre nom de famille."
+                    },
+                    "objectChildren": {
+                      "title": {
+                        "field": {
+                          "name": "title",
+                          "i18n": true,
+                          "widget": "string"
+                        },
+                        "value": "Nom de famille"
+                      },
+                      "description": {
+                        "field": {
+                          "name": "description",
+                          "i18n": true,
+                          "widget": "markdown"
+                        },
+                        "value": "Votre nom de famille."
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collection": {
+        "kind": "files",
+        "name": "translations",
+        "i18n": {
+          "structure": "single_file"
+        },
+        "files": [
+          {
+            "name": "site",
+            "file": "content/translations/site.yml",
+            "i18n": true,
+            "fields": [
+              {
+                "name": "name",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "shortName",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "url",
+                "i18n": "duplicate",
+                "widget": "string"
+              }
+            ]
+          },
+          {
+            "name": "interactions",
+            "file": "content/translations/interactions.yml",
+            "i18n": true,
+            "fields": [
+              {
+                "name": "welcome",
+                "i18n": true,
+                "widget": "string"
+              },
+              {
+                "name": "error",
+                "i18n": true,
+                "widget": "markdown"
+              },
+              {
+                "name": "success",
+                "i18n": true,
+                "widget": "markdown"
+              }
+            ]
+          }
+        ]
+      },
+      "contents": [
+        {
+          "sourceLocation": "content/translations/interactions.yml",
+          "collection": {
+            "kind": "files",
+            "name": "translations",
+            "i18n": {
+              "structure": "single_file"
+            },
+            "files": [
+              {
+                "name": "site",
+                "file": "content/translations/site.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "name",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "shortName",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "url",
+                    "i18n": "duplicate",
+                    "widget": "string"
+                  }
+                ]
+              },
+              {
+                "name": "interactions",
+                "file": "content/translations/interactions.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "welcome",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "error",
+                    "i18n": true,
+                    "widget": "markdown"
+                  },
+                  {
+                    "name": "success",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "interactions",
+          "locale": "en",
+          "sourceRaw": "en:\n  welcome: Welcome!\n  error: \"**An error has occured.**\"\n  success: \"*Everything went well!*\"\nfr:\n  welcome: Bienvenue !\n  error: \"**Une erreur s'est produite.**\"\n  success: \"*Tout s'est bien passé !*\"\npt:\n  welcome: Welcome!\n  error: An error has occured.\n  success: Everything went well!\n",
+          "meta": {
+            "welcome": "Welcome!",
+            "error": "**An error has occured.**",
+            "success": "*Everything went well!*"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "en",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "welcome",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "error",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "success",
+                  "i18n": true,
+                  "widget": "markdown"
+                }
+              ]
+            },
+            "value": {
+              "welcome": "Welcome!",
+              "error": "**An error has occured.**",
+              "success": "*Everything went well!*"
+            },
+            "objectChildren": {
+              "welcome": {
+                "field": {
+                  "name": "welcome",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Welcome!"
+              },
+              "error": {
+                "field": {
+                  "name": "error",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "**An error has occured.**"
+              },
+              "success": {
+                "field": {
+                  "name": "success",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "*Everything went well!*"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/translations/interactions.yml",
+          "collection": {
+            "kind": "files",
+            "name": "translations",
+            "i18n": {
+              "structure": "single_file"
+            },
+            "files": [
+              {
+                "name": "site",
+                "file": "content/translations/site.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "name",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "shortName",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "url",
+                    "i18n": "duplicate",
+                    "widget": "string"
+                  }
+                ]
+              },
+              {
+                "name": "interactions",
+                "file": "content/translations/interactions.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "welcome",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "error",
+                    "i18n": true,
+                    "widget": "markdown"
+                  },
+                  {
+                    "name": "success",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "interactions",
+          "locale": "fr",
+          "sourceRaw": "en:\n  welcome: Welcome!\n  error: \"**An error has occured.**\"\n  success: \"*Everything went well!*\"\nfr:\n  welcome: Bienvenue !\n  error: \"**Une erreur s'est produite.**\"\n  success: \"*Tout s'est bien passé !*\"\npt:\n  welcome: Welcome!\n  error: An error has occured.\n  success: Everything went well!\n",
+          "meta": {
+            "welcome": "Bienvenue !",
+            "error": "**Une erreur s'est produite.**",
+            "success": "*Tout s'est bien passé !*"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "fr",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "welcome",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "error",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "success",
+                  "i18n": true,
+                  "widget": "markdown"
+                }
+              ]
+            },
+            "value": {
+              "welcome": "Bienvenue !",
+              "error": "**Une erreur s'est produite.**",
+              "success": "*Tout s'est bien passé !*"
+            },
+            "objectChildren": {
+              "welcome": {
+                "field": {
+                  "name": "welcome",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Bienvenue !"
+              },
+              "error": {
+                "field": {
+                  "name": "error",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "**Une erreur s'est produite.**"
+              },
+              "success": {
+                "field": {
+                  "name": "success",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "*Tout s'est bien passé !*"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/translations/interactions.yml",
+          "collection": {
+            "kind": "files",
+            "name": "translations",
+            "i18n": {
+              "structure": "single_file"
+            },
+            "files": [
+              {
+                "name": "site",
+                "file": "content/translations/site.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "name",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "shortName",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "url",
+                    "i18n": "duplicate",
+                    "widget": "string"
+                  }
+                ]
+              },
+              {
+                "name": "interactions",
+                "file": "content/translations/interactions.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "welcome",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "error",
+                    "i18n": true,
+                    "widget": "markdown"
+                  },
+                  {
+                    "name": "success",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "interactions",
+          "locale": "pt",
+          "sourceRaw": "en:\n  welcome: Welcome!\n  error: \"**An error has occured.**\"\n  success: \"*Everything went well!*\"\nfr:\n  welcome: Bienvenue !\n  error: \"**Une erreur s'est produite.**\"\n  success: \"*Tout s'est bien passé !*\"\npt:\n  welcome: Welcome!\n  error: An error has occured.\n  success: Everything went well!\n",
+          "meta": {
+            "welcome": "Welcome!",
+            "error": "An error has occured.",
+            "success": "Everything went well!"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "pt",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "welcome",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "error",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                {
+                  "name": "success",
+                  "i18n": true,
+                  "widget": "markdown"
+                }
+              ]
+            },
+            "value": {
+              "welcome": "Welcome!",
+              "error": "An error has occured.",
+              "success": "Everything went well!"
+            },
+            "objectChildren": {
+              "welcome": {
+                "field": {
+                  "name": "welcome",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Welcome!"
+              },
+              "error": {
+                "field": {
+                  "name": "error",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "An error has occured."
+              },
+              "success": {
+                "field": {
+                  "name": "success",
+                  "i18n": true,
+                  "widget": "markdown"
+                },
+                "value": "Everything went well!"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/translations/site.yml",
+          "collection": {
+            "kind": "files",
+            "name": "translations",
+            "i18n": {
+              "structure": "single_file"
+            },
+            "files": [
+              {
+                "name": "site",
+                "file": "content/translations/site.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "name",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "shortName",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "url",
+                    "i18n": "duplicate",
+                    "widget": "string"
+                  }
+                ]
+              },
+              {
+                "name": "interactions",
+                "file": "content/translations/interactions.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "welcome",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "error",
+                    "i18n": true,
+                    "widget": "markdown"
+                  },
+                  {
+                    "name": "success",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "site",
+          "locale": "en",
+          "sourceRaw": "en:\n  name: Official Netlify CMS Toolkit Website\n  shortName: ONCTK-EN\n  url: http://localhost:3000\nfr:\n  url: http://localhost:3000\n  name: Site web officiel Netlify CMS Toolkit\n  shortName: ONCTK-FR\npt:\n  url: http://localhost:3000\n",
+          "meta": {
+            "name": "Official Netlify CMS Toolkit Website",
+            "shortName": "ONCTK-EN",
+            "url": "http://localhost:3000"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "en",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "name",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "shortName",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "name": "Official Netlify CMS Toolkit Website",
+              "shortName": "ONCTK-EN",
+              "url": "http://localhost:3000"
+            },
+            "objectChildren": {
+              "name": {
+                "field": {
+                  "name": "name",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Official Netlify CMS Toolkit Website"
+              },
+              "shortName": {
+                "field": {
+                  "name": "shortName",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "ONCTK-EN"
+              },
+              "url": {
+                "field": {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                },
+                "value": "http://localhost:3000"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/translations/site.yml",
+          "collection": {
+            "kind": "files",
+            "name": "translations",
+            "i18n": {
+              "structure": "single_file"
+            },
+            "files": [
+              {
+                "name": "site",
+                "file": "content/translations/site.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "name",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "shortName",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "url",
+                    "i18n": "duplicate",
+                    "widget": "string"
+                  }
+                ]
+              },
+              {
+                "name": "interactions",
+                "file": "content/translations/interactions.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "welcome",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "error",
+                    "i18n": true,
+                    "widget": "markdown"
+                  },
+                  {
+                    "name": "success",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "site",
+          "locale": "fr",
+          "sourceRaw": "en:\n  name: Official Netlify CMS Toolkit Website\n  shortName: ONCTK-EN\n  url: http://localhost:3000\nfr:\n  url: http://localhost:3000\n  name: Site web officiel Netlify CMS Toolkit\n  shortName: ONCTK-FR\npt:\n  url: http://localhost:3000\n",
+          "meta": {
+            "url": "http://localhost:3000",
+            "name": "Site web officiel Netlify CMS Toolkit",
+            "shortName": "ONCTK-FR"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "fr",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "name",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "shortName",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "url": "http://localhost:3000",
+              "name": "Site web officiel Netlify CMS Toolkit",
+              "shortName": "ONCTK-FR"
+            },
+            "objectChildren": {
+              "name": {
+                "field": {
+                  "name": "name",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "Site web officiel Netlify CMS Toolkit"
+              },
+              "shortName": {
+                "field": {
+                  "name": "shortName",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                "value": "ONCTK-FR"
+              },
+              "url": {
+                "field": {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                },
+                "value": "http://localhost:3000"
+              }
+            }
+          }
+        },
+        {
+          "sourceLocation": "content/translations/site.yml",
+          "collection": {
+            "kind": "files",
+            "name": "translations",
+            "i18n": {
+              "structure": "single_file"
+            },
+            "files": [
+              {
+                "name": "site",
+                "file": "content/translations/site.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "name",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "shortName",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "url",
+                    "i18n": "duplicate",
+                    "widget": "string"
+                  }
+                ]
+              },
+              {
+                "name": "interactions",
+                "file": "content/translations/interactions.yml",
+                "i18n": true,
+                "fields": [
+                  {
+                    "name": "welcome",
+                    "i18n": true,
+                    "widget": "string"
+                  },
+                  {
+                    "name": "error",
+                    "i18n": true,
+                    "widget": "markdown"
+                  },
+                  {
+                    "name": "success",
+                    "i18n": true,
+                    "widget": "markdown"
+                  }
+                ]
+              }
+            ]
+          },
+          "slug": "site",
+          "locale": "pt",
+          "sourceRaw": "en:\n  name: Official Netlify CMS Toolkit Website\n  shortName: ONCTK-EN\n  url: http://localhost:3000\nfr:\n  url: http://localhost:3000\n  name: Site web officiel Netlify CMS Toolkit\n  shortName: ONCTK-FR\npt:\n  url: http://localhost:3000\n",
+          "meta": {
+            "url": "http://localhost:3000"
+          },
+          "rootFieldNode": {
+            "field": {
+              "name": "pt",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "name",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "shortName",
+                  "i18n": true,
+                  "widget": "string"
+                },
+                {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                }
+              ]
+            },
+            "value": {
+              "url": "http://localhost:3000"
+            },
+            "objectChildren": {
+              "url": {
+                "field": {
+                  "name": "url",
+                  "i18n": "duplicate",
+                  "widget": "string"
+                },
+                "value": "http://localhost:3000"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

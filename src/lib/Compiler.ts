@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from "fs/promises";
+import { mkdir, readFile, rename, rm, writeFile } from "fs/promises";
 import { dirname, resolve } from "path";
 
 import { load } from "js-yaml";
@@ -20,9 +20,10 @@ const compileOnce = async (
   await withCompilerLock(opts, async () => {
     const chrono = new Chrono();
     chrono.mark(`Start`);
-    if (!opts.silent) {
-      logger.log(`Parsing schema...`);
-    }
+
+    const outFolder = resolve(opts.cwd, opts.outFolder);
+
+    logger.log(`Parsing schema...`);
     const schema = Schema.parse(
       load(
         await readFile(resolve(opts.cwd, opts.schema), { encoding: `utf-8` }),
@@ -30,43 +31,37 @@ const compileOnce = async (
     );
     chrono.mark(`Parse schema`);
 
-    if (!opts.silent) {
-      logger.log(`Parsing collections...`);
-    }
+    logger.log(`Parsing collections...`);
     const parserResult = await parse(opts.cwd, schema);
+
     chrono.mark(`Parse collections`);
-    if (!opts.silent) {
-      prettyPrintParseResult(parserResult, logger);
+    prettyPrintParseResult(parserResult, logger);
+
+    if (!opts.dryRun) {
+      await mkdir(outFolder, { recursive: true });
     }
+
     if (opts.saveParseResult && !opts.dryRun) {
-      if (!opts.silent) {
-        logger.log(`Saving parse result...`);
-      }
-      await mkdir(resolve(opts.cwd, opts.outFolder), { recursive: true });
+      logger.log(`Saving parse result...`);
       await writeFile(
-        resolve(opts.cwd, opts.outFolder, `parser.out.json`),
+        resolve(outFolder, `parser.out.json`),
         JSON.stringify(parserResult, null, 2),
         { encoding: `utf-8` },
       );
       chrono.mark(`Save parse result`);
     }
 
-    if (!opts.silent) {
-      logger.log(`Emitting assets...`);
-    }
+    logger.log(`Emitting assets...`);
+
     const emitResult = await emit(opts.cwd, opts, parserResult);
     chrono.mark(`Emit assets`);
-    if (!opts.silent) {
-      prettyPrintEmitResult(emitResult, logger);
-    }
+
+    prettyPrintEmitResult(emitResult, logger);
 
     if (opts.saveEmitResult && !opts.dryRun) {
-      if (!opts.silent) {
-        logger.log(`Saving emit result...`);
-      }
-      await mkdir(resolve(opts.cwd, opts.outFolder), { recursive: true });
+      logger.log(`Saving emit result...`);
       await writeFile(
-        resolve(opts.cwd, opts.outFolder, `emitter.out.json`),
+        resolve(outFolder, `emitter.out.json`),
         JSON.stringify(emitResult, null, 2),
         { encoding: `utf-8` },
       );
@@ -74,37 +69,45 @@ const compileOnce = async (
     }
 
     if (!opts.dryRun) {
-      if (!opts.silent) {
-        logger.log(`Saving markdown assets...`);
-        await rm(resolve(opts.cwd, opts.outFolder, `assets`), {
+      const assetsNextFolder = resolve(outFolder, `assets.next`);
+      const assetsPrevFolder = resolve(outFolder, `assets.prev`);
+      const assetsFolder = resolve(outFolder, `assets`);
+      logger.log(`Writing assets to temp folder...`);
+
+      await rm(assetsNextFolder, {
+        recursive: true,
+      }).catch(() => null);
+      await mkdir(assetsNextFolder, {
+        recursive: true,
+      });
+      chrono.mark(`Create temp folder`);
+      logger.log(`Writing markdown assets...`);
+      await mapAsync(emitResult.markdownAssets, async ({ path, source }) => {
+        await mkdir(dirname(resolve(assetsNextFolder, path)), {
           recursive: true,
         });
-        await mkdir(resolve(opts.cwd, opts.outFolder, `assets`), {
-          recursive: true,
+        await writeFile(resolve(assetsNextFolder, path), source, {
+          encoding: `utf-8`,
         });
-        await mapAsync(emitResult.markdownAssets, async ({ path, source }) => {
-          await mkdir(dirname(resolve(opts.cwd, opts.outFolder, path)), {
-            recursive: true,
-          });
-          await writeFile(resolve(opts.cwd, opts.outFolder, path), source, {
-            encoding: `utf-8`,
-          });
-        });
-        chrono.mark(`Save markdown assets`);
-        logger.log(`Saving index...`);
-        await mkdir(resolve(opts.cwd, opts.outFolder), { recursive: true });
-        await writeFile(
-          resolve(opts.cwd, opts.outFolder, emitResult.index.path),
-          emitResult.index.source,
-          { encoding: `utf-8` },
-        );
-        chrono.mark(`Save index`);
-      }
+      });
+      chrono.mark(`Save markdown assets`);
+      logger.log(`Saving index...`);
+      await writeFile(
+        resolve(assetsNextFolder, emitResult.index.path),
+        emitResult.index.source,
+        { encoding: `utf-8` },
+      );
+      chrono.mark(`Save index`);
+
+      logger.log(`Swapping with previous version...`);
+      await rename(assetsFolder, assetsPrevFolder).catch(() => null);
+      await rename(assetsNextFolder, assetsFolder).catch(() => null);
+      logger.log(`Deleting previous version...`);
+      await rm(assetsPrevFolder, { recursive: true }).catch(() => null);
+      chrono.mark(`Swap assets`);
     }
 
-    if (!opts.silent) {
-      chrono.report(logger);
-    }
+    chrono.report(logger);
   });
 };
 
@@ -119,15 +122,11 @@ export const compile = async (
   watch(
     opts,
     async (event, file) => {
-      if (!opts.silent) {
-        console.log(event, file);
-        await compileOnce(opts, logger);
-      }
+      logger.log(event, file);
+      await compileOnce(opts, logger);
     },
     (error) => {
-      if (!opts.silent) {
-        logger.error(error);
-      }
+      logger.error(error);
       if (opts.exitOnError) {
         process.exit(1);
       }

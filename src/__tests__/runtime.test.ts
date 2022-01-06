@@ -1,6 +1,6 @@
 import { expectType } from "tsd";
 
-import { Content, contents, findAll, findUnique } from "./fixtures/out";
+import { Content, contents, findAll, findUnique } from "./fixtures/out/assets";
 
 describe(`runtime`, () => {
   test(`findAll, findUnique`, () => {

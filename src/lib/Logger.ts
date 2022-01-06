@@ -19,6 +19,17 @@ type MemoryLogger = Logger & {
   readonly toString: () => string;
 };
 
+const silentLogFn: LogFn = () => null;
+
+export const createSilentLogger = (): Logger => ({
+  debug: silentLogFn,
+  error: silentLogFn,
+  info: silentLogFn,
+  log: silentLogFn,
+  trace: silentLogFn,
+  warn: silentLogFn,
+});
+
 export const createStringArrayLogger = (): MemoryLogger => {
   const lines: string[] = [];
 

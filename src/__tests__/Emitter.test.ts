@@ -36,7 +36,7 @@ describe(`Emitter`, () => {
 
       await expectToMatchRawFile(
         emitResult.index.source,
-        pkgPath(`src/__tests__/fixtures/out/index.ts`),
+        pkgPath(`src/__tests__/fixtures/out/assets/index.ts`),
       );
 
       const logger = createStringArrayLogger();

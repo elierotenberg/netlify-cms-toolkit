@@ -12,7 +12,7 @@ export const pkgPath = (...segments: string[]): string =>
 
 export const compilerOptions: CompilerOptions = {
   cwd: pkgPath(`.`),
-  markdownLoader: `../dummy-loader`,
+  markdownLoader: `../../dummy-loader`,
   outFolder: `src/__tests__/fixtures/out`,
   schema: `public/admin/config.yml`,
   silent: false,
