@@ -1,7 +1,7 @@
 import { expectType, expectNotType } from "tsd";
 
-import { Schema } from "./fixtures/out.test/assets";
-import { contents } from "./fixtures/out/assets";
+import { locales, Schema } from "./fixtures/out.test/assets";
+import { contents, defaultLocale } from "./fixtures/out/assets";
 
 describe(`Runtime`, () => {
   test(`Types`, () => {
@@ -16,5 +16,9 @@ describe(`Runtime`, () => {
     )?.props.name;
 
     expectType<string | undefined>(siteName);
+
+    expectType<readonly (`en` | `fr` | `pt`)[]>(locales);
+    expectType<`en` | `fr` | `pt`>(defaultLocale);
+    expect(defaultLocale).toEqual(`en`);
   });
 });

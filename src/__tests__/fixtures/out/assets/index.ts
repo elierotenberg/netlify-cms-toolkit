@@ -127,6 +127,8 @@ export type Schema = {
 
 export const locales: readonly Schema[`locale`][] = [`en`, `fr`, `pt`];
 
+export const defaultLocale: Schema[`locale`] = `en`;
+
 export type Contents = Readonly<{
   [`pages`]: Schema[`collection`][`pages`][];
   [`guide_tags`]: Schema[`collection`][`guide_tags`][];

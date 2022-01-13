@@ -26,6 +26,7 @@ const {
   createArrowFunction,
   createCallExpression,
   createComputedPropertyName,
+  createEmptyStatement,
   createIdentifier,
   createImportClause,
   createImportDeclaration,
@@ -410,6 +411,25 @@ const createLocalesDeclaration = (locales: string[]): ts.Node =>
     ),
   );
 
+const createDefaultLocaleDeclaration = (defaultLocale: string): ts.Node =>
+  createVariableStatement(
+    [createModifier(ts.SyntaxKind.ExportKeyword)],
+    createVariableDeclarationList(
+      [
+        createVariableDeclaration(
+          createIdentifier(`defaultLocale`),
+          undefined,
+          createIndexedAccessTypeNode(
+            createTypeReferenceNode(createIdentifier(`Schema`), undefined),
+            createLiteralTypeNode(createStringLiteral(`locale`)),
+          ),
+          createStringLiteral(defaultLocale),
+        ),
+      ],
+      ts.NodeFlags.Const,
+    ),
+  );
+
 const createIndexTsNodes = (
   opts: EmitterOptions,
   ctx: Context,
@@ -432,6 +452,10 @@ const createIndexTsNodes = (
     schema.i18n?.locales ?? [],
   );
 
+  const defaultLocaleDeclaration = schema.locale
+    ? createDefaultLocaleDeclaration(schema.locale)
+    : createEmptyStatement();
+
   const contentsDeclaration = createVariableStatement(
     [createModifier(SyntaxKind.ExportKeyword)],
     createVariableDeclarationList(
@@ -452,6 +476,7 @@ const createIndexTsNodes = (
     markdownTypeImportDeclaration,
     schemaTypeAliasDeclaration,
     localesDeclaration,
+    defaultLocaleDeclaration,
     contentsTypeAliasDeclaration,
     contentsDeclaration,
   ];
