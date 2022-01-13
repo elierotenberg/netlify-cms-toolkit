@@ -5,6 +5,7 @@ export const CompilerOptions = z.object({
   dryRun: z.boolean().optional(),
   eslintConfig: z.string().optional(),
   exitOnError: z.boolean().optional(),
+  narrowSlugs: z.boolean().optional(),
   markdownLoaderIdentifier: z.string(),
   markdownLoaderModule: z.string(),
   markdownTypeIdentifier: z.string(),

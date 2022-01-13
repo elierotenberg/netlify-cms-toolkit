@@ -1,5 +1,6 @@
 import { ts } from "ts-morph";
 
+import { CollectionAstNode } from "./Parser";
 import {
   Field,
   FilesCollection,
@@ -15,6 +16,7 @@ import {
   SelectFieldOption,
   tagCollection,
 } from "./Schema";
+import { deduplicate, findStrict } from "./util";
 
 const {
   createArrayTypeNode,
@@ -43,6 +45,7 @@ const { SyntaxKind } = ts;
 type TypeEmitterOptions = {
   readonly markdownTypeModule: string;
   readonly markdownTypeIdentifier: string;
+  readonly narrowSlugs?: boolean;
   readonly raw?: boolean;
   readonly sourceLocation?: boolean;
 };
@@ -205,6 +208,27 @@ const createLocaleTypeNode = (locales: string[]): ts.TypeNode =>
     locales.map((locale) => createLiteralTypeNode(createStringLiteral(locale))),
   );
 
+const createSlugTypeNode = (
+  opts: TypeEmitterOptions,
+  slugs: string[],
+): ts.TypeNode => {
+  if (!opts.narrowSlugs) {
+    return createKeywordTypeNode(SyntaxKind.StringKeyword);
+  }
+
+  if (slugs.length === 0) {
+    return createKeywordTypeNode(SyntaxKind.NeverKeyword);
+  }
+
+  if (slugs.length === 1) {
+    return createLiteralTypeNode(createStringLiteral(slugs[0]));
+  }
+
+  return createUnionTypeNode(
+    slugs.map((slug) => createLiteralTypeNode(createStringLiteral(slug))),
+  );
+};
+
 const createCollectionTypeNode = (
   opts: TypeEmitterOptions,
   {
@@ -213,18 +237,20 @@ const createCollectionTypeNode = (
     kind,
     i18n,
     fields,
+    slugs,
   }: {
     readonly collection: string;
     readonly file?: string;
     readonly kind: string;
     readonly i18n?: FolderCollectionI18n | FilesCollectionI18n;
     readonly fields: Field[];
+    readonly slugs: string[];
   },
 ): ts.TypeNode => {
   const properties: [key: string, type: ts.TypeNode][] = [
     [`collection`, createLiteralTypeNode(createStringLiteral(collection))],
     [`kind`, createLiteralTypeNode(createStringLiteral(kind))],
-    [`slug`, createKeywordTypeNode(SyntaxKind.StringKeyword)],
+    [`slug`, createSlugTypeNode(opts, slugs)],
     [
       `locale`,
       i18n
@@ -265,18 +291,21 @@ const createCollectionTypeNode = (
 const createFolderCollectionTypeNode = (
   opts: TypeEmitterOptions,
   collection: FolderTaggedCollection,
+  slugs: string[],
 ): ts.TypeNode =>
   createCollectionTypeNode(opts, {
     collection: collection.name,
     kind: `folder`,
     fields: collection.fields,
     i18n: collection.i18n,
+    slugs,
   });
 
 const createFilesCollectionItemTypeNode = (
   opts: TypeEmitterOptions,
   collection: FilesCollection,
   item: FilesCollectionItem,
+  slugs: string[],
 ): ts.TypeNode => {
   return createCollectionTypeNode(opts, {
     collection: collection.name,
@@ -284,12 +313,14 @@ const createFilesCollectionItemTypeNode = (
     fields: item.fields,
     file: item.name,
     i18n: item.i18n,
+    slugs,
   });
 };
 
 const createSchemaTypeNode = (
   opts: TypeEmitterOptions,
   schema: Schema,
+  collectionAstNodes: CollectionAstNode[],
 ): ts.TypeNode =>
   createTypeLiteralNode([
     createPropertySignature(
@@ -305,33 +336,55 @@ const createSchemaTypeNode = (
       `collection`,
       undefined,
       createTypeLiteralNode(
-        schema.collections
-          .map(tagCollection)
-          .map((collection) =>
-            createPropertySignature(
-              [],
-              createComputedPropertyName(createStringLiteral(collection.name)),
-              undefined,
-              collection.kind === `folder`
-                ? createFolderCollectionTypeNode(opts, collection)
-                : createTypeLiteralNode(
-                    collection.files.map((item) =>
-                      createPropertySignature(
-                        [],
-                        createComputedPropertyName(
-                          createStringLiteral(item.name),
-                        ),
-                        undefined,
-                        createFilesCollectionItemTypeNode(
-                          opts,
-                          collection,
-                          item,
+        schema.collections.map(tagCollection).map((collection) =>
+          createPropertySignature(
+            [],
+            createComputedPropertyName(createStringLiteral(collection.name)),
+            undefined,
+            collection.kind === `folder`
+              ? createFolderCollectionTypeNode(
+                  opts,
+                  collection,
+                  deduplicate(
+                    findStrict(
+                      collectionAstNodes,
+                      (collectionAstNode) =>
+                        collectionAstNode.collection.name === collection.name,
+                    ).contents.map((content) => content.slug),
+                  ),
+                )
+              : createTypeLiteralNode(
+                  collection.files.map((item) =>
+                    createPropertySignature(
+                      [],
+                      createComputedPropertyName(
+                        createStringLiteral(item.name),
+                      ),
+                      undefined,
+                      createFilesCollectionItemTypeNode(
+                        opts,
+                        collection,
+                        item,
+                        deduplicate(
+                          findStrict(
+                            collectionAstNodes,
+                            (collectionAstNode) =>
+                              collectionAstNode.collection.name ===
+                              collection.name,
+                          )
+                            .contents.filter(
+                              (content) =>
+                                content.kind === `files` &&
+                                content.file === item.name,
+                            )
+                            .map((content) => content.slug),
                         ),
                       ),
                     ),
                   ),
-            ),
+                ),
           ),
+        ),
       ),
     ),
   ]);
@@ -339,13 +392,14 @@ const createSchemaTypeNode = (
 export const createSchemaTypeAliasDeclaration = (
   opts: TypeEmitterOptions,
   schema: Schema,
+  collectionAstNodes: CollectionAstNode[],
 ): ts.TypeAliasDeclaration =>
   createTypeAliasDeclaration(
     [],
     [createModifier(SyntaxKind.ExportKeyword)],
     `Schema`,
     [],
-    createSchemaTypeNode(opts, schema),
+    createSchemaTypeNode(opts, schema, collectionAstNodes),
   );
 
 const createContentsTypeNode = (schema: Schema): ts.TypeNode =>

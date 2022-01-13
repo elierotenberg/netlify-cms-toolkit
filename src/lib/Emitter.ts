@@ -22,6 +22,7 @@ import { assertZod } from "./Zod";
 
 const {
   createArrayLiteralExpression,
+  createArrayTypeNode,
   createArrowFunction,
   createCallExpression,
   createComputedPropertyName,
@@ -29,6 +30,8 @@ const {
   createImportClause,
   createImportDeclaration,
   createImportSpecifier,
+  createIndexedAccessTypeNode,
+  createLiteralTypeNode,
   createModifier,
   createNamedImports,
   createNewExpression,
@@ -39,6 +42,7 @@ const {
   createStringLiteral,
   createToken,
   createTypeReferenceNode,
+  createTypeOperatorNode,
   createVariableDeclaration,
   createVariableDeclarationList,
   createVariableStatement,
@@ -74,6 +78,7 @@ type EmitterOptions = {
   readonly markdownLoaderIdentifier: string;
   readonly markdownTypeModule: string;
   readonly markdownTypeIdentifier: string;
+  readonly narrowSlugs?: boolean;
   readonly raw?: boolean;
   readonly sourceLocation?: boolean;
   readonly eslintConfig?: string;
@@ -378,6 +383,33 @@ const createMarkdownLoaderImportDeclaration = (
     createStringLiteral(opts.markdownLoaderModule),
   );
 
+const createLocalesDeclaration = (locales: string[]): ts.Node =>
+  createVariableStatement(
+    [createModifier(ts.SyntaxKind.ExportKeyword)],
+    createVariableDeclarationList(
+      [
+        createVariableDeclaration(
+          createIdentifier(`locales`),
+          undefined,
+          createTypeOperatorNode(
+            SyntaxKind.ReadonlyKeyword,
+            createArrayTypeNode(
+              createIndexedAccessTypeNode(
+                createTypeReferenceNode(createIdentifier(`Schema`), undefined),
+                createLiteralTypeNode(createStringLiteral(`locale`)),
+              ),
+            ),
+          ),
+          createArrayLiteralExpression(
+            locales.map((locale) => createStringLiteral(locale)),
+            false,
+          ),
+        ),
+      ],
+      ts.NodeFlags.Const,
+    ),
+  );
+
 const createIndexTsNodes = (
   opts: EmitterOptions,
   ctx: Context,
@@ -391,9 +423,14 @@ const createIndexTsNodes = (
   const schemaTypeAliasDeclaration = createSchemaTypeAliasDeclaration(
     opts,
     schema,
+    collections,
   );
   const contentsTypeAliasDeclaration =
     createContentsTypeAliasDeclaration(schema);
+
+  const localesDeclaration = createLocalesDeclaration(
+    schema.i18n?.locales ?? [],
+  );
 
   const contentsDeclaration = createVariableStatement(
     [createModifier(SyntaxKind.ExportKeyword)],
@@ -414,6 +451,7 @@ const createIndexTsNodes = (
     markdownLoaderImportDeclaration,
     markdownTypeImportDeclaration,
     schemaTypeAliasDeclaration,
+    localesDeclaration,
     contentsTypeAliasDeclaration,
     contentsDeclaration,
   ];

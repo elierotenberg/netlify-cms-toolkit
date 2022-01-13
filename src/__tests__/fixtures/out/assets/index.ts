@@ -15,7 +15,7 @@ export type Schema = {
     [`pages`]: {
       collection: `pages`;
       kind: `folder`;
-      slug: string;
+      slug: `rich-text-example`;
       locale: Schema[`locale`];
       props: {
         title: string;
@@ -25,7 +25,7 @@ export type Schema = {
     [`guide_tags`]: {
       collection: `guide_tags`;
       kind: `folder`;
-      slug: string;
+      slug: `animals` | `plants`;
       locale: Schema[`locale`];
       props: {
         title: string;
@@ -34,7 +34,7 @@ export type Schema = {
     [`guides`]: {
       collection: `guides`;
       kind: `folder`;
-      slug: string;
+      slug: `about-animals-and-plants` | `about-animals` | `about-plants`;
       locale: Schema[`locale`];
       props: {
         title: string;
@@ -45,7 +45,7 @@ export type Schema = {
     [`questionnaires`]: {
       collection: `questionnaires`;
       kind: `folder`;
-      slug: string;
+      slug: `questionnaire-1`;
       locale: Schema[`locale`];
       props: {
         title: string;
@@ -62,7 +62,7 @@ export type Schema = {
         file: `site`;
         collection: `translations`;
         kind: `files`;
-        slug: string;
+        slug: `site`;
         locale: Schema[`locale`];
         props: {
           name: string;
@@ -74,7 +74,7 @@ export type Schema = {
         file: `interactions`;
         collection: `translations`;
         kind: `files`;
-        slug: string;
+        slug: `interactions`;
         locale: Schema[`locale`];
         props: {
           welcome: string;
@@ -86,7 +86,7 @@ export type Schema = {
     [`kitchen_sink`]: {
       collection: `kitchen_sink`;
       kind: `folder`;
-      slug: string;
+      slug: `example-1`;
       locale: null;
       props: {
         title: string;
@@ -124,6 +124,8 @@ export type Schema = {
     };
   };
 };
+
+export const locales: readonly Schema[`locale`][] = [`en`, `fr`, `pt`];
 
 export type Contents = Readonly<{
   [`pages`]: Schema[`collection`][`pages`][];

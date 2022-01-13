@@ -1,3 +1,11 @@
+export const findStrict = <T>(t: T[], predicate: (t: T) => boolean): T => {
+  const item = t.find((item) => predicate(item));
+  if (typeof item === `undefined`) {
+    throw new Error(`Item not found`);
+  }
+  return item;
+};
+
 export const mapAsync = async <T, U>(
   items: T[],
   fn: (item: T) => Promise<U>,
@@ -38,3 +46,6 @@ export const memoize = <K extends Record<string, unknown>, V>(
 
 export const isNotNull = <T>(input: T | null): input is Exclude<T, null> =>
   input !== null;
+
+export const deduplicate = <T>(t: T[]): T[] =>
+  t.reduce<T[]>((t, item) => (t.includes(item) ? t : [...t, item]), []);

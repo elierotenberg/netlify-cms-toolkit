@@ -22,6 +22,7 @@ export const compilerOptions: CompilerOptions = {
   markdownLoaderModule: `../../dummy-loader`,
   markdownTypeIdentifier: `default`,
   markdownTypeModule: `*.md`,
+  narrowSlugs: true,
   outFolder: `src/__tests__/fixtures/out`,
   raw: false,
   saveEmitResult: true,
