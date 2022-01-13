@@ -2,11 +2,11 @@ import { inspect } from "util";
 
 import { z, ZodError } from "zod";
 
-import { Json } from "./Json";
+import { Serializable } from "./Serializer";
 
 const StackFrame = z.object({
   fn: z.string(),
-  params: Json,
+  params: Serializable,
 });
 
 type StackFrame = z.infer<typeof StackFrame>;
@@ -18,7 +18,7 @@ export type Stack = z.infer<typeof Stack>;
 export const Warning = z.object({
   stack: Stack,
   message: z.string(),
-  details: Json,
+  details: Serializable,
 });
 
 export type Warning = z.infer<typeof Warning>;
@@ -57,6 +57,5 @@ export const captureWarning = <T>(
       details: {},
       stack,
     });
-    return null;
   }
 };

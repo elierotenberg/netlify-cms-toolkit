@@ -21,7 +21,6 @@ import {
   Field,
 } from "./Schema";
 import { indent, Logger } from "./Logger";
-import { Json, JsonRecord } from "./Json";
 import {
   Stack,
   Warning,
@@ -36,21 +35,24 @@ import {
   createFieldsSchema,
 } from "./Validator";
 import { assertZod } from "./Zod";
+import { Serializable, SerializableRecord } from "./Serializer";
 
 export type FieldAstNode = {
   readonly field: Field;
-  readonly value: FieldValue;
+  readonly value?: FieldValue;
   readonly objectChildren?: Record<string, FieldAstNode>;
   readonly arrayChildren?: FieldAstNode[];
 };
 
-const FieldAstNode: z.ZodSchema<FieldAstNode> = z.lazy(() =>
-  z.object({
-    field: Field,
-    value: Json,
-    objectChildren: z.record(FieldAstNode).optional(),
-    arrayChildren: z.array(FieldAstNode).optional(),
-  }),
+const FieldAstNode: z.ZodSchema<FieldAstNode> = z.lazy(
+  () =>
+    z.object({
+      field: Field,
+      value: Serializable.optional(),
+      objectChildren: z.record(FieldAstNode).optional(),
+      arrayChildren: z.array(FieldAstNode).optional(),
+    }),
+  { invalid_type_error: `FieldAstNode` },
 );
 
 const BaseContentAstNode = z.object({
@@ -108,7 +110,7 @@ const parseField = (
   ctx: ParserContext,
   parentStack: Stack,
   collection: TaggedCollection,
-  value: Json,
+  value: Serializable,
   field: Field,
 ): FieldAstNode => {
   const stack = pushStackFrame(parentStack, {
@@ -245,19 +247,19 @@ const resolveFilesCollectionI18nStructure = (
   return collection.i18n.structure;
 };
 
-const parseFileContents = (file: string, raw: string): JsonRecord => {
+const parseFileContents = (file: string, raw: string): SerializableRecord => {
   const { ext } = parsePath(file);
 
   if (ext === `.md` || ext === `.mdx`) {
     const { data, content } = parseMatter(raw);
-    return {
+    return SerializableRecord.parse({
       ...data,
       body: content,
-    };
+    });
   }
 
   if (ext === `.yml` || ext === `.yml`) {
-    return JsonRecord.parse(load(raw));
+    return SerializableRecord.parse(load(raw));
   }
 
   throw new Error(`Unknown file extension: ${ext}`);
@@ -294,7 +296,7 @@ const parseProps = (
   ctx: ParserContext,
   stack: Stack,
   collection: TaggedCollection,
-  props: Json,
+  props: Serializable,
   fields: Field[],
 ): null | FieldAstNode[] =>
   captureWarning(

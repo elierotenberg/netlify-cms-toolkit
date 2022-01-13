@@ -7,7 +7,6 @@ import {
   ZodTypeAny,
 } from "zod";
 
-import { JsonOrDate } from "./Json";
 import {
   Field,
   ListField,
@@ -17,6 +16,7 @@ import {
   SelectField,
   SelectFieldOption,
 } from "./Schema";
+import { Serializable } from "./Serializer";
 import { memoize } from "./util";
 
 export const BooleanFieldValue = z.boolean({
@@ -45,7 +45,7 @@ export const FileFieldValue = z.string({
   invalid_type_error: `File Field`,
 });
 
-export const HiddenFieldValue = JsonOrDate;
+export const HiddenFieldValue = Serializable;
 
 export const ImageFieldValue = z.string({ invalid_type_error: `Image Field` });
 
@@ -53,7 +53,7 @@ export const StringListFieldValue = z.array(z.string(), {
   invalid_type_error: `String List Field`,
 });
 
-export const RecordListFieldValue = z.array(JsonOrDate, {
+export const RecordListFieldValue = z.array(Serializable, {
   invalid_type_error: `Record List Field`,
 });
 
@@ -79,7 +79,7 @@ export const NumberFieldValue = z.union(
   { invalid_type_error: `Number Field` },
 );
 
-export const ObjectFieldValue = z.record(JsonOrDate, {
+export const ObjectFieldValue = z.record(Serializable, {
   invalid_type_error: `Object Field`,
 });
 
