@@ -49,6 +49,9 @@ Options:
                                                              [string] [required]
       --markdownTypeModule        Markdown type module (e.g. '*.mdx' or
                                   '../markdown-content')     [string] [required]
+      --narrowSlugs               Narrow slug types to match parse results
+                                  (instead of 'string')
+                                                      [boolean] [default: false]
   -o, --outFolder                 Output folder              [string] [required]
   -r, --raw                       Include raw contents[boolean] [default: false]
       --saveParseResult           Save intermediate parse results

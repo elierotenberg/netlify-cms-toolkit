@@ -55,6 +55,11 @@ const main = async (): Promise<void> => {
               type: `string`,
               demandOption: true,
             })
+            .option(`narrowSlugs`, {
+              describe: `Narrow slug types to match parse results (instead of 'string')`,
+              type: `boolean`,
+              default: false,
+            })
             .option(`outFolder`, {
               alias: `o`,
               describe: `Output folder`,
