@@ -1,23 +1,23 @@
 import { z } from "zod";
 
-import { Casing } from "./util";
-
 export const CompilerOptions = z.object({
   cwd: z.string(),
-  schema: z.string(),
-  outFolder: z.string(),
-  saveParseResult: z.boolean().optional(),
-  saveEmitResult: z.boolean().optional(),
-  raw: z.boolean().optional(),
-  markdownLoader: z.string(),
-  eslintConfig: z.string().optional(),
-  markdownPropertyCasing: Casing.optional(),
-  propertyCasing: Casing.optional(),
-  watch: z.boolean().optional(),
-  silent: z.boolean().optional(),
   dryRun: z.boolean().optional(),
-  useLockfile: z.boolean().optional(),
+  eslintConfig: z.string().optional(),
   exitOnError: z.boolean().optional(),
+  markdownLoaderIdentifier: z.string(),
+  markdownLoaderModule: z.string(),
+  markdownTypeIdentifier: z.string(),
+  markdownTypeModule: z.string(),
+  outFolder: z.string(),
+  raw: z.boolean().optional(),
+  saveEmitResult: z.boolean().optional(),
+  saveParseResult: z.boolean().optional(),
+  schema: z.string(),
+  silent: z.boolean().optional(),
+  sourceLocation: z.boolean().optional(),
+  useLockfile: z.boolean().optional(),
+  watch: z.boolean().optional(),
 });
 
 export type CompilerOptions = z.infer<typeof CompilerOptions>;

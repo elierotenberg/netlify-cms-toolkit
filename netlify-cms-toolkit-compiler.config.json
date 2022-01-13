@@ -1,16 +1,18 @@
 {
-  "markdownLoader": "../dummy-loader",
+  "dryRun": false,
+  "eslintConfig": ".eslintrc.js",
+  "exitOnError": false,
+  "markdownLoaderIdentifier": "default",
+  "markdownLoaderModule": "../../dummy-loader",
+  "markdownTypeIdentifier": "default",
+  "markdownTypeModule": "*.md",
   "outFolder": "src/__tests__/fixtures/out",
-  "schema": "public/admin/config.yml",
-  "silent": false,
+  "raw": false,
   "saveEmitResult": true,
   "saveParseResult": true,
-  "dryRun": false,
-  "raw": false,
-  "watch": false,
-  "eslintConfig": ".eslintrc.js",
-  "markdownPropertyCasing": "pascalCase",
-  "propertyCasing": "camelCase",
+  "schema": "public/admin/config.yml",
+  "silent": false,
+  "sourceLocation": true,
   "useLockfile": true,
-  "exitOnError": false
+  "watch": false
 }

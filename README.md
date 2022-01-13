@@ -14,9 +14,9 @@ The compiler turns your `config.yml` and content files (`.md`, `.yml`...) into a
 
 What you get:
 
-- a statically typed index file in TypeScript (see [example](src/__tests__/fixtures/out/index.ts)),
+- a statically typed index file in TypeScript (see [example](src/__tests__/fixtures/out/assets/index.ts)),
 - splitted assets for each markdown field friendly to dynamic import, including collections with `single_file` i18n (see [examples](src/__tests__/fixtures/out/assets)),
-- a statically typed runtime to use your contents type-safely in your app (see [example](src/__tests__/runtime.test.ts)).
+- a statically schema your contents type-safely in your app.
 
 The compiler is completely agnostic of your site generator, but it has been designed with NextJS in mind.
 
@@ -28,38 +28,42 @@ The compiler is completely agnostic of your site generator, but it has been desi
 Compile contents and generate index file
 
 Options:
-      --version                 Show version number                    [boolean]
-      --config                  Path to JSON config file
-      --help                    Show help                              [boolean]
-      --cwd                     Working directory (defaults to proces.cwd)
-                                                                       [boolean]
-  -i, --schema                  Netlify config file (config.yml)
-                                                             [string] [required]
-  -o, --outFolder               Output folder                [string] [required]
-      --saveParseResult         Save intermediate parse results
+      --version                   Show version number                  [boolean]
+      --config                    Path to JSON config file
+      --help                      Show help                            [boolean]
+      --cwd                       Working directory (defaults to proces.cwd)
+                [string] [default: "/home/elierotenberg/gh/netlify-cms-toolkit"]
+      --dryRun                    Dry run (don't write output files)
                                                       [boolean] [default: false]
-      --saveEmitResult          Save intermediate emit results
-                                                      [boolean] [default: false]
-      --useLockfile             Use lock file to avoid write conflicts
-                                                       [boolean] [default: true]
-  -r, --raw                     Include raw contents  [boolean] [default: false]
-      --markdownLoader          Loader module (e.g. 'next/dynamic')
-                                                             [string] [required]
-      --eslintConfig            Custom eslint config fig (e.g. .eslintrc.js)
+      --eslintConfig              Custom eslint config fig (e.g. .eslintrc.js)
                                                                         [string]
-      --markdownPropertyCasing  Casing convention for markdown property naming
-         [choices: "preserve", "camelCase", "pascalCase", "snakeCase"] [default:
-                                                                     "preserve"]
-      --propertyCasing          Casing convention for non-markdown property
-                                naming
-                   [choices: "preserve", "camelCase", "pascalCase", "snakeCase"]
-  -w, --watch                   Recompile on changes  [boolean] [default: false]
-      --exitOnError             Exit on error in watch mode
+      --exitOnError               Exit on error in watch mode
                                                        [boolean] [default: true]
-  -s, --silent                  Suppress console output
+      --markdownLoaderIdentifier  Markdown loader identifier within markdown
+                                  loader module (e.g. 'default' or 'load')
+                                                             [string] [required]
+      --markdownLoaderModule      Markdown loader module (e.g. 'next/dynamic' or
+                                  '../markdown-loader')      [string] [required]
+      --markdownTypeIdentifier    Markdown type identifier within markdown type
+                                  module (e.g. 'default' or 'MDXContent')
+                                                             [string] [required]
+      --markdownTypeModule        Markdown type module (e.g. '*.mdx' or
+                                  '../markdown-content')     [string] [required]
+  -o, --outFolder                 Output folder              [string] [required]
+  -r, --raw                       Include raw contents[boolean] [default: false]
+      --saveParseResult           Save intermediate parse results
                                                       [boolean] [default: false]
-      --dryRun                  Dry run (don't write output files)
+      --saveEmitResult            Save intermediate emit results
                                                       [boolean] [default: false]
+  -i, --schema                    Netlify config file (config.yml)
+                                                             [string] [required]
+  -s, --silent                    Suppress console output
+                                                      [boolean] [default: false]
+      --sourceLocation            Include source location in output
+                                                      [boolean] [default: false]
+      --useLockfile               Use lock file to avoid write conflicts
+                                                       [boolean] [default: true]
+  -w, --watch                     Recompile on changes[boolean] [default: false]
 ```
 
 You can provide a configuration file (see [example](netlify-cms-toolkit-compiler.json.json)).
@@ -71,23 +75,23 @@ Compiled `index.ts` provides a very robust and safe framework for working with c
 For example, you can create a `BlogPost` React component that will render contents from a folder collection:
 
 ```tsx
-import { contents, Content, findAll, findUnique } from "contents/out";
+import { contents, Schema } from "./src/contents/out/assets";
 
-type BlogPostContent = Extract<Content, { collection: "blog_posts" }>;
+type BlogPost = Schema["collection"]["blog_post"];
 
-const { findUnique } = createRuntime(contents);
+const BlogPost: FunctionComponent<{ slug: string }> = ({ slug }) => {
+  const blogPost = contents.blog_post.find(
+    (blogPost) => blogPost.slug === slug
+  );
 
-const BlogPost: FunctionComponent<{ slug: BlogPostContent["slug"] }> = ({
-  slug,
-}) => {
-  const blogPost = findUnique({
-    collection: "blog_posts",
-    slug,
-  });
+  if (!blogPost) {
+    return <NotFound />;
+  }
 
   return (
     <div>
-      <blogPost.Body /> {/* <== type safe */}
+      {blogPost.title} {/* <== type safe */}
+      <blogPost.body /> {/* <== type safe */}
     </div>
   );
 };
@@ -109,3 +113,5 @@ This is especially useful in dev mode with hot reloading. For example, if you ar
   }
 }
 ```
+
+Watch mode tries to be atomic, i.e. to write all contents at once to avoid tripping Webpack or other filesystem watchers.

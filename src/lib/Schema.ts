@@ -5,73 +5,151 @@ const FieldI18n = z.union([z.literal(true), z.literal(`duplicate`)]);
 const BaseField = z.object({
   name: z.string(),
   i18n: FieldI18n.optional(),
+  required: z.boolean().optional(),
 });
 
 type BaseField = z.infer<typeof BaseField>;
 
-const SimpleField = BaseField.extend({
-  widget: z.union([
-    z.literal(`boolean`),
-    z.literal(`code`),
-    z.literal(`color`),
-    z.literal(`date`),
-    z.literal(`datetime`),
-    z.literal(`file`),
-    z.literal(`hidden`),
-    z.literal(`image`),
-    z.literal(`map`),
-    z.literal(`markdown`),
-    z.literal(`number`),
-    z.literal(`relation`),
-    z.literal(`select`),
-    z.literal(`string`),
-    z.literal(`text`),
-  ]),
+export const BooleanField = BaseField.extend({
+  widget: z.literal(`boolean`),
 });
+export type BooleanField = z.infer<typeof BooleanField>;
 
-type SimpleField = z.infer<typeof SimpleField>;
+export const CodeField = BaseField.extend({
+  widget: z.literal(`code`),
+});
+export type CodeField = z.infer<typeof CodeField>;
+
+export const ColorField = BaseField.extend({
+  widget: z.literal(`color`),
+});
+export type ColorField = z.infer<typeof ColorField>;
+
+export const DateTimeField = BaseField.extend({
+  widget: z.literal(`datetime`),
+});
+export type DateTimeField = z.infer<typeof DateTimeField>;
+
+export const FileField = BaseField.extend({
+  widget: z.literal(`file`),
+  allow_multiple: z.boolean().optional(),
+});
+export type FileField = z.infer<typeof FileField>;
+
+const HiddenField = BaseField.extend({
+  widget: z.literal(`hidden`),
+});
+export type HiddenField = z.infer<typeof HiddenField>;
+
+const ImageField = BaseField.extend({
+  widget: z.literal(`image`),
+});
+export type ImageField = z.infer<typeof ImageField>;
+
+export type ListField = BaseField & {
+  readonly widget: `list`;
+  readonly field?: Field;
+  readonly fields?: Field[];
+  readonly allow_add?: boolean;
+  readonly min?: number;
+  readonly max?: number;
+};
+export const ListField: z.ZodSchema<ListField> = z.lazy(() =>
+  BaseField.extend({
+    widget: z.literal(`list`),
+    field: Field.optional(),
+    fields: z.array(Field).optional(),
+    allow_add: z.boolean().optional(),
+    min: z.number().optional(),
+    max: z.number().optional(),
+  }),
+);
+
+export const MapField = BaseField.extend({
+  widget: z.literal(`map`),
+});
+export type MapField = z.infer<typeof MapField>;
+
+export const MarkdownField = BaseField.extend({
+  widget: z.literal(`markdown`),
+});
+export type MarkdownField = z.infer<typeof MarkdownField>;
+
+export const NumberField = BaseField.extend({
+  widget: z.literal(`number`),
+  value_type: z.union([z.literal(`int`), z.literal(`float`)]).optional(),
+  min: z.number().optional(),
+  max: z.number().optional(),
+});
+export type NumberField = z.infer<typeof NumberField>;
 
 export type ObjectField = BaseField & {
   readonly widget: `object`;
   readonly fields: Field[];
 };
-
-const ObjectField: z.ZodSchema<ObjectField> = z.lazy(() =>
+export const ObjectField: z.ZodSchema<ObjectField> = z.lazy(() =>
   BaseField.extend({
     widget: z.literal(`object`),
     fields: z.array(Field),
   }),
 );
 
-type ListField = BaseField & {
-  readonly widget: `list`;
-  readonly field?: Field;
-  readonly fields?: Field[];
-};
+const RelationField = BaseField.extend({
+  widget: z.literal(`relation`),
+  multiple: z.boolean().optional(),
+  min: z.number().optional(),
+  max: z.number().optional(),
+});
+export type RelationField = z.infer<typeof RelationField>;
 
-const ListField: z.ZodSchema<ListField> = z.lazy(() =>
-  BaseField.extend({
-    widget: z.literal(`list`),
-    fields: z.array(Field).optional(),
-    field: Field.optional(),
+export const SelectFieldOption = z.union([
+  z.string(),
+  z.object({
+    label: z.string(),
+    value: z.string(),
   }),
-);
+]);
 
-const CompositeField = z.union([ObjectField, ListField]);
-type CompositeField = z.infer<typeof CompositeField>;
+export type SelectFieldOption = z.infer<typeof SelectFieldOption>;
 
-export const Field = z.union([SimpleField, CompositeField]);
+export const SelectField = BaseField.extend({
+  widget: z.literal(`select`),
+  options: z.array(SelectFieldOption).min(1),
+  multiple: z.boolean().optional(),
+  min: z.number().optional(),
+  max: z.number().optional(),
+});
+export type SelectField = z.infer<typeof SelectField>;
 
+export const StringField = BaseField.extend({
+  widget: z.literal(`string`),
+});
+export type StringField = z.infer<typeof StringField>;
+
+export const TextField = BaseField.extend({
+  widget: z.literal(`text`),
+});
+export type TextField = z.infer<typeof TextField>;
+
+export const Field = z.union([
+  BooleanField,
+  CodeField,
+  ColorField,
+  DateTimeField,
+  FileField,
+  HiddenField,
+  ImageField,
+  ListField,
+  MapField,
+  MarkdownField,
+  NumberField,
+  ObjectField,
+  RelationField,
+  SelectField,
+  StringField,
+  TextField,
+]);
 export type Field = z.infer<typeof Field>;
-
-export const isCompositeField = (field: Field): field is CompositeField => {
-  try {
-    CompositeField.parse(field);
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 const Fields = z.array(Field);
 
@@ -101,6 +179,7 @@ export const FolderCollectionI18n = z.union([
     structure: FolderCollectionI18nStructure,
   }),
 ]);
+export type FolderCollectionI18n = z.infer<typeof FolderCollectionI18n>;
 
 const FilesCollectionI18nStructure = SingleFileI18nStructure;
 
@@ -109,11 +188,12 @@ export type FilesCollectionI18nStructure = z.infer<
 >;
 
 export const FilesCollectionI18n = z.union([
-  z.literal(true),
+  z.boolean(),
   z.object({
     structure: FilesCollectionI18nStructure,
   }),
 ]);
+export type FilesCollectionI18n = z.infer<typeof FilesCollectionI18n>;
 
 const FolderCollection = z.object({
   name: z.string(),
@@ -145,13 +225,13 @@ const Collection = z.union([FolderCollection, FilesCollection]);
 
 export type Collection = z.infer<typeof Collection>;
 
-const FolderTaggedCollection = FolderCollection.extend({
+export const FolderTaggedCollection = FolderCollection.extend({
   kind: z.literal(`folder`),
 });
 
 export type FolderTaggedCollection = z.infer<typeof FolderTaggedCollection>;
 
-const FilesTaggedCollection = FilesCollection.extend({
+export const FilesTaggedCollection = FilesCollection.extend({
   kind: z.literal(`files`),
 });
 export type FilesTaggedCollection = z.infer<typeof FilesTaggedCollection>;

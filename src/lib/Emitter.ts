@@ -1,10 +1,9 @@
 import { join, resolve } from "path";
-import { readFile } from "fs/promises";
 
 import { z } from "zod";
 import { ts } from "ts-morph";
-import { paramCase } from "change-case";
 import { ESLint } from "eslint";
+import { paramCase } from "change-case";
 
 import {
   CollectionAstNode,
@@ -13,29 +12,32 @@ import {
   ParseResult,
 } from "./Parser";
 import { Collection, Field } from "./Schema";
-import { pushStackFrame, pushWarning, Stack, Warning } from "./Stack";
 import { Logger } from "./Logger";
-import { applyCasing, Casing } from "./util";
+import {
+  createContentsTypeAliasDeclaration,
+  createMarkdownTypeImportDeclaration,
+  createSchemaTypeAliasDeclaration,
+} from "./TypeEmitter";
+import { assertZod } from "./Zod";
 
 const {
   createArrayLiteralExpression,
   createArrowFunction,
-  createAsExpression,
   createCallExpression,
+  createComputedPropertyName,
   createIdentifier,
   createImportClause,
   createImportDeclaration,
-  createIndexedAccessTypeNode,
+  createImportSpecifier,
   createModifier,
-  createKeywordTypeNode,
+  createNamedImports,
+  createNewExpression,
   createNoSubstitutionTemplateLiteral,
   createNull,
   createObjectLiteralExpression,
   createPropertyAssignment,
   createStringLiteral,
   createToken,
-  createTypeAliasDeclaration,
-  createTypeQueryNode,
   createTypeReferenceNode,
   createVariableDeclaration,
   createVariableDeclarationList,
@@ -59,7 +61,6 @@ const Asset = z.object({
 type Asset = z.infer<typeof Asset>;
 
 type Context = {
-  readonly warnings: Warning[];
   readonly markdownAssets: Asset[];
 };
 
@@ -69,11 +70,13 @@ const pushMarkdownAsset = (ctx: Context, markdownAsset: Asset): void => {
 
 type EmitterOptions = {
   readonly outFolder: string;
-  readonly markdownLoader: string;
+  readonly markdownLoaderModule: string;
+  readonly markdownLoaderIdentifier: string;
+  readonly markdownTypeModule: string;
+  readonly markdownTypeIdentifier: string;
   readonly raw?: boolean;
+  readonly sourceLocation?: boolean;
   readonly eslintConfig?: string;
-  readonly markdownPropertyCasing?: Casing;
-  readonly propertyCasing?: Casing;
 };
 
 const EmitResult = z.object({
@@ -110,7 +113,6 @@ const pushFieldStack = (
 
 const createMarkdownAssetPath = (
   ctx: Context,
-  stack: Stack,
   { collection, slug, locale, path }: FieldStack,
 ): string => {
   const parts = [collection.name];
@@ -127,31 +129,15 @@ const createMarkdownAssetPath = (
       parts.push(fieldStackFrame.value);
     }
   }
-  const basePath = join(`assets`, ...parts.map((part) => paramCase(part)));
+  const basePath = join(...parts.map((part) => paramCase(part)));
   const fullPath = `${basePath}.md`;
   if (
     ctx.markdownAssets.some((markdownAsset) => markdownAsset.path === fullPath)
   ) {
-    pushWarning(ctx, {
-      message: `Markdown asset name conflict`,
-      stack,
-      details: { fullPath },
-    });
-    let k = 0;
-    while (
-      ctx.markdownAssets.some(
-        (markdownAsset) => markdownAsset.path === `${basePath}_${k}.md`,
-      )
-    ) {
-      k++;
-    }
-    return `${basePath}_${k}.md`;
+    throw new Error(`Markdown asset name conflict: ${fullPath}`);
   }
   return fullPath;
 };
-
-const createAsConstExpression = (expression: ts.Expression): ts.Expression =>
-  createAsExpression(expression, createTypeReferenceNode(`const`));
 
 const createJsonExpression = (value: unknown): ts.Expression =>
   ts.parseJsonText(``, JSON.stringify(value, null, 2)).statements[0].expression;
@@ -175,60 +161,30 @@ const createLoaderImportExpression = (
     ),
   ]);
 
-const applyMarkdownPropertyCasing = (
-  opts: EmitterOptions,
-  identifier: string,
-): string =>
-  applyCasing(
-    opts.markdownPropertyCasing ?? opts.propertyCasing ?? `preserve`,
-    identifier,
-  );
-
-const applyPropertyCasing = (
-  opts: EmitterOptions,
-  identifier: string,
-): string => applyCasing(opts.propertyCasing ?? `preserve`, identifier);
-
 const createFieldNodeExpression = (
   opts: EmitterOptions,
   ctx: Context,
-  parentStack: Stack,
   parentFieldStack: FieldStack,
   field: FieldAstNode,
 ): ts.Expression => {
-  const stack = pushStackFrame(parentStack, {
-    fn: `createFieldNodeExpression`,
-    params: { field },
-  });
   const fieldStack = pushFieldStack(parentFieldStack, {
     kind: `field`,
     field: field.field,
   });
-  if (field.field.widget === `markdown`) {
-    const path = createMarkdownAssetPath(ctx, stack, fieldStack);
-    const source = field.value;
-    if (typeof source !== `string`) {
-      pushWarning(ctx, {
-        message: `markdown field should be a string`,
-        stack,
-        details: { field },
-      });
-      return createNull();
-    }
-    const markdownAsset: Asset = {
-      path,
-      source,
-    };
-    pushMarkdownAsset(ctx, markdownAsset);
-    return createLoaderImportExpression(createIdentifier(`loadMarkdown`), path);
+
+  if (field.field.widget === `datetime`) {
+    assertZod(z.date(), field.value);
+    return createNewExpression(createIdentifier(`Date`), undefined, [
+      createStringLiteral(field.value.toISOString()),
+    ]);
   }
+
   if (field.field.widget === `list`) {
     return createArrayLiteralExpression(
       field.arrayChildren?.map((childFieldNode, index) =>
         createFieldNodeExpression(
           opts,
           ctx,
-          stack,
           pushFieldStack(fieldStack, {
             kind: `discriminator`,
             value: `${index}`,
@@ -238,19 +194,34 @@ const createFieldNodeExpression = (
       ) ?? [],
     );
   }
+
+  if (field.field.widget === `markdown`) {
+    const path = createMarkdownAssetPath(ctx, fieldStack);
+    const source = field.value;
+    assertZod(z.string(), source);
+    const markdownAsset: Asset = {
+      path,
+      source,
+    };
+    pushMarkdownAsset(ctx, markdownAsset);
+    return createLoaderImportExpression(createIdentifier(`loadMarkdown`), path);
+  }
+
+  if (field.field.widget === `number` && field.field.value_type === `float`) {
+    assertZod(z.string(), field.value);
+    return createJsonExpression(parseFloat(field.value));
+  }
+
   if (field.field.widget === `object`) {
     return createObjectLiteralExpression(
       Object.entries(field.objectChildren ?? {}).reduce(
         (properties, [key, childFieldNode]) => [
           ...properties,
           createPropertyAssignment(
-            childFieldNode.field.widget === `markdown`
-              ? applyMarkdownPropertyCasing(opts, key)
-              : applyPropertyCasing(opts, key),
+            createComputedPropertyName(createStringLiteral(key)),
             createFieldNodeExpression(
               opts,
               ctx,
-              stack,
               pushFieldStack(fieldStack, { kind: `discriminator`, value: key }),
               childFieldNode,
             ),
@@ -267,23 +238,26 @@ const createFieldNodeExpression = (
 const createContentNodeExpression = (
   opts: EmitterOptions,
   ctx: Context,
-  parentStack: Stack,
   content: ContentAstNode,
 ): ts.Expression => {
-  const stack = pushStackFrame(parentStack, {
-    fn: `createContentNodeExpression`,
-    params: { content },
-  });
-
-  return createObjectLiteralExpression([
-    createPropertyAssignment(
-      `sourceLocation`,
-      createStringLiteral(content.sourceLocation),
-    ),
+  const properties: ts.ObjectLiteralElementLike[] = [
     createPropertyAssignment(
       `collection`,
-      createStringLiteral(applyPropertyCasing(opts, content.collection.name)),
+      createStringLiteral(content.collection.name),
     ),
+    createPropertyAssignment(
+      `kind`,
+      createStringLiteral(content.collection.kind),
+    ),
+  ];
+
+  if (content.kind === `files`) {
+    properties.push(
+      createPropertyAssignment(`file`, createStringLiteral(content.file)),
+    );
+  }
+
+  properties.push(
     createPropertyAssignment(`slug`, createStringLiteral(content.slug)),
     createPropertyAssignment(
       `locale`,
@@ -293,117 +267,155 @@ const createContentNodeExpression = (
     ),
     createPropertyAssignment(
       `props`,
-      createFieldNodeExpression(
-        opts,
-        ctx,
-        stack,
-        {
-          collection: content.collection,
-          slug: content.slug,
-          locale: content.locale,
-          path: [],
-        },
-        content.rootFieldNode,
+      createObjectLiteralExpression(
+        content.propsNodes.map((propsNode) =>
+          createPropertyAssignment(
+            createComputedPropertyName(
+              createStringLiteral(propsNode.field.name),
+            ),
+            createFieldNodeExpression(
+              opts,
+              ctx,
+              {
+                collection: content.collection,
+                locale: content.locale,
+                path: [],
+                slug: content.slug,
+              },
+              propsNode,
+            ),
+          ),
+        ),
       ),
     ),
-    createPropertyAssignment(
-      `raw`,
-      opts.raw
-        ? createNoSubstitutionTemplateLiteral(content.sourceRaw)
-        : createNull(),
-    ),
-  ]);
+  );
+
+  if (opts.raw) {
+    properties.push(
+      createPropertyAssignment(
+        `raw`,
+        createNoSubstitutionTemplateLiteral(content.raw),
+      ),
+    );
+  }
+
+  if (opts.sourceLocation) {
+    properties.push(
+      createPropertyAssignment(
+        `sourceLocation`,
+        createStringLiteral(content.sourceLocation),
+      ),
+    );
+  }
+
+  return createObjectLiteralExpression(properties);
 };
 
-const createCollectionNodeExpressions = (
+const createCollectionExpression = (
   opts: EmitterOptions,
   ctx: Context,
-  parentStack: Stack,
   collection: CollectionAstNode,
-): ts.Expression[] => {
-  const stack = pushStackFrame(parentStack, {
-    fn: `createCollectionNodeExpression`,
-    params: {
-      collection,
-    },
-  });
-  return collection.contents.map((content) =>
-    createContentNodeExpression(opts, ctx, stack, content),
+): ts.Expression => {
+  if (collection.collection.kind === `folder`) {
+    return createArrayLiteralExpression(
+      collection.contents.map((content) =>
+        createContentNodeExpression(opts, ctx, content),
+      ),
+    );
+  }
+
+  const files = collection.collection.files.map((file) => file.name);
+
+  return createObjectLiteralExpression(
+    files.map((file) =>
+      createPropertyAssignment(
+        createComputedPropertyName(createStringLiteral(file)),
+        createArrayLiteralExpression(
+          collection.contents
+            .filter(
+              (content) => content.kind === `files` && content.file === file,
+            )
+            .map((content) => createContentNodeExpression(opts, ctx, content)),
+        ),
+      ),
+    ),
   );
 };
 
 const createContentsExpression = (
   opts: EmitterOptions,
   ctx: Context,
-  parentStack: Stack,
   collections: CollectionAstNode[],
-): ts.Expression => {
-  const stack = pushStackFrame(parentStack, {
-    fn: `createCollectionsExpression`,
-    params: {
-      collections,
-    },
-  });
-
-  return createAsConstExpression(
-    createArrayLiteralExpression(
-      collections.flatMap((collection) =>
-        createCollectionNodeExpressions(opts, ctx, stack, collection),
+): ts.Expression =>
+  createObjectLiteralExpression(
+    collections.map((collection) =>
+      createPropertyAssignment(
+        createComputedPropertyName(
+          createStringLiteral(collection.collection.name),
+        ),
+        createCollectionExpression(opts, ctx, collection),
       ),
     ),
   );
-};
+
+const createMarkdownLoaderImportDeclaration = (
+  opts: EmitterOptions,
+): ts.ImportDeclaration =>
+  createImportDeclaration(
+    [],
+    [],
+    createImportClause(
+      false,
+      undefined,
+      createNamedImports([
+        createImportSpecifier(
+          false,
+          createIdentifier(opts.markdownLoaderIdentifier),
+          createIdentifier(`loadMarkdown`),
+        ),
+      ]),
+    ),
+    createStringLiteral(opts.markdownLoaderModule),
+  );
 
 const createIndexTsNodes = (
   opts: EmitterOptions,
   ctx: Context,
-  parentStack: Stack,
-  collections: CollectionAstNode[],
+  { collections, schema }: ParseResult,
 ): ts.Node[] => {
-  const stack = pushStackFrame(parentStack, {
-    fn: `createIndextsNode`,
-    params: { collections },
-  });
-  const loadMarkdownIdentifier = createIdentifier(`loadMarkdown`);
-  const loadMarkdownImportStatement = createImportDeclaration(
-    [],
-    [],
-    createImportClause(false, loadMarkdownIdentifier, undefined),
-    createStringLiteral(opts.markdownLoader),
-  );
+  const markdownLoaderImportDeclaration =
+    createMarkdownLoaderImportDeclaration(opts);
+  const markdownTypeImportDeclaration =
+    createMarkdownTypeImportDeclaration(opts);
 
-  const contentsIdentifier = createIdentifier(`contents`);
-  const contentsDeclarationStatement = createVariableStatement(
+  const schemaTypeAliasDeclaration = createSchemaTypeAliasDeclaration(
+    opts,
+    schema,
+  );
+  const contentsTypeAliasDeclaration =
+    createContentsTypeAliasDeclaration(schema);
+
+  const contentsDeclaration = createVariableStatement(
     [createModifier(SyntaxKind.ExportKeyword)],
     createVariableDeclarationList(
       [
         createVariableDeclaration(
-          contentsIdentifier,
+          `contents`,
           undefined,
-          undefined,
-          createContentsExpression(opts, ctx, stack, collections),
+          createTypeReferenceNode(`Contents`),
+          createContentsExpression(opts, ctx, collections),
         ),
       ],
       NodeFlags.Const,
     ),
   );
 
-  const contentTypeIdentifier = createIdentifier(`Content`);
-  const contentTypeDeclaration = createTypeAliasDeclaration(
-    [],
-    [createModifier(SyntaxKind.ExportKeyword)],
-    contentTypeIdentifier,
-    undefined,
-    createIndexedAccessTypeNode(
-      createTypeQueryNode(contentsIdentifier),
-      createKeywordTypeNode(SyntaxKind.NumberKeyword),
-    ),
-  );
-
   return [
-    loadMarkdownImportStatement,
-    contentsDeclarationStatement,
-    contentTypeDeclaration,
+    markdownLoaderImportDeclaration,
+    markdownTypeImportDeclaration,
+    schemaTypeAliasDeclaration,
+    contentsTypeAliasDeclaration,
+    contentsDeclaration,
   ];
 };
 
@@ -443,56 +455,32 @@ const headerRawSource = `
   .filter((line) => line.length > 0)
   .join(`\n`);
 
-const exportRuntimeRawSource = `
-const runtime = createRuntime(contents);
-
-export const findAll = runtime.findAll;
-export const findUnique = runtime.findUnique;
-`;
-
 export const emit = async (
   cwd: string,
   opts: EmitterOptions,
   parseResult: ParseResult,
 ): Promise<EmitResult> => {
   const ctx: Context = {
-    warnings: [],
     markdownAssets: [],
   };
-  const stack = pushStackFrame([], { fn: `emit`, params: { parseResult } });
-  const indexPath = resolve(cwd, opts.outFolder, `index.ts`);
+  const indexPath = resolve(cwd, opts.outFolder, `assets.next`, `index.ts`);
   const indexTsFile = createSourceFile(indexPath, ``, ScriptTarget.Latest);
   const tsPrinter = createPrinter();
 
   const printTsNodeStatement = (node: ts.Node): string =>
     `${tsPrinter.printNode(EmitHint.Unspecified, node, indexTsFile)};\n`;
 
-  const indexTsNodes = createIndexTsNodes(
-    opts,
-    ctx,
-    stack,
-    parseResult.collections,
-  )
+  const indexTsNodes = createIndexTsNodes(opts, ctx, parseResult)
     .map(printTsNodeStatement)
     .join(`\n`);
 
-  const runtimeRawSource = await readFile(
-    join(__dirname, `..`, `..`, `src`, `lib`, `runtime.ts`),
-    { encoding: `utf-8` },
-  );
-
-  const indexRawSource = [
-    headerRawSource,
-    indexTsNodes,
-    runtimeRawSource.replace(`export { createRuntime };`, ``),
-    exportRuntimeRawSource,
-  ].join(`\n`);
+  const indexRawSource = [headerRawSource, indexTsNodes].join(`\n`);
 
   const indexSource = await formatSource(opts, indexPath, indexRawSource);
 
   return {
     index: {
-      path: indexPath,
+      path: `index.ts`,
       source: indexSource,
     },
     markdownAssets: ctx.markdownAssets,

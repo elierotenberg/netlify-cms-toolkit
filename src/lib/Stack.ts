@@ -1,4 +1,6 @@
-import { z } from "zod";
+import { inspect } from "util";
+
+import { z, ZodError } from "zod";
 
 import { Json } from "./Json";
 
@@ -34,3 +36,27 @@ export const pushStackFrame = (stack: Stack, stackFrame: StackFrame): Stack => [
   stackFrame,
   ...stack,
 ];
+
+export const captureWarning = <T>(
+  ctx: Context,
+  stack: Stack,
+  fn: () => T,
+): T | null => {
+  try {
+    return fn();
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return pushWarning(ctx, {
+        message: inspect(error.flatten()),
+        details: error.message,
+        stack,
+      });
+    }
+    return pushWarning(ctx, {
+      message: error.message,
+      details: {},
+      stack,
+    });
+    return null;
+  }
+};

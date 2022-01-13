@@ -7,24 +7,29 @@ import { CompilerOptions } from "../lib/CompilerOptions";
 import { mapAsync } from "../lib/util";
 
 const pkgCwd = join(__dirname, `..`, `..`);
+
+const CREATE_FIXTURES = process.env.CREATE_FIXTURES === `1`;
+
 export const pkgPath = (...segments: string[]): string =>
   resolve(pkgCwd, ...segments);
 
 export const compilerOptions: CompilerOptions = {
   cwd: pkgPath(`.`),
-  markdownLoader: `../dummy-loader`,
+  dryRun: false,
+  eslintConfig: `.eslintrc.js`,
+  exitOnError: false,
+  markdownLoaderIdentifier: `default`,
+  markdownLoaderModule: `../../dummy-loader`,
+  markdownTypeIdentifier: `default`,
+  markdownTypeModule: `*.md`,
   outFolder: `src/__tests__/fixtures/out`,
-  schema: `public/admin/config.yml`,
-  silent: false,
+  raw: false,
   saveEmitResult: true,
   saveParseResult: true,
-  dryRun: false,
-  raw: false,
-  watch: false,
-  eslintConfig: `.eslintrc.js`,
-  markdownPropertyCasing: `pascalCase`,
-  propertyCasing: `camelCase`,
+  schema: `public/admin/config.yml`,
+  silent: false,
   useLockfile: true,
+  watch: false,
 };
 
 export const expectToMatchJsonFile = async (
@@ -34,13 +39,14 @@ export const expectToMatchJsonFile = async (
     readonly create: boolean;
   },
 ): Promise<void> => {
-  if (opts?.create) {
+  if (opts?.create ?? CREATE_FIXTURES) {
     await writeFile(file, JSON.stringify(value, null, 2), {
       encoding: `utf-8`,
     });
   }
+  const jsonValue = JSON.parse(JSON.stringify(value));
   const fileContents = await readFile(file, { encoding: `utf-8` });
-  expect(value).toEqual(JSON.parse(fileContents));
+  expect(jsonValue).toEqual(JSON.parse(fileContents));
 };
 
 export const expectToMatchRawFile = async (
@@ -50,7 +56,7 @@ export const expectToMatchRawFile = async (
     readonly create: boolean;
   },
 ): Promise<void> => {
-  if (opts?.create) {
+  if (opts?.create ?? CREATE_FIXTURES) {
     await writeFile(file, raw, { encoding: `utf-8` });
   }
   const fileContents = await readFile(file, { encoding: `utf-8` });
