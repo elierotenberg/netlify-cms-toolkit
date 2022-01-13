@@ -19,87 +19,123 @@ import {
 } from "./Schema";
 import { memoize } from "./util";
 
-export const BooleanFieldValue = z.boolean();
-
-export const CodeFieldValue = z.object({
-  code: z.string(),
-  lang: z.string().optional(),
+export const BooleanFieldValue = z.boolean({
+  invalid_type_error: `Boolean Field`,
 });
 
-export const ColorFieldValue = z.string();
+export const CodeFieldValue = z.object(
+  {
+    code: z.string(),
+    lang: z.string().optional(),
+  },
+  {
+    invalid_type_error: `Code Field`,
+  },
+);
 
-export const DateTimeFieldValue = z.date();
+export const ColorFieldValue = z.string({
+  invalid_type_error: `Color Field`,
+});
 
-export const FileFieldValue = z.string();
+export const DateTimeFieldValue = z.date({
+  invalid_type_error: `DateTime Field`,
+});
+
+export const FileFieldValue = z.string({
+  invalid_type_error: `File Field`,
+});
 
 export const HiddenFieldValue = JsonOrDate;
 
-export const ImageFieldValue = z.string();
+export const ImageFieldValue = z.string({ invalid_type_error: `Image Field` });
 
-export const StringListFieldValue = z.array(z.string());
+export const StringListFieldValue = z.array(z.string(), {
+  invalid_type_error: `String List Field`,
+});
 
-export const RecordListFieldValue = z.array(JsonOrDate);
+export const RecordListFieldValue = z.array(JsonOrDate, {
+  invalid_type_error: `Record List Field`,
+});
 
-export const ListFieldValue = z.union([
-  StringListFieldValue,
-  RecordListFieldValue,
-]);
+export const ListFieldValue = z.union(
+  [StringListFieldValue, RecordListFieldValue],
+  { invalid_type_error: `List Field` },
+);
 
-export const MapFieldValue = z.string();
+export const MapFieldValue = z.string({ invalid_type_error: `Map Field` });
 
-export const MarkdownFieldValue = z.string();
+export const MarkdownFieldValue = z.string({
+  invalid_type_error: `Markdown Field`,
+});
 
-const IntNumberFieldValue = z.number().int();
+const IntNumberFieldValue = z.number().int({ message: `Int Number Field` });
 
-const FloatNumberFieldValue = z.string();
+export const FloatNumberFieldValue = z.string({
+  invalid_type_error: `Float Number Field`,
+});
 
-export const NumberFieldValue = z.union([
-  IntNumberFieldValue,
-  FloatNumberFieldValue,
-]);
+export const NumberFieldValue = z.union(
+  [IntNumberFieldValue, FloatNumberFieldValue],
+  { invalid_type_error: `Number Field` },
+);
 
-export const ObjectFieldValue = z.record(JsonOrDate);
+export const ObjectFieldValue = z.record(JsonOrDate, {
+  invalid_type_error: `Object Field`,
+});
 
-const SingleRelationFieldValue = z.string();
+const SingleRelationFieldValue = z.string({
+  invalid_type_error: `Single Relation Field`,
+});
 
-const MultipleRelationFieldValue = z.array(z.string());
+const MultipleRelationFieldValue = z.array(z.string(), {
+  invalid_type_error: `Multiple Relation Field`,
+});
 
-export const RelationFieldValue = z.union([
-  SingleRelationFieldValue,
-  MultipleRelationFieldValue,
-]);
+export const RelationFieldValue = z.union(
+  [SingleRelationFieldValue, MultipleRelationFieldValue],
+  { invalid_type_error: `Relation Field Value` },
+);
 
-const SingleSelectFieldValue = z.string();
+const SingleSelectFieldValue = z.string({
+  invalid_type_error: `Single Select Field`,
+});
 
-const MultipleSelectFieldValue = z.array(z.string());
+const MultipleSelectFieldValue = z.array(z.string(), {
+  invalid_type_error: `Multiple Select Field`,
+});
 
-export const SelectFieldValue = z.union([
-  SingleSelectFieldValue,
-  MultipleSelectFieldValue,
-]);
+export const SelectFieldValue = z.union(
+  [SingleSelectFieldValue, MultipleSelectFieldValue],
+  { invalid_type_error: `Select Field` },
+);
 
-export const StringFieldValue = z.string();
+export const StringFieldValue = z.string({
+  invalid_type_error: `String Field`,
+});
 
-export const TextFieldValue = z.string();
+export const TextFieldValue = z.string({ invalid_type_error: `Text Field` });
 
-const RequiredFieldValue = z.union([
-  BooleanFieldValue,
-  CodeFieldValue,
-  ColorFieldValue,
-  DateTimeFieldValue,
-  FileFieldValue,
-  HiddenFieldValue,
-  ImageFieldValue,
-  ListFieldValue,
-  MapFieldValue,
-  MarkdownFieldValue,
-  NumberFieldValue,
-  ObjectFieldValue,
-  RelationFieldValue,
-  SelectFieldValue,
-  StringFieldValue,
-  TextFieldValue,
-]);
+const RequiredFieldValue = z.union(
+  [
+    BooleanFieldValue,
+    CodeFieldValue,
+    ColorFieldValue,
+    DateTimeFieldValue,
+    FileFieldValue,
+    HiddenFieldValue,
+    ImageFieldValue,
+    ListFieldValue,
+    MapFieldValue,
+    MarkdownFieldValue,
+    NumberFieldValue,
+    ObjectFieldValue,
+    RelationFieldValue,
+    SelectFieldValue,
+    StringFieldValue,
+    TextFieldValue,
+  ],
+  { invalid_type_error: `Required Field` },
+);
 type RequiredFieldValue = z.infer<typeof RequiredFieldValue>;
 
 export const FieldValue = RequiredFieldValue.optional();
@@ -133,6 +169,9 @@ export const createFieldsSchema = (
       }),
       {},
     ),
+    {
+      invalid_type_error: `Fields`,
+    },
   );
 
 const createListFieldSchema = (
@@ -149,7 +188,9 @@ const createListFieldSchema = (
             }),
             {},
           ),
+          { invalid_type_error: `List Field Object` },
         ),
+        { invalid_type_error: `List Field Array` },
       ),
       field,
     );
@@ -162,7 +203,7 @@ const createNumberFieldSchema = (
 ): ZodSchemaFor<typeof NumberFieldValue> => {
   const { min, max } = field;
   if (field.value_type === `float`) {
-    let schema: ZodSchema<string> = z.string();
+    let schema: ZodSchema<string> = FloatNumberFieldValue;
     if (min !== undefined) {
       schema = schema.refine((stringValue) => {
         const numberValue = parseFloat(stringValue);
@@ -179,7 +220,7 @@ const createNumberFieldSchema = (
     return schema;
   }
 
-  let schema: ZodNumber = z.number().int();
+  let schema: ZodNumber = IntNumberFieldValue;
 
   if (min !== undefined) {
     schema = schema.gte(min);
@@ -201,7 +242,7 @@ const createRelationFieldSchema = (
 ): ZodSchemaFor<typeof RelationFieldValue> => {
   if (field.multiple) {
     const { min, max } = field;
-    let schema = z.array(z.string());
+    let schema = MultipleRelationFieldValue;
 
     if (min !== undefined) {
       schema = schema.min(min);
@@ -214,17 +255,21 @@ const createRelationFieldSchema = (
     return schema;
   }
 
-  return z.string();
+  return SingleRelationFieldValue;
 };
 
 const createSelectFieldOptionSchema = (
   option: SelectFieldOption,
 ): ZodSchema<string> => {
   if (typeof option === `string`) {
-    return z.literal(option);
+    return z.literal(option, {
+      invalid_type_error: `String Select Field Option`,
+    });
   }
 
-  return z.literal(option.value);
+  return z.literal(option.value, {
+    invalid_type_error: `Key-Value Select Field Option`,
+  });
 };
 
 const createSingleSelectFieldSchema = (
@@ -236,17 +281,20 @@ const createSingleSelectFieldSchema = (
 
   const [option1, option2, ...tailOptions] = field.options;
 
-  return z.union([
-    createSelectFieldOptionSchema(option1),
-    createSelectFieldOptionSchema(option2),
-    ...tailOptions.reduce<ZodSchema<string>[]>(
-      (tailOptions, option) => [
-        ...tailOptions,
-        createSelectFieldOptionSchema(option),
-      ],
-      [],
-    ),
-  ]);
+  return z.union(
+    [
+      createSelectFieldOptionSchema(option1),
+      createSelectFieldOptionSchema(option2),
+      ...tailOptions.reduce<ZodSchema<string>[]>(
+        (tailOptions, option) => [
+          ...tailOptions,
+          createSelectFieldOptionSchema(option),
+        ],
+        [],
+      ),
+    ],
+    { invalid_type_error: `Single Select Field Union` },
+  );
 };
 
 const createSelectFieldSchema = (
@@ -255,7 +303,12 @@ const createSelectFieldSchema = (
   const singleSelectFieldSchema = createSingleSelectFieldSchema(field);
 
   if (field.multiple) {
-    return refineZodArrayMinMax(z.array(singleSelectFieldSchema), field);
+    return refineZodArrayMinMax(
+      z.array(singleSelectFieldSchema, {
+        invalid_type_error: `Multiple Select Field Array`,
+      }),
+      field,
+    );
   }
 
   return singleSelectFieldSchema;

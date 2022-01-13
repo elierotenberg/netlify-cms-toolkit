@@ -1,8 +1,8 @@
 {
   "warnings": [
     {
-      "message": "{\n  formErrors: [],\n  fieldErrors: { name: [ 'Required' ], shortName: [ 'Required' ] }\n}",
-      "details": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"name\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"shortName\"\n    ],\n    \"message\": \"Required\"\n  }\n]",
+      "message": "{\n  formErrors: [],\n  fieldErrors: { name: [ 'String Field' ], shortName: [ 'String Field' ] }\n}",
+      "details": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"name\"\n    ],\n    \"message\": \"String Field\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"shortName\"\n    ],\n    \"message\": \"String Field\"\n  }\n]",
       "stack": [
         {
           "fn": "parseProps",

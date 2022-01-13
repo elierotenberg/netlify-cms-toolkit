@@ -19,6 +19,11 @@ import {
   createSchemaTypeAliasDeclaration,
 } from "./TypeEmitter";
 import { assertZod } from "./Zod";
+import {
+  DateTimeFieldValue,
+  FloatNumberFieldValue,
+  MarkdownFieldValue,
+} from "./Validator";
 
 const {
   createArrayLiteralExpression,
@@ -179,7 +184,7 @@ const createFieldNodeExpression = (
   });
 
   if (field.field.widget === `datetime`) {
-    assertZod(z.date(), field.value);
+    assertZod(DateTimeFieldValue, field.value);
     return createNewExpression(createIdentifier(`Date`), undefined, [
       createStringLiteral(field.value.toISOString()),
     ]);
@@ -204,7 +209,7 @@ const createFieldNodeExpression = (
   if (field.field.widget === `markdown`) {
     const path = createMarkdownAssetPath(ctx, fieldStack);
     const source = field.value;
-    assertZod(z.string(), source);
+    assertZod(MarkdownFieldValue, source);
     const markdownAsset: Asset = {
       path,
       source,
@@ -214,7 +219,7 @@ const createFieldNodeExpression = (
   }
 
   if (field.field.widget === `number` && field.field.value_type === `float`) {
-    assertZod(z.string(), field.value);
+    assertZod(FloatNumberFieldValue, field.value);
     return createJsonExpression(parseFloat(field.value));
   }
 
