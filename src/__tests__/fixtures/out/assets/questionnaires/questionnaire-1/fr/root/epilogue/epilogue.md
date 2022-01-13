@@ -1,1 +1,0 @@
-Merci d'avoir répondu à ce questionnaire !

@@ -132,3 +132,119 @@ collections:
             label: Success
             widget: markdown
             i18n: true
+  - name: kitchen_sink
+    label: Kitchen Sinks
+    folder: content/kitch_sinks
+    create: true
+    fields:
+      - name: title
+        label: Title
+        widget: string
+      - name: boolean_field
+        label: Boolean Field
+        widget: boolean
+      - name: code_field
+        label: Code Field
+        widget: code
+      - name: color_field
+        label: Color Field
+        widget: color
+      - name: date_time_field
+        label: Date Time Field
+        widget: datetime
+      - name: hidden_field
+        label: Hidden Field
+        widget: hidden
+        default: 42
+      - name: image_field_single
+        label: Image Field (Single)
+        widget: image
+      - name: list_field_no_field
+        label: List Field (No Field)
+        widget: list
+      - name: list_field_single_field
+        label: List Field (Single Field)
+        widget: list
+        field:
+          name: image
+          label: Image
+          widget: image
+      - name: list_field_multiple_fields
+        label: List Field (Multiple Fields)
+        widget: list
+        fields:
+          - name: title
+            label: Title
+            widget: string
+          - name: date
+            label: Date
+            widget: datetime
+      - name: map
+        label: Map
+        widget: map
+      - name: markdown
+        label: Markdown
+        widget: markdown
+      - name: number_no_value_type
+        label: Number (No Value Type)
+        widget: number
+      - name: number_value_type_int
+        label: Number (Value Type Int)
+        widget: number
+        value_type: int
+        min: 50
+        max: 100
+      - name: number_value_type_float
+        label: Number (Value Type Float)
+        widget: number
+        value_type: float
+        min: -0.5
+        max: 0.5
+      - name: object
+        label: Object
+        widget: object
+        fields:
+          - name: title
+            label: Title
+            widget: string
+          - name: date
+            label: Date
+            widget: datetime
+      - name: relation_single
+        label: Relation (Single)
+        widget: relation
+        collection: pages
+        value_field: title
+        search_fields: [title]
+      - name: relation_multiple
+        label: Relation (Multiple)
+        widget: relation
+        collection: guide_tags
+        value_field: title
+        search_fields: [title]
+        multiple: true
+        min: 1
+        max: 2
+      - name: select_single
+        label: Select (Single)
+        widget: select
+        options:
+          - option_1
+          - label: Option 2
+            value: option_2
+          - label: Option 3
+            value: option_3
+      - name: select_multiple
+        label: Select (Multiple)
+        widget: select
+        multiple: true
+        options:
+          - Option A
+          - Option B
+          - Option C
+      - name: string
+        label: String
+        widget: string
+      - name: text
+        label: Text
+        widget: text

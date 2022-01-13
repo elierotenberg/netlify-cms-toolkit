@@ -1,6 +1,6 @@
 {
   "name": "netlify-cms-toolkit",
-  "version": "0.0.1-rc7",
+  "version": "0.0.1-rc8",
   "private": false,
   "main": "build/cli.js",
   "bin": "build/cli.js",
@@ -12,7 +12,7 @@
     "build:babel": "npm run clean && babel src --out-dir build --extensions '.ts' --source-maps && chmod u+x build/cli.js",
     "build:types": "tsc -p . --emitDeclarationOnly",
     "build": "npm run build:babel && npm run build:types",
-    "cli": "node build/cli.js",
+    "cli": "NODE_OPTIONS='--enable-source-maps' node build/cli.js",
     "test": "jest"
   },
   "devDependencies": {
@@ -36,8 +36,7 @@
     "jest": "^27.4.5",
     "netlify-cms-proxy-server": "^1.3.22",
     "prettier": "^2.5.1",
-    "tsd": "^0.19.0",
-    "typescript": "4.5.4"
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "@types/globby": "^9.1.0",

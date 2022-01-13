@@ -5,471 +5,515 @@
 /*               be overwritten.               */
 /*                                             */
 /***********************************************/
-import loadMarkdown from "../../dummy-loader";
+import { default as loadMarkdown } from "../../dummy-loader";
 
-export const contents = [
-  {
-    sourceLocation: `content/guide_tags/animals.en.md`,
-    collection: `guideTags`,
-    slug: `animals`,
-    locale: `en`,
-    props: { title: `Animals` },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guide_tags/animals.fr.md`,
-    collection: `guideTags`,
-    slug: `animals`,
-    locale: `fr`,
-    props: { title: `Animaux` },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guide_tags/animals.pt.md`,
-    collection: `guideTags`,
-    slug: `animals`,
-    locale: `pt`,
-    props: { title: `Animais` },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guide_tags/plants.en.md`,
-    collection: `guideTags`,
-    slug: `plants`,
-    locale: `en`,
-    props: { title: `Plants` },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guide_tags/plants.fr.md`,
-    collection: `guideTags`,
-    slug: `plants`,
-    locale: `fr`,
-    props: { title: `Plantes` },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guide_tags/plants.pt.md`,
-    collection: `guideTags`,
-    slug: `plants`,
-    locale: `pt`,
-    props: { title: `Plantas` },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-animals-and-plants.en.md`,
-    collection: `guides`,
-    slug: `about-animals-and-plants`,
-    locale: `en`,
-    props: {
-      title: `About animals and plants`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-animals-and-plants/en/root/body/body.md`),
-      ),
-      guideTags: [`animals`, `plants`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-animals-and-plants.fr.md`,
-    collection: `guides`,
-    slug: `about-animals-and-plants`,
-    locale: `fr`,
-    props: {
-      title: `\u00C0 propos d'animaux et de plantes`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-animals-and-plants/fr/root/body/body.md`),
-      ),
-      guideTags: [`animals`, `plants`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-animals.en.md`,
-    collection: `guides`,
-    slug: `about-animals`,
-    locale: `en`,
-    props: {
-      title: `About animals`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-animals/en/root/body/body.md`),
-      ),
-      guideTags: [`animals`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-animals.fr.md`,
-    collection: `guides`,
-    slug: `about-animals`,
-    locale: `fr`,
-    props: {
-      title: `\u00C0 propos d'animaux`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-animals/fr/root/body/body.md`),
-      ),
-      guideTags: [`animals`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-animals.pt.md`,
-    collection: `guides`,
-    slug: `about-animals`,
-    locale: `pt`,
-    props: {
-      title: `Sobre animais`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-animals/pt/root/body/body.md`),
-      ),
-      guideTags: [`animals`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-plants.en.md`,
-    collection: `guides`,
-    slug: `about-plants`,
-    locale: `en`,
-    props: {
-      title: `About plants`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-plants/en/root/body/body.md`),
-      ),
-      guideTags: [`plants`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-plants.fr.md`,
-    collection: `guides`,
-    slug: `about-plants`,
-    locale: `fr`,
-    props: {
-      title: `\u00C0 propos des plantes`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-plants/fr/root/body/body.md`),
-      ),
-      guideTags: [`plants`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/guides/about-plants.pt.md`,
-    collection: `guides`,
-    slug: `about-plants`,
-    locale: `pt`,
-    props: {
-      title: `Sobre plantas`,
-      Body: loadMarkdown(
-        () => import(`./guides/about-plants/pt/root/body/body.md`),
-      ),
-      guideTags: [`plants`],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/pages/rich-text-example.en.md`,
-    collection: `pages`,
-    slug: `rich-text-example`,
-    locale: `en`,
-    props: {
-      title: `Rich text example`,
-      Body: loadMarkdown(
-        () => import(`./pages/rich-text-example/en/root/body/body.md`),
-      ),
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/pages/rich-text-example.fr.md`,
-    collection: `pages`,
-    slug: `rich-text-example`,
-    locale: `fr`,
-    props: {
-      title: `Exemple de texte riche`,
-      Body: loadMarkdown(
-        () => import(`./pages/rich-text-example/fr/root/body/body.md`),
-      ),
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/questionnaires/questionnaire-1.en.md`,
-    collection: `questionnaires`,
-    slug: `questionnaire-1`,
-    locale: `en`,
-    props: {
-      title: `Questionnaire 1`,
-      Prologue: loadMarkdown(
-        () =>
-          import(
-            `./questionnaires/questionnaire-1/en/root/prologue/prologue.md`
-          ),
-      ),
-      Epilogue: loadMarkdown(
-        () =>
-          import(
-            `./questionnaires/questionnaire-1/en/root/epilogue/epilogue.md`
-          ),
-      ),
-      items: [
-        {
-          title: `First name`,
-          Description: loadMarkdown(
-            () =>
-              import(
-                `./questionnaires/questionnaire-1/en/root/items/items/0/items-child/description/description.md`
-              ),
-          ),
-        },
-        {
-          title: `Last Name`,
-          Description: loadMarkdown(
-            () =>
-              import(
-                `./questionnaires/questionnaire-1/en/root/items/items/1/items-child/description/description.md`
-              ),
-          ),
-        },
-      ],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/questionnaires/questionnaire-1.fr.md`,
-    collection: `questionnaires`,
-    slug: `questionnaire-1`,
-    locale: `fr`,
-    props: {
-      title: `Questionnaire 1`,
-      Prologue: loadMarkdown(
-        () =>
-          import(
-            `./questionnaires/questionnaire-1/fr/root/prologue/prologue.md`
-          ),
-      ),
-      Epilogue: loadMarkdown(
-        () =>
-          import(
-            `./questionnaires/questionnaire-1/fr/root/epilogue/epilogue.md`
-          ),
-      ),
-      items: [
-        {
-          title: `Pr\u00E9nom`,
-          Description: loadMarkdown(
-            () =>
-              import(
-                `./questionnaires/questionnaire-1/fr/root/items/items/0/items-child/description/description.md`
-              ),
-          ),
-        },
-        {
-          title: `Nom de famille`,
-          Description: loadMarkdown(
-            () =>
-              import(
-                `./questionnaires/questionnaire-1/fr/root/items/items/1/items-child/description/description.md`
-              ),
-          ),
-        },
-      ],
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/translations/interactions.yml`,
-    collection: `translations`,
-    slug: `interactions`,
-    locale: `en`,
-    props: {
-      welcome: `Welcome!`,
-      Error: loadMarkdown(
-        () => import(`./translations/interactions/en/en/error/error.md`),
-      ),
-      Success: loadMarkdown(
-        () => import(`./translations/interactions/en/en/success/success.md`),
-      ),
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/translations/interactions.yml`,
-    collection: `translations`,
-    slug: `interactions`,
-    locale: `fr`,
-    props: {
-      welcome: `Bienvenue !`,
-      Error: loadMarkdown(
-        () => import(`./translations/interactions/fr/fr/error/error.md`),
-      ),
-      Success: loadMarkdown(
-        () => import(`./translations/interactions/fr/fr/success/success.md`),
-      ),
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/translations/interactions.yml`,
-    collection: `translations`,
-    slug: `interactions`,
-    locale: `pt`,
-    props: {
-      welcome: `Welcome!`,
-      Error: loadMarkdown(
-        () => import(`./translations/interactions/pt/pt/error/error.md`),
-      ),
-      Success: loadMarkdown(
-        () => import(`./translations/interactions/pt/pt/success/success.md`),
-      ),
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/translations/site.yml`,
-    collection: `translations`,
-    slug: `site`,
-    locale: `en`,
-    props: {
-      name: `Official Netlify CMS Toolkit Website`,
-      shortName: `ONCTK-EN`,
-      url: `http://localhost:3000`,
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/translations/site.yml`,
-    collection: `translations`,
-    slug: `site`,
-    locale: `fr`,
-    props: {
-      name: `Site web officiel Netlify CMS Toolkit`,
-      shortName: `ONCTK-FR`,
-      url: `http://localhost:3000`,
-    },
-    raw: null,
-  },
-  {
-    sourceLocation: `content/translations/site.yml`,
-    collection: `translations`,
-    slug: `site`,
-    locale: `pt`,
-    props: { url: `http://localhost:3000` },
-    raw: null,
-  },
-] as const;
+import type { default as Markdown } from "*.md";
 
-export type Content = typeof contents[number];
-
-const isRecord = (input: unknown): input is Record<string, unknown> =>
-  typeof input === `object` && input !== null;
-
-type AbstractContent = {
-  readonly sourceLocation: string;
-  readonly collection: string;
-  readonly slug: string;
-  readonly locale: null | string;
-  readonly props: Record<string, unknown>;
-  readonly raw: null | string;
-};
-
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>;
-};
-
-type AbstractFilter<Content extends AbstractContent> = DeepPartial<Content>;
-
-const matchRaw = (filter: unknown, value: unknown): boolean => {
-  if (typeof filter === `undefined`) {
-    return true;
-  }
-  if (Array.isArray(filter)) {
-    if (!Array.isArray(value)) {
-      return false;
-    }
-    if (filter.length !== value.length) {
-      return false;
-    }
-    for (let k = 0; k < filter.length; k++) {
-      if (!matchRaw(filter[k], value[k])) {
-        return false;
-      }
-    }
-    return true;
-  }
-  if (isRecord(filter)) {
-    if (!isRecord(value)) {
-      return false;
-    }
-    for (const key of Object.keys(filter)) {
-      if (!matchRaw(filter[key], value[key])) {
-        return false;
-      }
-    }
-    return true;
-  }
-  return filter === value;
-};
-
-const match =
-  <Content extends AbstractContent, Filter extends AbstractFilter<Content>>(
-    filter: Filter,
-  ) =>
-  (content: Content): content is Extract<Content, Filter> =>
-    matchRaw(filter, content);
-
-type FindAllContents<Content extends AbstractContent> = <
-  Filter extends AbstractFilter<Content>,
->(
-  filter: Filter,
-) => Extract<Content, Filter>[];
-
-type FindUniqueContent<Content extends AbstractContent> = <
-  Filter extends AbstractFilter<Content>,
->(
-  filter: Filter,
-) => Extract<Content, Filter>;
-
-type Runtime<Content extends AbstractContent> = {
-  readonly findAll: FindAllContents<Content>;
-  readonly findUnique: FindUniqueContent<Content>;
-};
-
-const createRuntime = <Content extends AbstractContent>(
-  contents: readonly Content[],
-): Runtime<Content> => {
-  const findAll: FindAllContents<Content> = <
-    Filter extends AbstractFilter<Content>,
-  >(
-    filter: Filter,
-  ) => {
-    const matchFilter = match<Content, Filter>(filter);
-    return contents.filter(matchFilter);
-  };
-
-  const findUnique: FindUniqueContent<Content> = <
-    Filter extends AbstractFilter<Content>,
-  >(
-    filter: Filter,
-  ) => {
-    const allContents = findAll(filter);
-    if (allContents.length === 0) {
-      throw new Error(`Content not found`);
-    }
-    if (allContents.length > 1) {
-      throw new Error(`Multiple contents found`);
-    }
-    return allContents[0];
-  };
-
-  return {
-    findAll,
-    findUnique,
+export type Schema = {
+  locale: `en` | `fr` | `pt`;
+  collection: {
+    [`pages`]: {
+      collection: `pages`;
+      kind: `folder`;
+      slug: string;
+      locale: Schema[`locale`];
+      props: {
+        title: string;
+        body: Markdown;
+      };
+    };
+    [`guide_tags`]: {
+      collection: `guide_tags`;
+      kind: `folder`;
+      slug: string;
+      locale: Schema[`locale`];
+      props: {
+        title: string;
+      };
+    };
+    [`guides`]: {
+      collection: `guides`;
+      kind: `folder`;
+      slug: string;
+      locale: Schema[`locale`];
+      props: {
+        title: string;
+        body: Markdown;
+        guide_tags?: string[];
+      };
+    };
+    [`questionnaires`]: {
+      collection: `questionnaires`;
+      kind: `folder`;
+      slug: string;
+      locale: Schema[`locale`];
+      props: {
+        title: string;
+        prologue: Markdown;
+        epilogue: Markdown;
+        items: {
+          title: string;
+          description: Markdown;
+        }[];
+      };
+    };
+    [`translations`]: {
+      [`site`]: {
+        file: `site`;
+        collection: `translations`;
+        kind: `files`;
+        slug: string;
+        locale: Schema[`locale`];
+        props: {
+          name: string;
+          shortName: string;
+          url: string;
+        };
+      };
+      [`interactions`]: {
+        file: `interactions`;
+        collection: `translations`;
+        kind: `files`;
+        slug: string;
+        locale: Schema[`locale`];
+        props: {
+          welcome: string;
+          error: Markdown;
+          success: Markdown;
+        };
+      };
+    };
+    [`kitchen_sink`]: {
+      collection: `kitchen_sink`;
+      kind: `folder`;
+      slug: string;
+      locale: null;
+      props: {
+        title: string;
+        boolean_field: boolean;
+        code_field: {
+          code: string;
+          lang?: string;
+        };
+        color_field: string;
+        date_time_field: Date;
+        hidden_field: unknown;
+        image_field_single: string;
+        list_field_no_field: string[];
+        list_field_single_field: string[];
+        list_field_multiple_fields: {
+          title: string;
+          date: Date;
+        }[];
+        map: string;
+        markdown: Markdown;
+        number_no_value_type: number;
+        number_value_type_int: number;
+        number_value_type_float: number;
+        object: {
+          title: string;
+          date: Date;
+        };
+        relation_single: string;
+        relation_multiple: string[];
+        select_single: `option_1` | `option_2` | `option_3`;
+        select_multiple: (`Option A` | `Option B` | `Option C`)[];
+        string: string;
+        text: string;
+      };
+    };
   };
 };
 
-const runtime = createRuntime(contents);
+export type Contents = Readonly<{
+  [`pages`]: Schema[`collection`][`pages`][];
+  [`guide_tags`]: Schema[`collection`][`guide_tags`][];
+  [`guides`]: Schema[`collection`][`guides`][];
+  [`questionnaires`]: Schema[`collection`][`questionnaires`][];
+  [`translations`]: {
+    [`site`]: Schema[`collection`][`translations`][`site`][];
+    [`interactions`]: Schema[`collection`][`translations`][`interactions`][];
+  };
+  [`kitchen_sink`]: Schema[`collection`][`kitchen_sink`][];
+}>;
 
-export const findAll = runtime.findAll;
-export const findUnique = runtime.findUnique;
+export const contents: Contents = {
+  [`guide_tags`]: [
+    {
+      collection: `guide_tags`,
+      kind: `folder`,
+      slug: `animals`,
+      locale: `en`,
+      props: { [`title`]: `Animals` },
+    },
+    {
+      collection: `guide_tags`,
+      kind: `folder`,
+      slug: `animals`,
+      locale: `fr`,
+      props: { [`title`]: `Animaux` },
+    },
+    {
+      collection: `guide_tags`,
+      kind: `folder`,
+      slug: `animals`,
+      locale: `pt`,
+      props: { [`title`]: `Animais` },
+    },
+    {
+      collection: `guide_tags`,
+      kind: `folder`,
+      slug: `plants`,
+      locale: `en`,
+      props: { [`title`]: `Plants` },
+    },
+    {
+      collection: `guide_tags`,
+      kind: `folder`,
+      slug: `plants`,
+      locale: `fr`,
+      props: { [`title`]: `Plantes` },
+    },
+    {
+      collection: `guide_tags`,
+      kind: `folder`,
+      slug: `plants`,
+      locale: `pt`,
+      props: { [`title`]: `Plantas` },
+    },
+  ],
+  [`guides`]: [
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-animals-and-plants`,
+      locale: `en`,
+      props: {
+        [`title`]: `About animals and plants`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-animals-and-plants/en/body.md`),
+        ),
+        [`guide_tags`]: [`animals`, `plants`],
+      },
+    },
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-animals-and-plants`,
+      locale: `fr`,
+      props: {
+        [`title`]: `\u00C0 propos d'animaux et de plantes`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-animals-and-plants/fr/body.md`),
+        ),
+        [`guide_tags`]: [`animals`, `plants`],
+      },
+    },
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-animals`,
+      locale: `en`,
+      props: {
+        [`title`]: `About animals`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-animals/en/body.md`),
+        ),
+        [`guide_tags`]: [`animals`],
+      },
+    },
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-animals`,
+      locale: `fr`,
+      props: {
+        [`title`]: `\u00C0 propos d'animaux`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-animals/fr/body.md`),
+        ),
+        [`guide_tags`]: [`animals`],
+      },
+    },
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-animals`,
+      locale: `pt`,
+      props: {
+        [`title`]: `Sobre animais`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-animals/pt/body.md`),
+        ),
+        [`guide_tags`]: [`animals`],
+      },
+    },
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-plants`,
+      locale: `en`,
+      props: {
+        [`title`]: `About plants`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-plants/en/body.md`),
+        ),
+        [`guide_tags`]: [`plants`],
+      },
+    },
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-plants`,
+      locale: `fr`,
+      props: {
+        [`title`]: `\u00C0 propos des plantes`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-plants/fr/body.md`),
+        ),
+        [`guide_tags`]: [`plants`],
+      },
+    },
+    {
+      collection: `guides`,
+      kind: `folder`,
+      slug: `about-plants`,
+      locale: `pt`,
+      props: {
+        [`title`]: `Sobre plantas`,
+        [`body`]: loadMarkdown(
+          () => import(`./guides/about-plants/pt/body.md`),
+        ),
+        [`guide_tags`]: [`plants`],
+      },
+    },
+  ],
+  [`kitchen_sink`]: [
+    {
+      collection: `kitchen_sink`,
+      kind: `folder`,
+      slug: `example-1`,
+      locale: null,
+      props: {
+        [`title`]: `Example 1`,
+        [`boolean_field`]: true,
+        [`code_field`]: {
+          code: `console.log("example 1");`,
+          lang: `typescript`,
+        },
+        [`color_field`]: `#00d9ff`,
+        [`date_time_field`]: new Date(`2022-01-06T16:00:10.297Z`),
+        [`hidden_field`]: 42,
+        [`image_field_single`]: `/public/media/uploads/otter-1.jpg`,
+        [`list_field_no_field`]: [],
+        [`list_field_single_field`]: [
+          `/public/media/uploads/otter-2.jpg`,
+          `/public/media/uploads/otter-3.jpg`,
+        ],
+        [`list_field_multiple_fields`]: [
+          {
+            [`title`]: `Value 1`,
+            [`date`]: new Date(`2022-01-01T16:00:38.610Z`),
+          },
+          {
+            [`title`]: `Value 2`,
+            [`date`]: new Date(`2022-01-02T19:00:47.709Z`),
+          },
+        ],
+        [`map`]: `{"type":"Point","coordinates":[2.3453468,48.8463647]}`,
+        [`markdown`]: loadMarkdown(
+          () => import(`./kitchen-sink/example-1/markdown.md`),
+        ),
+        [`number_no_value_type`]: 1,
+        [`number_value_type_int`]: 100,
+        [`number_value_type_float`]: 0.33333,
+        [`object`]: {
+          [`title`]: `Object 1`,
+          [`date`]: new Date(`2022-02-14T13:45:10.329Z`),
+        },
+        [`relation_single`]: `Rich text example`,
+        [`relation_multiple`]: [`Animals`, `Plants`],
+        [`select_single`]: `option_2`,
+        [`select_multiple`]: [`Option A`, `Option B`, `Option C`],
+        [`string`]: `Example String`,
+        [`text`]: `Example Text`,
+      },
+    },
+  ],
+  [`pages`]: [
+    {
+      collection: `pages`,
+      kind: `folder`,
+      slug: `rich-text-example`,
+      locale: `en`,
+      props: {
+        [`title`]: `Rich text example`,
+        [`body`]: loadMarkdown(
+          () => import(`./pages/rich-text-example/en/body.md`),
+        ),
+      },
+    },
+    {
+      collection: `pages`,
+      kind: `folder`,
+      slug: `rich-text-example`,
+      locale: `fr`,
+      props: {
+        [`title`]: `Exemple de texte riche`,
+        [`body`]: loadMarkdown(
+          () => import(`./pages/rich-text-example/fr/body.md`),
+        ),
+      },
+    },
+  ],
+  [`questionnaires`]: [
+    {
+      collection: `questionnaires`,
+      kind: `folder`,
+      slug: `questionnaire-1`,
+      locale: `en`,
+      props: {
+        [`title`]: `Questionnaire 1`,
+        [`prologue`]: loadMarkdown(
+          () => import(`./questionnaires/questionnaire-1/en/prologue.md`),
+        ),
+        [`epilogue`]: loadMarkdown(
+          () => import(`./questionnaires/questionnaire-1/en/epilogue.md`),
+        ),
+        [`items`]: [
+          {
+            [`title`]: `First name`,
+            [`description`]: loadMarkdown(
+              () =>
+                import(
+                  `./questionnaires/questionnaire-1/en/items/0/items-child/description/description.md`
+                ),
+            ),
+          },
+          {
+            [`title`]: `Last Name`,
+            [`description`]: loadMarkdown(
+              () =>
+                import(
+                  `./questionnaires/questionnaire-1/en/items/1/items-child/description/description.md`
+                ),
+            ),
+          },
+        ],
+      },
+    },
+    {
+      collection: `questionnaires`,
+      kind: `folder`,
+      slug: `questionnaire-1`,
+      locale: `fr`,
+      props: {
+        [`title`]: `Questionnaire 1`,
+        [`prologue`]: loadMarkdown(
+          () => import(`./questionnaires/questionnaire-1/fr/prologue.md`),
+        ),
+        [`epilogue`]: loadMarkdown(
+          () => import(`./questionnaires/questionnaire-1/fr/epilogue.md`),
+        ),
+        [`items`]: [
+          {
+            [`title`]: `Pr\u00E9nom`,
+            [`description`]: loadMarkdown(
+              () =>
+                import(
+                  `./questionnaires/questionnaire-1/fr/items/0/items-child/description/description.md`
+                ),
+            ),
+          },
+          {
+            [`title`]: `Nom de famille`,
+            [`description`]: loadMarkdown(
+              () =>
+                import(
+                  `./questionnaires/questionnaire-1/fr/items/1/items-child/description/description.md`
+                ),
+            ),
+          },
+        ],
+      },
+    },
+  ],
+  [`translations`]: {
+    [`site`]: [
+      {
+        collection: `translations`,
+        kind: `files`,
+        file: `site`,
+        slug: `site`,
+        locale: `en`,
+        props: {
+          [`name`]: `Official Netlify CMS Toolkit Website`,
+          [`shortName`]: `ONCTK-EN`,
+          [`url`]: `http://localhost:3000`,
+        },
+      },
+      {
+        collection: `translations`,
+        kind: `files`,
+        file: `site`,
+        slug: `site`,
+        locale: `fr`,
+        props: {
+          [`name`]: `Site web officiel Netlify CMS Toolkit`,
+          [`shortName`]: `ONCTK-FR`,
+          [`url`]: `http://localhost:3000`,
+        },
+      },
+    ],
+    [`interactions`]: [
+      {
+        collection: `translations`,
+        kind: `files`,
+        file: `interactions`,
+        slug: `interactions`,
+        locale: `en`,
+        props: {
+          [`welcome`]: `Welcome!`,
+          [`error`]: loadMarkdown(
+            () => import(`./translations/interactions/en/error.md`),
+          ),
+          [`success`]: loadMarkdown(
+            () => import(`./translations/interactions/en/success.md`),
+          ),
+        },
+      },
+      {
+        collection: `translations`,
+        kind: `files`,
+        file: `interactions`,
+        slug: `interactions`,
+        locale: `fr`,
+        props: {
+          [`welcome`]: `Bienvenue !`,
+          [`error`]: loadMarkdown(
+            () => import(`./translations/interactions/fr/error.md`),
+          ),
+          [`success`]: loadMarkdown(
+            () => import(`./translations/interactions/fr/success.md`),
+          ),
+        },
+      },
+      {
+        collection: `translations`,
+        kind: `files`,
+        file: `interactions`,
+        slug: `interactions`,
+        locale: `pt`,
+        props: {
+          [`welcome`]: `Welcome!`,
+          [`error`]: loadMarkdown(
+            () => import(`./translations/interactions/pt/error.md`),
+          ),
+          [`success`]: loadMarkdown(
+            () => import(`./translations/interactions/pt/success.md`),
+          ),
+        },
+      },
+    ],
+  },
+};

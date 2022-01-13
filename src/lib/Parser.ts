@@ -7,7 +7,7 @@ import { load } from "js-yaml";
 import globby from "globby";
 import { z } from "zod";
 
-import { isRecord, mapAsync, isNotNull } from "./util";
+import { isNotNull, mapAsync } from "./util";
 import {
   FilesCollectionI18nStructure,
   FilesCollectionItem,
@@ -21,12 +21,25 @@ import {
   Field,
 } from "./Schema";
 import { indent, Logger } from "./Logger";
-import { Json } from "./Json";
-import { Stack, Warning, pushStackFrame, pushWarning } from "./Stack";
+import { Json, JsonRecord } from "./Json";
+import {
+  Stack,
+  Warning,
+  pushStackFrame,
+  pushWarning,
+  captureWarning,
+} from "./Stack";
+import {
+  FieldValue,
+  ObjectFieldValue,
+  ListFieldValue,
+  createFieldsSchema,
+} from "./Validator";
+import { assertZod } from "./Zod";
 
 export type FieldAstNode = {
   readonly field: Field;
-  readonly value: Json;
+  readonly value: FieldValue;
   readonly objectChildren?: Record<string, FieldAstNode>;
   readonly arrayChildren?: FieldAstNode[];
 };
@@ -40,19 +53,29 @@ const FieldAstNode: z.ZodSchema<FieldAstNode> = z.lazy(() =>
   }),
 );
 
-const Meta = z.record(Json);
-
-type Meta = z.infer<typeof Meta>;
-
-const ContentAstNode = z.object({
+const BaseContentAstNode = z.object({
   sourceLocation: z.string(),
-  collection: TaggedCollection,
   slug: z.string(),
   locale: z.string().nullable(),
-  sourceRaw: z.string(),
-  meta: Meta,
-  rootFieldNode: FieldAstNode,
+  raw: z.string(),
+  propsNodes: z.array(FieldAstNode),
 });
+
+const FolderCollectionContentAstNode = BaseContentAstNode.extend({
+  kind: z.literal(`folder`),
+  collection: FolderTaggedCollection,
+});
+
+const FilesCollectionContentAstNode = BaseContentAstNode.extend({
+  kind: z.literal(`files`),
+  file: z.string(),
+  collection: FilesTaggedCollection,
+});
+
+const ContentAstNode = z.union([
+  FolderCollectionContentAstNode,
+  FilesCollectionContentAstNode,
+]);
 
 export type ContentAstNode = z.infer<typeof ContentAstNode>;
 
@@ -66,11 +89,11 @@ export type CollectionAstNode = z.infer<typeof CollectionAstNode>;
 const sortContentNodes = (a: ContentAstNode, b: ContentAstNode): number =>
   a.sourceLocation.localeCompare(b.sourceLocation);
 
-const Context = z.object({
+const ParserContext = z.object({
   warnings: z.array(Warning),
 });
 
-type Context = z.infer<typeof Context>;
+type ParserContext = z.infer<typeof ParserContext>;
 
 export const ParseResult = z.object({
   schema: Schema,
@@ -82,24 +105,18 @@ export type ParseResult = z.infer<typeof ParseResult>;
 
 const parseField = (
   schema: Schema,
-  ctx: Context,
+  ctx: ParserContext,
   parentStack: Stack,
   collection: TaggedCollection,
   value: Json,
   field: Field,
-): null | FieldAstNode => {
+): FieldAstNode => {
   const stack = pushStackFrame(parentStack, {
     fn: `parseField`,
     params: { collection, field, value },
   });
   if (field.widget === `object`) {
-    if (!isRecord(value)) {
-      return pushWarning(ctx, {
-        stack,
-        message: `Value of 'object' widget should be a record`,
-        details: { value },
-      });
-    }
+    assertZod(ObjectFieldValue, value);
     return {
       field,
       value,
@@ -107,20 +124,11 @@ const parseField = (
         .map(
           (
             childField,
-          ): null | {
+          ): {
             readonly key: string;
             readonly fieldNode: FieldAstNode;
           } => {
             const childValue = value[childField.name];
-            if (typeof childValue === `undefined`) {
-              return pushWarning(ctx, {
-                stack,
-                message: `Property '${childField.name}' not found`,
-                details: {
-                  value,
-                },
-              });
-            }
             const childFieldNode = parseField(
               schema,
               ctx,
@@ -129,16 +137,12 @@ const parseField = (
               childValue,
               childField,
             );
-            if (!childFieldNode) {
-              return null;
-            }
             return {
               key: childField.name,
               fieldNode: childFieldNode,
             };
           },
         )
-        .filter(isNotNull)
         .reduce(
           (objectChildren, { key, fieldNode }) => ({
             ...objectChildren,
@@ -149,23 +153,15 @@ const parseField = (
     };
   }
   if (field.widget === `list`) {
-    if (!Array.isArray(value)) {
-      return pushWarning(ctx, {
-        stack,
-        message: `Value of 'list' widget should be an array`,
-        details: { value },
-      });
-    }
+    assertZod(ListFieldValue, value);
     const childField = field.field;
     if (childField) {
       return {
         field,
         value,
-        arrayChildren: value
-          .map((childValue) =>
-            parseField(schema, ctx, stack, collection, childValue, childField),
-          )
-          .filter(isNotNull),
+        arrayChildren: value.map((childValue) =>
+          parseField(schema, ctx, stack, collection, childValue, childField),
+        ),
       };
     }
     const childFields = field.fields;
@@ -179,11 +175,9 @@ const parseField = (
       return {
         field,
         value,
-        arrayChildren: value
-          .map((childValue) =>
-            parseField(schema, ctx, stack, collection, childValue, childField),
-          )
-          .filter(isNotNull),
+        arrayChildren: value.map((childValue) =>
+          parseField(schema, ctx, stack, collection, childValue, childField),
+        ),
       };
     }
   }
@@ -196,7 +190,7 @@ const parseField = (
 
 const resolveFolderCollectionI18nStructure = (
   schema: Schema,
-  ctx: Context,
+  ctx: ParserContext,
   parentStack: Stack,
   collection: FolderTaggedCollection,
 ): null | FolderCollectionI18nStructure => {
@@ -225,7 +219,7 @@ const resolveFolderCollectionI18nStructure = (
 
 const resolveFilesCollectionI18nStructure = (
   schema: Schema,
-  ctx: Context,
+  ctx: ParserContext,
   parentStack: Stack,
   collection: FilesTaggedCollection,
 ): null | FilesCollectionI18nStructure => {
@@ -251,56 +245,25 @@ const resolveFilesCollectionI18nStructure = (
   return collection.i18n.structure;
 };
 
-const parseMeta = (
-  ctx: Context,
-  parentStack: Stack,
-  sourceLocation: string,
-  sourceRaw: string,
-): null | Meta => {
-  const stack = pushStackFrame(parentStack, {
-    fn: `parseMeta`,
-    params: { sourceLocation },
-  });
-  const { ext } = parsePath(sourceLocation);
-  if (ext === `.md`) {
-    return Meta.parse(parseMatter(sourceRaw).data);
-  }
-  if (ext === `.yml` || ext === `.yaml`) {
-    const meta = Json.parse(load(sourceRaw));
-    if (!isRecord(meta)) {
-      return pushWarning(ctx, {
-        stack,
-        message: `Yaml data should be a record.`,
-        details: { meta },
-      });
-    }
-    return meta;
-  }
+const parseFileContents = (file: string, raw: string): JsonRecord => {
+  const { ext } = parsePath(file);
 
-  return pushWarning(ctx, {
-    stack,
-    message: `Unknown file extension: ${ext}`,
-    details: { sourceLocation },
-  });
-};
-
-const inlineMarkdownBody = (
-  fields: Field[],
-  meta: Meta,
-  sourceRaw: string,
-): Meta => {
-  if (
-    fields.some((field) => field.widget === `markdown` && field.name === `body`)
-  ) {
+  if (ext === `.md` || ext === `.mdx`) {
+    const { data, content } = parseMatter(raw);
     return {
-      ...meta,
-      body: sourceRaw,
+      ...data,
+      body: content,
     };
   }
-  return meta;
+
+  if (ext === `.yml` || ext === `.yml`) {
+    return JsonRecord.parse(load(raw));
+  }
+
+  throw new Error(`Unknown file extension: ${ext}`);
 };
 
-const parseSourceLocation = (
+const parseFilePath = (
   path: ParsedPath,
   i18nStructure: null | `multiple_files` | `multiple_folders`,
 ): { readonly slug: string; readonly locale: null | string } => {
@@ -326,13 +289,38 @@ const parseSourceLocation = (
   }
 };
 
+const parseProps = (
+  schema: Schema,
+  ctx: ParserContext,
+  stack: Stack,
+  collection: TaggedCollection,
+  props: Json,
+  fields: Field[],
+): null | FieldAstNode[] =>
+  captureWarning(
+    ctx,
+    pushStackFrame(stack, {
+      fn: `parseProps`,
+      params: {
+        props,
+      },
+    }),
+    () => {
+      const fieldsSchema = createFieldsSchema(fields);
+      assertZod(fieldsSchema, props);
+      return fields.map((field) =>
+        parseField(schema, ctx, stack, collection, props[field.name], field),
+      );
+    },
+  );
+
 const parseFolderCollectionFile = (
   schema: Schema,
-  ctx: Context,
+  ctx: ParserContext,
   parentStack: Stack,
   collection: FolderTaggedCollection,
   sourceLocation: string,
-  sourceRaw: string,
+  raw: string,
 ): ContentAstNode[] => {
   const stack = pushStackFrame(parentStack, {
     fn: `parseFolderCollectionFile`,
@@ -345,73 +333,69 @@ const parseFolderCollectionFile = (
     collection,
   );
 
-  const meta = parseMeta(ctx, stack, sourceLocation, sourceRaw) ?? {};
-
   const path = parsePath(sourceLocation);
 
   if (i18nStructure !== `single_file`) {
-    const { slug, locale } = parseSourceLocation(path, i18nStructure);
-    const rootFieldNode = parseField(
+    const { slug, locale } = parseFilePath(path, i18nStructure);
+    const props = parseFileContents(sourceLocation, raw);
+    const propsNodes = parseProps(
       schema,
       ctx,
-      stack,
+      pushStackFrame(stack, {
+        fn: `parseFolderCollectionFile`,
+        params: {
+          i18n: i18nStructure,
+          locale,
+        },
+      }),
       collection,
-      inlineMarkdownBody(collection.fields, meta, sourceRaw),
-      {
-        name: `root`,
-        widget: `object`,
-        fields: collection.fields,
-      },
+      props,
+      collection.fields,
     );
-    if (!rootFieldNode) {
+    if (!propsNodes) {
       return [];
     }
     return [
       {
         sourceLocation,
+        kind: `folder`,
         collection,
         slug,
         locale,
-        sourceRaw,
-        meta,
-        rootFieldNode,
+        raw,
+        propsNodes,
       },
     ];
   } else {
-    const locales = Object.keys(meta);
+    const fileContents = parseFileContents(sourceLocation, raw);
+    const locales = Object.keys(fileContents);
+    const { slug } = parseFilePath(path, null);
     return locales
-      .map((locale) => {
-        const localeMeta = meta[locale];
-        if (!isRecord(localeMeta)) {
-          return pushWarning(ctx, {
-            stack,
-            message: `meta['${locale}'] should be a record`,
-            details: { locale, meta },
-          });
-        }
-        const rootFieldNode = parseField(
+      .map((locale): null | ContentAstNode => {
+        const props = fileContents[locale];
+
+        const propsNodes = parseProps(
           schema,
           ctx,
-          stack,
+          pushStackFrame(stack, {
+            fn: `parseFolderCollectionFile`,
+            params: { i18n: i18nStructure, locale },
+          }),
           collection,
-          localeMeta,
-          {
-            name: locale,
-            widget: `object`,
-            fields: collection.fields,
-          },
+          props,
+          collection.fields,
         );
-        if (!rootFieldNode) {
+        if (!propsNodes) {
           return null;
         }
         return {
           sourceLocation,
+          kind: `folder`,
           collection,
-          slug: path.name,
+          slug,
           locale,
-          sourceRaw,
-          meta: localeMeta,
-          rootFieldNode,
+          raw,
+          propsNodes,
         };
       })
       .filter(isNotNull);
@@ -420,18 +404,17 @@ const parseFolderCollectionFile = (
 
 const parseFilesCollectionFile = (
   schema: Schema,
-  ctx: Context,
+  ctx: ParserContext,
   parentStack: Stack,
   collection: FilesTaggedCollection,
   item: FilesCollectionItem,
   sourceLocation: string,
-  sourceRaw: string,
+  raw: string,
 ): ContentAstNode[] => {
   const stack = pushStackFrame(parentStack, {
     fn: `parseFilesCollectionFile`,
     params: {
       collection: collection.name,
-      file: item.file,
       sourceLocation,
     },
   });
@@ -442,78 +425,80 @@ const parseFilesCollectionFile = (
     collection,
   );
 
-  const meta = parseMeta(ctx, stack, sourceLocation, sourceRaw) ?? {};
-
   const path = parsePath(sourceLocation);
 
+  const { slug } = parseFilePath(path, null);
+
   const itemI18nStructure = item.i18n ? collectionI18nStructure : null;
+
   if (itemI18nStructure === `single_file`) {
-    const locales = Object.keys(meta);
+    const fileContents = parseFileContents(sourceLocation, raw);
+    const locales = Object.keys(fileContents);
     return locales
-      .map((locale) => {
-        const localeMeta = meta[locale];
-        if (!isRecord(localeMeta)) {
-          return pushWarning(ctx, {
-            stack,
-            message: `meta['${locale}'] should be a record`,
-            details: {
-              meta,
-              locale,
-            },
-          });
-        }
-        const rootFieldNode = parseField(
+      .map((locale): null | ContentAstNode => {
+        const props = fileContents[locale];
+
+        const propsNodes = parseProps(
           schema,
           ctx,
-          stack,
+          pushStackFrame(stack, {
+            fn: `parseFilesCollectionFile`,
+            params: {
+              i18n: itemI18nStructure,
+              locale,
+            },
+          }),
           collection,
-          localeMeta,
-          {
-            name: locale,
-            widget: `object`,
-            fields: item.fields,
-          },
+          props,
+          item.fields,
         );
-        if (!rootFieldNode) {
+        if (!propsNodes) {
           return null;
         }
         return {
           sourceLocation,
+          file: item.name,
+          kind: `files`,
           collection,
-          slug: path.name,
+          slug,
           locale,
-          sourceRaw,
-          meta: localeMeta,
-          rootFieldNode,
+          raw,
+          propsNodes,
         };
       })
       .filter(isNotNull);
   }
-  const { slug } = parseSourceLocation(path, null);
-  const rootFieldNode = parseField(
+
+  const props = parseFileContents(sourceLocation, raw);
+
+  const propsNodes = parseProps(
     schema,
     ctx,
-    stack,
+    pushStackFrame(stack, {
+      fn: `parseFilesCollectionFile`,
+      params: {
+        i18n: itemI18nStructure,
+      },
+    }),
     collection,
-    inlineMarkdownBody(item.fields, meta, sourceRaw),
-    {
-      name: `root`,
-      widget: `object`,
-      fields: item.fields,
-    },
+    props,
+    item.fields,
   );
-  if (!rootFieldNode) {
+
+  if (!propsNodes) {
     return [];
   }
+
   return [
     {
       sourceLocation,
+      file: item.name,
+      kind: `files`,
       collection,
       slug,
       locale: null,
-      sourceRaw,
-      meta,
-      rootFieldNode,
+      raw,
+      propsNodes,
     },
   ];
 };
@@ -521,7 +506,7 @@ const parseFilesCollectionFile = (
 const parseCollection = async (
   cwd: string,
   schema: Schema,
-  ctx: Context,
+  ctx: ParserContext,
   parentStack: Stack,
   collection: TaggedCollection,
 ): Promise<CollectionAstNode> => {
@@ -537,53 +522,37 @@ const parseCollection = async (
         cwd: resolve(cwd, collection.folder),
       });
       return mapAsync(paths, async (path) => {
-        try {
-          const sourceLocation = resolve(cwd, collection.folder, path);
-          const sourceRaw = await readFile(sourceLocation, {
-            encoding: `utf-8`,
-          });
-          return parseFolderCollectionFile(
-            schema,
-            ctx,
-            stack,
-            collection,
-            relative(cwd, sourceLocation),
-            sourceRaw,
-          );
-        } catch (error) {
-          pushWarning(ctx, {
-            message: error.message,
-            details: error,
-            stack,
-          });
-          return [];
-        }
+        const file = resolve(cwd, collection.folder, path);
+        const sourceLocation = relative(cwd, file);
+        const sourceRaw = await readFile(file, {
+          encoding: `utf-8`,
+        });
+        return parseFolderCollectionFile(
+          schema,
+          ctx,
+          stack,
+          collection,
+          sourceLocation,
+          sourceRaw,
+        );
       }).then((nodes) => nodes.flat().sort(sortContentNodes));
     },
     files: async (collection) => {
       return mapAsync(collection.files, async (item) => {
-        try {
-          const sourceLocation = resolve(cwd, item.file);
-          const sourceRaw = await readFile(sourceLocation, {
-            encoding: `utf8`,
-          });
-          return parseFilesCollectionFile(
-            schema,
-            ctx,
-            stack,
-            collection,
-            item,
-            relative(cwd, sourceLocation),
-            sourceRaw,
-          );
-        } catch (error) {
-          pushWarning(ctx, {
-            message: error.message,
-            details: error,
-            stack,
-          });
-          return [];
-        }
+        const sourceLocation = item.file;
+        const file = resolve(cwd, sourceLocation);
+        const sourceRaw = await readFile(file, {
+          encoding: `utf8`,
+        });
+        return parseFilesCollectionFile(
+          schema,
+          ctx,
+          stack,
+          collection,
+          item,
+          sourceLocation,
+          sourceRaw,
+        );
       }).then((nodes) => nodes.flat().sort(sortContentNodes));
     },
   });
@@ -597,7 +566,7 @@ export const parse = async (
   cwd: string,
   schema: Schema,
 ): Promise<ParseResult> => {
-  const ctx: Context = {
+  const ctx: ParserContext = {
     warnings: [],
   };
   const stack = pushStackFrame([], {
@@ -655,7 +624,14 @@ export const prettyPrintParseResult = (
       indent(4, `(${k + 1}/${warnings.length}) warning: ${warning.message}`),
     );
     logger.info(indent(6, `details`));
-    logger.info(indent(8, inspect(warning.details, { depth: 4 })));
+    logger.info(
+      indent(
+        8,
+        typeof warning.details === `string`
+          ? warning.details
+          : inspect(warning.details, { depth: 4 }),
+      ),
+    );
     logger.info(indent(6, `stack`));
     logger.info(indent(8, inspect(warning.stack, { depth: 4 })));
   }

@@ -1,3 +1,8 @@
-const load = <T>(t: T): T => t;
+import type Markdown from "*.md";
+
+const load =
+  (_module: unknown): Markdown =>
+  () =>
+    `markdown`;
 
 export default load;

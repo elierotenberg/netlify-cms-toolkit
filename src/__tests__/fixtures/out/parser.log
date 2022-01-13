@@ -1,13 +1,13 @@
-[log]   5 collections parsed with total 24 contents and 2 warnings.
-[log]     Collections (5):
-[log]       (1/5) collection 'guide_tags': 6 contents.
+[log]   6 collections parsed with total 24 contents and 1 warnings.
+[log]     Collections (6):
+[log]       (1/6) collection 'guide_tags': 6 contents.
 [info]        content/guide_tags/animals.en.md
 [info]        content/guide_tags/animals.fr.md
 [info]        content/guide_tags/animals.pt.md
 [info]        content/guide_tags/plants.en.md
 [info]        content/guide_tags/plants.fr.md
 [info]        content/guide_tags/plants.pt.md
-[log]       (2/5) collection 'guides': 8 contents.
+[log]       (2/6) collection 'guides': 8 contents.
 [info]        content/guides/about-animals-and-plants.en.md
 [info]        content/guides/about-animals-and-plants.fr.md
 [info]        content/guides/about-animals.en.md
@@ -16,80 +16,60 @@
 [info]        content/guides/about-plants.en.md
 [info]        content/guides/about-plants.fr.md
 [info]        content/guides/about-plants.pt.md
-[log]       (3/5) collection 'pages': 2 contents.
+[log]       (3/6) collection 'kitchen_sink': 1 contents.
+[info]        content/kitch_sinks/example-1.md
+[log]       (4/6) collection 'pages': 2 contents.
 [info]        content/pages/rich-text-example.en.md
 [info]        content/pages/rich-text-example.fr.md
-[log]       (4/5) collection 'questionnaires': 2 contents.
+[log]       (5/6) collection 'questionnaires': 2 contents.
 [info]        content/questionnaires/questionnaire-1.en.md
 [info]        content/questionnaires/questionnaire-1.fr.md
-[log]       (5/5) collection 'translations': 6 contents.
+[log]       (6/6) collection 'translations': 5 contents.
 [info]        content/translations/interactions.yml
 [info]        content/translations/interactions.yml
 [info]        content/translations/interactions.yml
 [info]        content/translations/site.yml
 [info]        content/translations/site.yml
-[info]        content/translations/site.yml
-[warn]    Warnings (2):
-[warn]      (1/2) warning: Property 'name' not found
+[warn]    Warnings (1):
+[warn]      (1/1) warning: {
+              formErrors: [],
+              fieldErrors: { name: [ 'Required' ], shortName: [ 'Required' ] }
+            }
 [info]        details
-[info]          { value: { url: 'http://localhost:3000' } }
-[info]        stack
 [info]          [
                   {
-                    fn: 'parseField',
-                    params: {
-                      collection: {
-                        kind: 'files',
-                        name: 'translations',
-                        i18n: { structure: 'single_file' },
-                        files: [ [Object], [Object] ]
-                      },
-                      field: {
-                        name: 'pt',
-                        widget: 'object',
-                        fields: [ [Object], [Object], [Object] ]
-                      },
-                      value: { url: 'http://localhost:3000' }
-                    }
+                    "code": "invalid_type",
+                    "expected": "string",
+                    "received": "undefined",
+                    "path": [
+                      "name"
+                    ],
+                    "message": "Required"
                   },
                   {
-                    fn: 'parseFilesCollectionFile',
-                    params: {
-                      collection: 'translations',
-                      file: 'content/translations/site.yml',
-                      sourceLocation: 'content/translations/site.yml'
-                    }
-                  },
-                  { fn: 'parseCollection', params: { collection: 'translations' } },
-                  { fn: 'parseCollections', params: {} }
+                    "code": "invalid_type",
+                    "expected": "string",
+                    "received": "undefined",
+                    "path": [
+                      "shortName"
+                    ],
+                    "message": "Required"
+                  }
                 ]
-[warn]      (2/2) warning: Property 'shortName' not found
-[info]        details
-[info]          { value: { url: 'http://localhost:3000' } }
 [info]        stack
 [info]          [
                   {
-                    fn: 'parseField',
-                    params: {
-                      collection: {
-                        kind: 'files',
-                        name: 'translations',
-                        i18n: { structure: 'single_file' },
-                        files: [ [Object], [Object] ]
-                      },
-                      field: {
-                        name: 'pt',
-                        widget: 'object',
-                        fields: [ [Object], [Object], [Object] ]
-                      },
-                      value: { url: 'http://localhost:3000' }
-                    }
+                    fn: 'parseProps',
+                    params: { props: { url: 'http://localhost:3000' } }
+                  },
+                  {
+                    fn: 'parseFilesCollectionFile',
+                    params: { i18n: 'single_file', locale: 'pt' }
                   },
                   {
                     fn: 'parseFilesCollectionFile',
                     params: {
                       collection: 'translations',
-                      file: 'content/translations/site.yml',
                       sourceLocation: 'content/translations/site.yml'
                     }
                   },
