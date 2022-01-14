@@ -292,6 +292,11 @@
             ]
           },
           {
+            "name": "optional_field",
+            "required": false,
+            "widget": "string"
+          },
+          {
             "name": "relation_single",
             "widget": "relation"
           },
@@ -1148,6 +1153,11 @@
             ]
           },
           {
+            "name": "optional_field",
+            "required": false,
+            "widget": "string"
+          },
+          {
             "name": "relation_single",
             "widget": "relation"
           },
@@ -1295,6 +1305,11 @@
                     "widget": "datetime"
                   }
                 ]
+              },
+              {
+                "name": "optional_field",
+                "required": false,
+                "widget": "string"
               },
               {
                 "name": "relation_single",
@@ -1612,6 +1627,13 @@
                   },
                   "value": "2022-02-14T13:45:10.329Z"
                 }
+              }
+            },
+            {
+              "field": {
+                "name": "optional_field",
+                "required": false,
+                "widget": "string"
               }
             },
             {

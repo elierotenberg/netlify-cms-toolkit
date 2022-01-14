@@ -256,7 +256,7 @@ const createCollectionTypeNode = (
       i18n
         ? createIndexedAccessTypeNode(
             createTypeReferenceNode(`Schema`),
-            createLiteralTypeNode(createStringLiteral(`locale`)),
+            createLiteralTypeNode(createStringLiteral(`locales`)),
           )
         : createLiteralTypeNode(createNull()),
     ],
@@ -325,7 +325,7 @@ const createSchemaTypeNode = (
   createTypeLiteralNode([
     createPropertySignature(
       [],
-      `locale`,
+      `locales`,
       undefined,
       schema.i18n
         ? createLocaleTypeNode(schema.i18n.locales)
@@ -333,7 +333,7 @@ const createSchemaTypeNode = (
     ),
     createPropertySignature(
       [],
-      `collection`,
+      `collections`,
       undefined,
       createTypeLiteralNode(
         schema.collections.map(tagCollection).map((collection) =>
@@ -417,7 +417,7 @@ const createContentsTypeNode = (schema: Schema): ts.TypeNode =>
                 createIndexedAccessTypeNode(
                   createIndexedAccessTypeNode(
                     createTypeReferenceNode(`Schema`),
-                    createLiteralTypeNode(createStringLiteral(`collection`)),
+                    createLiteralTypeNode(createStringLiteral(`collections`)),
                   ),
                   createLiteralTypeNode(createStringLiteral(collection.name)),
                 ),
@@ -441,7 +441,7 @@ const createContentsTypeNode = (schema: Schema): ts.TypeNode =>
                           createIndexedAccessTypeNode(
                             createTypeReferenceNode(`Schema`),
                             createLiteralTypeNode(
-                              createStringLiteral(`collection`),
+                              createStringLiteral(`collections`),
                             ),
                           ),
                           createLiteralTypeNode(

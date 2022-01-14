@@ -52,6 +52,7 @@ const {
   createVariableDeclaration,
   createVariableDeclarationList,
   createVariableStatement,
+  createVoidZero,
 } = ts.factory;
 
 const {
@@ -243,6 +244,10 @@ const createFieldNodeExpression = (
     );
   }
 
+  if (typeof field.value === `undefined`) {
+    return createVoidZero();
+  }
+
   return createJsonExpression(field.value);
 };
 
@@ -402,7 +407,7 @@ const createLocalesDeclaration = (locales: string[]): ts.Node =>
             createArrayTypeNode(
               createIndexedAccessTypeNode(
                 createTypeReferenceNode(createIdentifier(`Schema`), undefined),
-                createLiteralTypeNode(createStringLiteral(`locale`)),
+                createLiteralTypeNode(createStringLiteral(`locales`)),
               ),
             ),
           ),
@@ -426,7 +431,7 @@ const createDefaultLocaleDeclaration = (defaultLocale: string): ts.Node =>
           undefined,
           createIndexedAccessTypeNode(
             createTypeReferenceNode(createIdentifier(`Schema`), undefined),
-            createLiteralTypeNode(createStringLiteral(`locale`)),
+            createLiteralTypeNode(createStringLiteral(`locales`)),
           ),
           createStringLiteral(defaultLocale),
         ),

@@ -5,7 +5,7 @@ import { contents, defaultLocale } from "./fixtures/out/assets";
 
 describe(`Runtime`, () => {
   test(`Types`, () => {
-    type Guide = Schema[`collection`][`guides`];
+    type Guide = Schema[`collections`][`guides`];
     type GuideSlug = Guide[`slug`];
 
     expectType<GuideSlug>(`about-animals`);

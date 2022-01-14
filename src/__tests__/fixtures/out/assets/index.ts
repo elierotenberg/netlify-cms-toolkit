@@ -10,13 +10,13 @@ import { default as loadMarkdown } from "../../dummy-loader";
 import type { default as Markdown } from "*.md";
 
 export type Schema = {
-  locale: `en` | `fr` | `pt`;
-  collection: {
+  locales: `en` | `fr` | `pt`;
+  collections: {
     [`pages`]: {
       collection: `pages`;
       kind: `folder`;
       slug: `rich-text-example`;
-      locale: Schema[`locale`];
+      locale: Schema[`locales`];
       props: {
         title: string;
         body: Markdown;
@@ -26,7 +26,7 @@ export type Schema = {
       collection: `guide_tags`;
       kind: `folder`;
       slug: `animals` | `plants`;
-      locale: Schema[`locale`];
+      locale: Schema[`locales`];
       props: {
         title: string;
       };
@@ -35,7 +35,7 @@ export type Schema = {
       collection: `guides`;
       kind: `folder`;
       slug: `about-animals-and-plants` | `about-animals` | `about-plants`;
-      locale: Schema[`locale`];
+      locale: Schema[`locales`];
       props: {
         title: string;
         body: Markdown;
@@ -46,7 +46,7 @@ export type Schema = {
       collection: `questionnaires`;
       kind: `folder`;
       slug: `questionnaire-1`;
-      locale: Schema[`locale`];
+      locale: Schema[`locales`];
       props: {
         title: string;
         prologue: Markdown;
@@ -63,7 +63,7 @@ export type Schema = {
         collection: `translations`;
         kind: `files`;
         slug: `site`;
-        locale: Schema[`locale`];
+        locale: Schema[`locales`];
         props: {
           name: string;
           shortName: string;
@@ -75,7 +75,7 @@ export type Schema = {
         collection: `translations`;
         kind: `files`;
         slug: `interactions`;
-        locale: Schema[`locale`];
+        locale: Schema[`locales`];
         props: {
           welcome: string;
           error: Markdown;
@@ -114,6 +114,7 @@ export type Schema = {
           title: string;
           date: Date;
         };
+        optional_field?: string;
         relation_single: string;
         relation_multiple: string[];
         select_single: `option_1` | `option_2` | `option_3`;
@@ -125,20 +126,20 @@ export type Schema = {
   };
 };
 
-export const locales: readonly Schema[`locale`][] = [`en`, `fr`, `pt`];
+export const locales: readonly Schema[`locales`][] = [`en`, `fr`, `pt`];
 
-export const defaultLocale: Schema[`locale`] = `en`;
+export const defaultLocale: Schema[`locales`] = `en`;
 
 export type Contents = Readonly<{
-  [`pages`]: Schema[`collection`][`pages`][];
-  [`guide_tags`]: Schema[`collection`][`guide_tags`][];
-  [`guides`]: Schema[`collection`][`guides`][];
-  [`questionnaires`]: Schema[`collection`][`questionnaires`][];
+  [`pages`]: Schema[`collections`][`pages`][];
+  [`guide_tags`]: Schema[`collections`][`guide_tags`][];
+  [`guides`]: Schema[`collections`][`guides`][];
+  [`questionnaires`]: Schema[`collections`][`questionnaires`][];
   [`translations`]: {
-    [`site`]: Schema[`collection`][`translations`][`site`][];
-    [`interactions`]: Schema[`collection`][`translations`][`interactions`][];
+    [`site`]: Schema[`collections`][`translations`][`site`][];
+    [`interactions`]: Schema[`collections`][`translations`][`interactions`][];
   };
-  [`kitchen_sink`]: Schema[`collection`][`kitchen_sink`][];
+  [`kitchen_sink`]: Schema[`collections`][`kitchen_sink`][];
 }>;
 
 export const contents: Contents = {
@@ -335,6 +336,7 @@ export const contents: Contents = {
           [`title`]: `Object 1`,
           [`date`]: new Date(`2022-02-14T13:45:10.329Z`),
         },
+        [`optional_field`]: void 0,
         [`relation_single`]: `Rich text example`,
         [`relation_multiple`]: [`Animals`, `Plants`],
         [`select_single`]: `option_2`,

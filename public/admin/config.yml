@@ -210,6 +210,10 @@ collections:
           - name: date
             label: Date
             widget: datetime
+      - name: optional_field
+        label: Optional field
+        widget: string
+        required: false
       - name: relation_single
         label: Relation (Single)
         widget: relation

@@ -1,6 +1,6 @@
 {
   "name": "netlify-cms-toolkit",
-  "version": "0.0.1-rc12",
+  "version": "0.0.1-rc13",
   "private": false,
   "main": "build/cli.js",
   "bin": "build/cli.js",
