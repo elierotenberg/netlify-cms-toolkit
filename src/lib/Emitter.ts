@@ -45,6 +45,7 @@ const {
   createNull,
   createObjectLiteralExpression,
   createPropertyAssignment,
+  createSpreadElement,
   createStringLiteral,
   createToken,
   createTypeReferenceNode,
@@ -83,6 +84,8 @@ type EmitterOptions = {
   readonly outFolder: string;
   readonly markdownLoaderModule: string;
   readonly markdownLoaderIdentifier: string;
+  readonly markdownLoaderParamsModule: string;
+  readonly markdownLoaderParamsIdentifier: string;
   readonly markdownTypeModule: string;
   readonly markdownTypeIdentifier: string;
   readonly narrowSlugs?: boolean;
@@ -155,10 +158,9 @@ const createJsonExpression = (value: unknown): ts.Expression =>
   ts.parseJsonText(``, JSON.stringify(value, null, 2)).statements[0].expression;
 
 const createLoaderImportExpression = (
-  loaderIdentifier: ts.Identifier,
   relativeFileName: string,
 ): ts.Expression =>
-  createCallExpression(loaderIdentifier, undefined, [
+  createCallExpression(createIdentifier(`loadMarkdown`), undefined, [
     createArrowFunction(
       [],
       [],
@@ -167,6 +169,13 @@ const createLoaderImportExpression = (
       createToken(SyntaxKind.EqualsGreaterThanToken),
       createCallExpression(
         createToken(SyntaxKind.ImportKeyword) as ts.Expression,
+        undefined,
+        [createStringLiteral(`./${relativeFileName}`)],
+      ),
+    ),
+    createSpreadElement(
+      createCallExpression(
+        createIdentifier(`getLoadMarkdownParams`),
         undefined,
         [createStringLiteral(`./${relativeFileName}`)],
       ),
@@ -216,7 +225,7 @@ const createFieldNodeExpression = (
       source,
     };
     pushMarkdownAsset(ctx, markdownAsset);
-    return createLoaderImportExpression(createIdentifier(`loadMarkdown`), path);
+    return createLoaderImportExpression(path);
   }
 
   if (field.field.widget === `number` && field.field.value_type === `float`) {
@@ -394,6 +403,26 @@ const createMarkdownLoaderImportDeclaration = (
     createStringLiteral(opts.markdownLoaderModule),
   );
 
+const createMarkdownLoaderParamsImportDeclaration = (
+  opts: EmitterOptions,
+): ts.ImportDeclaration =>
+  createImportDeclaration(
+    [],
+    [],
+    createImportClause(
+      false,
+      undefined,
+      createNamedImports([
+        createImportSpecifier(
+          false,
+          createIdentifier(opts.markdownLoaderParamsIdentifier),
+          createIdentifier(`getLoadMarkdownParams`),
+        ),
+      ]),
+    ),
+    createStringLiteral(opts.markdownLoaderParamsModule),
+  );
+
 const createLocalesDeclaration = (locales: string[]): ts.Node =>
   createVariableStatement(
     [createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -447,6 +476,10 @@ const createIndexTsNodes = (
 ): ts.Node[] => {
   const markdownLoaderImportDeclaration =
     createMarkdownLoaderImportDeclaration(opts);
+
+  const markdownLoaderParamsImportDeclaration =
+    createMarkdownLoaderParamsImportDeclaration(opts);
+
   const markdownTypeImportDeclaration =
     createMarkdownTypeImportDeclaration(opts);
 
@@ -483,6 +516,7 @@ const createIndexTsNodes = (
 
   return [
     markdownLoaderImportDeclaration,
+    markdownLoaderParamsImportDeclaration,
     markdownTypeImportDeclaration,
     schemaTypeAliasDeclaration,
     localesDeclaration,

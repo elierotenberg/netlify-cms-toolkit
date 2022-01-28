@@ -21,6 +21,8 @@ export const compilerOptions: CompilerOptions = {
   markdownLoaderIdentifier: `default`,
   markdownLoaderModule: `../../dummy-loader`,
   markdownTypeIdentifier: `default`,
+  markdownLoaderParamsModule: `../../dummy-loader-params`,
+  markdownLoaderParamsIdentifier: `default`,
   markdownTypeModule: `*.md`,
   narrowSlugs: true,
   outFolder: `src/__tests__/fixtures/out`,

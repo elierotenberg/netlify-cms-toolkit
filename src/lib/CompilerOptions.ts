@@ -8,6 +8,8 @@ export const CompilerOptions = z.object({
   narrowSlugs: z.boolean().optional(),
   markdownLoaderIdentifier: z.string(),
   markdownLoaderModule: z.string(),
+  markdownLoaderParamsModule: z.string(),
+  markdownLoaderParamsIdentifier: z.string(),
   markdownTypeIdentifier: z.string(),
   markdownTypeModule: z.string(),
   outFolder: z.string(),

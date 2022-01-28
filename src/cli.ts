@@ -45,6 +45,16 @@ const main = async (): Promise<void> => {
               type: `string`,
               demandOption: true,
             })
+            .option(`markdownLoaderParamsIdentifier`, {
+              describe: `Markdown loader params identifier within markdown loader params module (e.g. 'default' or 'getLoadParams')`,
+              type: `string`,
+              demandOption: true,
+            })
+            .option(`markdownLoaderParamsModule`, {
+              describe: `Markdown loader params module (e.g. '../markdown-loader-params')`,
+              type: `string`,
+              demandOption: true,
+            })
             .option(`markdownTypeIdentifier`, {
               describe: `Markdown type identifier within markdown type module (e.g. 'default' or 'MDXContent')`,
               type: `string`,

@@ -6,6 +6,7 @@
 /*                                             */
 /***********************************************/
 import { default as loadMarkdown } from "../../dummy-loader";
+import { default as getLoadMarkdownParams } from "../../dummy-loader-params";
 
 import type { default as Markdown } from "*.md";
 
@@ -197,6 +198,9 @@ export const contents: Contents = {
         [`title`]: `About animals and plants`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-animals-and-plants/en/body.md`),
+          ...getLoadMarkdownParams(
+            `./guides/about-animals-and-plants/en/body.md`,
+          ),
         ),
         [`guide_tags`]: [`animals`, `plants`],
       },
@@ -210,6 +214,9 @@ export const contents: Contents = {
         [`title`]: `\u00C0 propos d'animaux et de plantes`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-animals-and-plants/fr/body.md`),
+          ...getLoadMarkdownParams(
+            `./guides/about-animals-and-plants/fr/body.md`,
+          ),
         ),
         [`guide_tags`]: [`animals`, `plants`],
       },
@@ -223,6 +230,7 @@ export const contents: Contents = {
         [`title`]: `About animals`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-animals/en/body.md`),
+          ...getLoadMarkdownParams(`./guides/about-animals/en/body.md`),
         ),
         [`guide_tags`]: [`animals`],
       },
@@ -236,6 +244,7 @@ export const contents: Contents = {
         [`title`]: `\u00C0 propos d'animaux`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-animals/fr/body.md`),
+          ...getLoadMarkdownParams(`./guides/about-animals/fr/body.md`),
         ),
         [`guide_tags`]: [`animals`],
       },
@@ -249,6 +258,7 @@ export const contents: Contents = {
         [`title`]: `Sobre animais`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-animals/pt/body.md`),
+          ...getLoadMarkdownParams(`./guides/about-animals/pt/body.md`),
         ),
         [`guide_tags`]: [`animals`],
       },
@@ -262,6 +272,7 @@ export const contents: Contents = {
         [`title`]: `About plants`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-plants/en/body.md`),
+          ...getLoadMarkdownParams(`./guides/about-plants/en/body.md`),
         ),
         [`guide_tags`]: [`plants`],
       },
@@ -275,6 +286,7 @@ export const contents: Contents = {
         [`title`]: `\u00C0 propos des plantes`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-plants/fr/body.md`),
+          ...getLoadMarkdownParams(`./guides/about-plants/fr/body.md`),
         ),
         [`guide_tags`]: [`plants`],
       },
@@ -288,6 +300,7 @@ export const contents: Contents = {
         [`title`]: `Sobre plantas`,
         [`body`]: loadMarkdown(
           () => import(`./guides/about-plants/pt/body.md`),
+          ...getLoadMarkdownParams(`./guides/about-plants/pt/body.md`),
         ),
         [`guide_tags`]: [`plants`],
       },
@@ -328,6 +341,7 @@ export const contents: Contents = {
         [`map`]: `{"type":"Point","coordinates":[2.3453468,48.8463647]}`,
         [`markdown`]: loadMarkdown(
           () => import(`./kitchen-sink/example-1/markdown.md`),
+          ...getLoadMarkdownParams(`./kitchen-sink/example-1/markdown.md`),
         ),
         [`number_no_value_type`]: 1,
         [`number_value_type_int`]: 100,
@@ -356,6 +370,7 @@ export const contents: Contents = {
         [`title`]: `Rich text example`,
         [`body`]: loadMarkdown(
           () => import(`./pages/rich-text-example/en/body.md`),
+          ...getLoadMarkdownParams(`./pages/rich-text-example/en/body.md`),
         ),
       },
     },
@@ -368,6 +383,7 @@ export const contents: Contents = {
         [`title`]: `Exemple de texte riche`,
         [`body`]: loadMarkdown(
           () => import(`./pages/rich-text-example/fr/body.md`),
+          ...getLoadMarkdownParams(`./pages/rich-text-example/fr/body.md`),
         ),
       },
     },
@@ -382,9 +398,15 @@ export const contents: Contents = {
         [`title`]: `Questionnaire 1`,
         [`prologue`]: loadMarkdown(
           () => import(`./questionnaires/questionnaire-1/en/prologue.md`),
+          ...getLoadMarkdownParams(
+            `./questionnaires/questionnaire-1/en/prologue.md`,
+          ),
         ),
         [`epilogue`]: loadMarkdown(
           () => import(`./questionnaires/questionnaire-1/en/epilogue.md`),
+          ...getLoadMarkdownParams(
+            `./questionnaires/questionnaire-1/en/epilogue.md`,
+          ),
         ),
         [`items`]: [
           {
@@ -394,6 +416,9 @@ export const contents: Contents = {
                 import(
                   `./questionnaires/questionnaire-1/en/items/0/items-child/description/description.md`
                 ),
+              ...getLoadMarkdownParams(
+                `./questionnaires/questionnaire-1/en/items/0/items-child/description/description.md`,
+              ),
             ),
           },
           {
@@ -403,6 +428,9 @@ export const contents: Contents = {
                 import(
                   `./questionnaires/questionnaire-1/en/items/1/items-child/description/description.md`
                 ),
+              ...getLoadMarkdownParams(
+                `./questionnaires/questionnaire-1/en/items/1/items-child/description/description.md`,
+              ),
             ),
           },
         ],
@@ -417,9 +445,15 @@ export const contents: Contents = {
         [`title`]: `Questionnaire 1`,
         [`prologue`]: loadMarkdown(
           () => import(`./questionnaires/questionnaire-1/fr/prologue.md`),
+          ...getLoadMarkdownParams(
+            `./questionnaires/questionnaire-1/fr/prologue.md`,
+          ),
         ),
         [`epilogue`]: loadMarkdown(
           () => import(`./questionnaires/questionnaire-1/fr/epilogue.md`),
+          ...getLoadMarkdownParams(
+            `./questionnaires/questionnaire-1/fr/epilogue.md`,
+          ),
         ),
         [`items`]: [
           {
@@ -429,6 +463,9 @@ export const contents: Contents = {
                 import(
                   `./questionnaires/questionnaire-1/fr/items/0/items-child/description/description.md`
                 ),
+              ...getLoadMarkdownParams(
+                `./questionnaires/questionnaire-1/fr/items/0/items-child/description/description.md`,
+              ),
             ),
           },
           {
@@ -438,6 +475,9 @@ export const contents: Contents = {
                 import(
                   `./questionnaires/questionnaire-1/fr/items/1/items-child/description/description.md`
                 ),
+              ...getLoadMarkdownParams(
+                `./questionnaires/questionnaire-1/fr/items/1/items-child/description/description.md`,
+              ),
             ),
           },
         ],
@@ -482,9 +522,13 @@ export const contents: Contents = {
           [`welcome`]: `Welcome!`,
           [`error`]: loadMarkdown(
             () => import(`./translations/interactions/en/error.md`),
+            ...getLoadMarkdownParams(`./translations/interactions/en/error.md`),
           ),
           [`success`]: loadMarkdown(
             () => import(`./translations/interactions/en/success.md`),
+            ...getLoadMarkdownParams(
+              `./translations/interactions/en/success.md`,
+            ),
           ),
         },
       },
@@ -498,9 +542,13 @@ export const contents: Contents = {
           [`welcome`]: `Bienvenue !`,
           [`error`]: loadMarkdown(
             () => import(`./translations/interactions/fr/error.md`),
+            ...getLoadMarkdownParams(`./translations/interactions/fr/error.md`),
           ),
           [`success`]: loadMarkdown(
             () => import(`./translations/interactions/fr/success.md`),
+            ...getLoadMarkdownParams(
+              `./translations/interactions/fr/success.md`,
+            ),
           ),
         },
       },
@@ -514,9 +562,13 @@ export const contents: Contents = {
           [`welcome`]: `Welcome!`,
           [`error`]: loadMarkdown(
             () => import(`./translations/interactions/pt/error.md`),
+            ...getLoadMarkdownParams(`./translations/interactions/pt/error.md`),
           ),
           [`success`]: loadMarkdown(
             () => import(`./translations/interactions/pt/success.md`),
+            ...getLoadMarkdownParams(
+              `./translations/interactions/pt/success.md`,
+            ),
           ),
         },
       },

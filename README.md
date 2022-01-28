@@ -47,6 +47,13 @@ Options:
       --markdownTypeIdentifier    Markdown type identifier within markdown type
                                   module (e.g. 'default' or 'MDXContent')
                                                              [string] [required]
+      --markdownLoaderParamsIdentifier  Markdown loader params identifier within
+                                        markdown loader params module (e.g.
+                                        'default' or 'getLoadParams')
+                                                             [string] [required]
+      --markdownLoaderParamsModule      Markdown loader params module (e.g.
+                                        '../markdown-loader-params')
+                                                             [string] [required]
       --markdownTypeModule        Markdown type module (e.g. '*.mdx' or
                                   '../markdown-content')     [string] [required]
       --narrowSlugs               Narrow slug types to match parse results
