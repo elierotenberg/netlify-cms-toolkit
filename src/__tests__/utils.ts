@@ -31,7 +31,7 @@ export const compilerOptions: CompilerOptions = {
   saveParseResult: true,
   schema: `public/admin/config.yml`,
   silent: false,
-  useLockfile: true,
+  lockFile: {},
   watch: false,
 };
 

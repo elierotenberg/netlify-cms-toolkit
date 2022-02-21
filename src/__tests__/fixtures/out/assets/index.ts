@@ -22,7 +22,6 @@ export type Schema = {
         title: string;
         body: Markdown;
       };
-      sourceLocation: string;
     };
     [`guide_tags`]: {
       collection: `guide_tags`;
@@ -32,7 +31,6 @@ export type Schema = {
       props: {
         title: string;
       };
-      sourceLocation: string;
     };
     [`guides`]: {
       collection: `guides`;
@@ -44,7 +42,6 @@ export type Schema = {
         body: Markdown;
         guide_tags?: string[];
       };
-      sourceLocation: string;
     };
     [`questionnaires`]: {
       collection: `questionnaires`;
@@ -60,7 +57,6 @@ export type Schema = {
           description: Markdown;
         }[];
       };
-      sourceLocation: string;
     };
     [`translations`]: {
       [`site`]: {
@@ -74,7 +70,6 @@ export type Schema = {
           shortName: string;
           url: string;
         };
-        sourceLocation: string;
       };
       [`interactions`]: {
         file: `interactions`;
@@ -87,7 +82,6 @@ export type Schema = {
           error: Markdown;
           success: Markdown;
         };
-        sourceLocation: string;
       };
     };
     [`kitchen_sink`]: {
@@ -129,7 +123,6 @@ export type Schema = {
         string: string;
         text: string;
       };
-      sourceLocation: string;
     };
   };
 };
@@ -158,7 +151,6 @@ export const contents: Contents = {
       slug: `animals`,
       locale: `en`,
       props: { [`title`]: `Animals` },
-      sourceLocation: `content/guide_tags/animals.en.md`,
     },
     {
       collection: `guide_tags`,
@@ -166,7 +158,6 @@ export const contents: Contents = {
       slug: `animals`,
       locale: `fr`,
       props: { [`title`]: `Animaux` },
-      sourceLocation: `content/guide_tags/animals.fr.md`,
     },
     {
       collection: `guide_tags`,
@@ -174,7 +165,6 @@ export const contents: Contents = {
       slug: `animals`,
       locale: `pt`,
       props: { [`title`]: `Animais` },
-      sourceLocation: `content/guide_tags/animals.pt.md`,
     },
     {
       collection: `guide_tags`,
@@ -182,7 +172,6 @@ export const contents: Contents = {
       slug: `plants`,
       locale: `en`,
       props: { [`title`]: `Plants` },
-      sourceLocation: `content/guide_tags/plants.en.md`,
     },
     {
       collection: `guide_tags`,
@@ -190,7 +179,6 @@ export const contents: Contents = {
       slug: `plants`,
       locale: `fr`,
       props: { [`title`]: `Plantes` },
-      sourceLocation: `content/guide_tags/plants.fr.md`,
     },
     {
       collection: `guide_tags`,
@@ -198,7 +186,6 @@ export const contents: Contents = {
       slug: `plants`,
       locale: `pt`,
       props: { [`title`]: `Plantas` },
-      sourceLocation: `content/guide_tags/plants.pt.md`,
     },
   ],
   [`guides`]: [
@@ -217,7 +204,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`animals`, `plants`],
       },
-      sourceLocation: `content/guides/about-animals-and-plants.en.md`,
     },
     {
       collection: `guides`,
@@ -234,7 +220,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`animals`, `plants`],
       },
-      sourceLocation: `content/guides/about-animals-and-plants.fr.md`,
     },
     {
       collection: `guides`,
@@ -249,7 +234,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`animals`],
       },
-      sourceLocation: `content/guides/about-animals.en.md`,
     },
     {
       collection: `guides`,
@@ -264,7 +248,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`animals`],
       },
-      sourceLocation: `content/guides/about-animals.fr.md`,
     },
     {
       collection: `guides`,
@@ -279,7 +262,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`animals`],
       },
-      sourceLocation: `content/guides/about-animals.pt.md`,
     },
     {
       collection: `guides`,
@@ -294,7 +276,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`plants`],
       },
-      sourceLocation: `content/guides/about-plants.en.md`,
     },
     {
       collection: `guides`,
@@ -309,7 +290,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`plants`],
       },
-      sourceLocation: `content/guides/about-plants.fr.md`,
     },
     {
       collection: `guides`,
@@ -324,7 +304,6 @@ export const contents: Contents = {
         ),
         [`guide_tags`]: [`plants`],
       },
-      sourceLocation: `content/guides/about-plants.pt.md`,
     },
   ],
   [`kitchen_sink`]: [
@@ -379,7 +358,6 @@ export const contents: Contents = {
         [`string`]: `Example String`,
         [`text`]: `Example Text`,
       },
-      sourceLocation: `content/kitch_sinks/example-1.md`,
     },
   ],
   [`pages`]: [
@@ -395,7 +373,6 @@ export const contents: Contents = {
           ...getLoadMarkdownParams(`./pages/rich-text-example/en/body.md`),
         ),
       },
-      sourceLocation: `content/pages/rich-text-example.en.md`,
     },
     {
       collection: `pages`,
@@ -409,7 +386,6 @@ export const contents: Contents = {
           ...getLoadMarkdownParams(`./pages/rich-text-example/fr/body.md`),
         ),
       },
-      sourceLocation: `content/pages/rich-text-example.fr.md`,
     },
   ],
   [`questionnaires`]: [
@@ -459,7 +435,6 @@ export const contents: Contents = {
           },
         ],
       },
-      sourceLocation: `content/questionnaires/questionnaire-1.en.md`,
     },
     {
       collection: `questionnaires`,
@@ -507,7 +482,6 @@ export const contents: Contents = {
           },
         ],
       },
-      sourceLocation: `content/questionnaires/questionnaire-1.fr.md`,
     },
   ],
   [`translations`]: {
@@ -523,7 +497,6 @@ export const contents: Contents = {
           [`shortName`]: `ONCTK-EN`,
           [`url`]: `http://localhost:3000`,
         },
-        sourceLocation: `content/translations/site.yml`,
       },
       {
         collection: `translations`,
@@ -536,7 +509,6 @@ export const contents: Contents = {
           [`shortName`]: `ONCTK-FR`,
           [`url`]: `http://localhost:3000`,
         },
-        sourceLocation: `content/translations/site.yml`,
       },
     ],
     [`interactions`]: [
@@ -559,7 +531,6 @@ export const contents: Contents = {
             ),
           ),
         },
-        sourceLocation: `content/translations/interactions.yml`,
       },
       {
         collection: `translations`,
@@ -580,7 +551,6 @@ export const contents: Contents = {
             ),
           ),
         },
-        sourceLocation: `content/translations/interactions.yml`,
       },
       {
         collection: `translations`,
@@ -601,7 +571,6 @@ export const contents: Contents = {
             ),
           ),
         },
-        sourceLocation: `content/translations/interactions.yml`,
       },
     ],
   },

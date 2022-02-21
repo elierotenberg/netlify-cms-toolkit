@@ -19,7 +19,14 @@ export const CompilerOptions = z.object({
   schema: z.string(),
   silent: z.boolean().optional(),
   sourceLocation: z.boolean().optional(),
-  useLockfile: z.boolean().optional(),
+  lockFile: z
+    .object({
+      staleMs: z.number().int().min(5000).optional(),
+      updateMs: z.number().int().min(1000).optional(),
+      retries: z.number().int().min(0).optional(),
+      warningThresholdMs: z.number().int().min(0).optional(),
+    })
+    .optional(),
   watch: z.boolean().optional(),
 });
 

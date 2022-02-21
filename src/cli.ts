@@ -3,6 +3,7 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
+import { injectHelpers, InjectHelpersOptions } from "./lib/AdminHelpers";
 import { compile } from "./lib/Compiler";
 import { CompilerOptions } from "./lib/CompilerOptions";
 import { createSilentLogger } from "./lib/Logger";
@@ -109,11 +110,23 @@ const main = async (): Promise<void> => {
               type: `boolean`,
               default: false,
             })
-            .option(`useLockfile`, {
+            .option(`lockFile`, {
               describe: `Use lock file to avoid write conflicts`,
-              type: `boolean`,
-              default: true,
+              default: {},
             })
+            .option(`lockFile.staleMs`, {
+              describe: `Stale time for lock file in ms.`,
+              default: 10000,
+            })
+            .option(`lockFile.updateMs`, {
+              describe: `Update time for lock file in ms, defaults to staleMs / 2.`,
+              default: undefined,
+            })
+            .option(`lockFile.warningThresholdMs`, {
+              describe: `Warn if acquiring the lock file took too long (unless silent is true)`,
+              default: 10000,
+            })
+            .option(`lockFile.retries`, {})
             .option(`watch`, {
               alias: `w`,
               describe: `Recompile on changes`,
@@ -124,6 +137,29 @@ const main = async (): Promise<void> => {
           const config = CompilerOptions.parse(argv);
           const logger = config.silent ? createSilentLogger() : console;
           await compile(config, logger);
+        },
+      )
+      .command(
+        `inject-helpers`,
+        `Inject CMS Helpers`,
+        (yargs) =>
+          yargs
+            .option(`cwd`, {
+              describe: `Working directory (defaults to proces.cwd)`,
+              type: `string`,
+              default: process.cwd(),
+            })
+            .option(`file`, {
+              describe: `Admin HTML file`,
+              type: `string`,
+            })
+            .option(`prettier`, {
+              describe: `Prettier option (false to skip, true to defaults, or options object)`,
+              default: true,
+            }),
+        async (argv) => {
+          const config = InjectHelpersOptions.parse(argv);
+          await injectHelpers(config);
         },
       )
       .demandCommand()

@@ -16,6 +16,6 @@
   "schema": "public/admin/config.yml",
   "silent": false,
   "sourceLocation": true,
-  "useLockfile": true,
+  "lockFile": {},
   "watch": false
 }

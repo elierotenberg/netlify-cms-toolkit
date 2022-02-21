@@ -8,6 +8,7 @@ module.exports = {
   ],
   extends: [
     `plugin:@typescript-eslint/recommended`,
+    `plugin:react/recommended`,
     `prettier`,
     `plugin:prettier/recommended`,
     `plugin:import/errors`,
@@ -18,9 +19,13 @@ module.exports = {
     "import/parsers": {
       "@typescript-eslint/parser": [`.ts`, `.d.ts`],
     },
+    react: {
+      version: `detect`,
+    },
   },
   parserOptions: {
     ecmaVersion: 2018,
+    jsx: true,
     sourceType: `module`,
   },
   rules: {
@@ -43,6 +48,10 @@ module.exports = {
         allowTypedFunctionExpressions: true,
       },
     ],
+    "import/namespace": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
+    "import/default": 0,
     "import/order": [
       1,
       {
@@ -57,5 +66,11 @@ module.exports = {
         "newlines-between": `always`,
       },
     ],
+    "react-hooks/exhaustive-deps": 0,
+    // until https://github.com/yannickcr/eslint-plugin-react/issues/2654 is resolved
+    "react/display-name": 0,
+
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": 1,
   },
 };

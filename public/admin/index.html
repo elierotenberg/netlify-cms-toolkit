@@ -8,9 +8,323 @@
   </head>
   <body>
     <script
+      data-netlify-cms-helpers="sha512:13a75de59c566991458028e7ac95d935539e4f18b632911aee4e6b63e4dee7b8e8098ac9657db7fb5a1ea4b5646c61cae635595b22ed6d36f8f45f09ef89d34e"
+      type="text/javascript"
+    >
+      ((exports) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true,
+        });
+
+        if (typeof window.CMSHelpers !== `undefined`) {
+          throw new Error(`CMSHelpers already defined`);
+        }
+
+        window.CMSHelpers = {
+          init: ({ CMS, createElement, uuid, preview }) => {
+            const cleanIndent = (text) =>
+              text
+                .split(`\n`)
+                .map((line) => line.trim())
+                .join(`\n`)
+                .trim();
+
+            const React = {
+              createElement,
+            };
+            const mdxBlockBegin =
+              /<MdxBlockBegin mdxBlockId='(?<mdxBlockId>.*?)' \/>\s*?/;
+            const mdxBlockEnd =
+              /\s*?<MdxBlockEnd mdxBlockId='\k<mdxBlockId>' \/>/;
+
+            const mdxBlock = (pattern) =>
+              new RegExp(
+                `^${mdxBlockBegin.source}${pattern.source}${mdxBlockEnd.source}$`,
+                `ms`
+              );
+
+            const mdxBlockFields = (fields) => [
+              {
+                name: `mdxBlockId`,
+                label: `MdxBlockId`,
+                widget: `hidden`,
+              },
+              ...fields,
+            ];
+
+            const castMdxBlockId = (data) =>
+              typeof data === `string` && data.length > 0 ? data : uuid();
+
+            const fromMdxBlock = (fromBlock) => (match) => {
+              var _match$groups;
+
+              const mdxBlockId = castMdxBlockId(
+                match === null || match === void 0
+                  ? void 0
+                  : (_match$groups = match.groups) === null ||
+                    _match$groups === void 0
+                  ? void 0
+                  : _match$groups.mdxBlockId
+              );
+              const data = {
+                mdxBlockId,
+                ...fromBlock(match),
+              };
+              return data;
+            };
+
+            const toMdxBlock = (toBlock) => (data) => {
+              const mdxBlockId = castMdxBlockId(
+                data === null || data === void 0 ? void 0 : data.mdxBlockId
+              );
+              const block = cleanIndent(`
+           <MdxBlockBegin mdxBlockId='${mdxBlockId}' />
+             ${toBlock(data)}
+           <MdxBlockEnd mdxBlockId='${mdxBlockId}' />
+         `);
+              return block;
+            };
+
+            const SPECIAL_CHARACTERS = [
+              [`"`, `&quot;`],
+              [`'`, `&apos;`],
+              [`<`, `&lt;`],
+              [`>`, `&lt;`],
+            ];
+
+            const escapeAttribute = (unescapedValue) => {
+              return SPECIAL_CHARACTERS.reduce(
+                (json, [decoded, encoded]) => json.replaceAll(decoded, encoded),
+                unescapedValue.replaceAll(`&`, `&amp;`)
+              );
+            };
+
+            const unescapeAttribute = (escapedValue) =>
+              SPECIAL_CHARACTERS.reduce(
+                (json, [decoded, encoded]) => json.replaceAll(encoded, decoded),
+                escapedValue
+              ).replaceAll(`&amp;`, `&`);
+
+            const VALID_TAG_NAME = /^([A-Z][a-z0-9]+)+$/;
+            const VALID_FIELD_NAME = /^[a-z]+([A-Za-z0-9]+)+$/;
+            return {
+              registerMdxEditorComponent: ({
+                id,
+                label,
+                props,
+                tagName,
+                children = {
+                  name: `children`,
+                  label: `Children`,
+                  widget: `hidden`,
+                },
+              }) => {
+                if (!VALID_TAG_NAME.test(tagName)) {
+                  throw new Error(`Invalid tag name: ${tagName}`);
+                }
+
+                for (const field of props) {
+                  if (!VALID_FIELD_NAME.test(field.name)) {
+                    throw new Error(`Invalid field name: ${field.name}`);
+                  }
+                }
+
+                const fields = mdxBlockFields([...props, children]);
+                const propsParts = props
+                  .map((field) => `${field.name}='(?<${field.name}>.*?)'`)
+                  .join(` `);
+                const openingTagPart = `<${tagName}${
+                  propsParts.length > 0 ? ` ${propsParts}` : ``
+                }>`;
+                const childrenPart = `\\s*?(?<children>.*?)\\s*?`;
+                const closingTagPart = `</${tagName}>`;
+                const pattern = mdxBlock(
+                  new RegExp(
+                    `${openingTagPart}${childrenPart}${closingTagPart}`
+                  )
+                );
+
+                const pickProps = (data) => {
+                  const pickedProps = Object.create(null);
+
+                  for (const field of props) {
+                    pickedProps[field.name] = data[field.name];
+                  }
+
+                  return pickedProps;
+                };
+
+                const pickChildren = (data) => {
+                  return data[children.name];
+                };
+
+                const toPreview = (data) =>
+                  /*#__PURE__*/ React.createElement(
+                    "div",
+                    preview.blockProps,
+                    /*#__PURE__*/ React.createElement(
+                      "div",
+                      preview.blockProps,
+                      /*#__PURE__*/ React.createElement("em", null, "Props"),
+                      /*#__PURE__*/ React.createElement(
+                        "pre",
+                        null,
+                        JSON.stringify(pickProps(data), null, 2)
+                      )
+                    ),
+                    /*#__PURE__*/ React.createElement(
+                      "div",
+                      preview.blockProps,
+                      /*#__PURE__*/ React.createElement("em", null, "Children"),
+                      pickChildren(data)
+                    )
+                  );
+
+                CMS.registerEditorComponent({
+                  id,
+                  label,
+                  fields,
+                  pattern,
+                  fromBlock: fromMdxBlock((match) => {
+                    const data = Object.create(null);
+
+                    for (const field of props) {
+                      var _match$groups2;
+
+                      const value =
+                        match === null || match === void 0
+                          ? void 0
+                          : (_match$groups2 = match.groups) === null ||
+                            _match$groups2 === void 0
+                          ? void 0
+                          : _match$groups2[field.name];
+                      data[field.name] =
+                        typeof value === `string` && value.length > 0
+                          ? unescapeAttribute(value)
+                          : ``;
+                    }
+
+                    if (children) {
+                      var _match$groups3;
+
+                      const childrenValue =
+                        match === null || match === void 0
+                          ? void 0
+                          : (_match$groups3 = match.groups) === null ||
+                            _match$groups3 === void 0
+                          ? void 0
+                          : _match$groups3.children;
+                      data[children.name] =
+                        typeof childrenValue === `string` &&
+                        childrenValue.length > 0
+                          ? childrenValue
+                          : ``;
+                    }
+
+                    return data;
+                  }),
+                  toBlock: toMdxBlock((data) => {
+                    const propsParts = props
+                      .map((field) => {
+                        const value = data[field.name];
+                        return `${field.name}='${escapeAttribute(
+                          value ?? ``
+                        )}'`;
+                      })
+                      .join(` `);
+                    const openingTagPart = `<${tagName}${
+                      propsParts.length > 0 ? ` ${propsParts}` : ``
+                    }>`;
+                    const childrenPart = children
+                      ? typeof data[children.name] === `string`
+                        ? data[children.name]
+                        : ``
+                      : ``;
+                    const closingTagPart = `</${tagName}>`;
+                    return [openingTagPart, childrenPart, closingTagPart].join(
+                      `\n`
+                    );
+                  }),
+                  toPreview: toPreview,
+                });
+              },
+            };
+          },
+        };
+        //# sourceMappingURL=admin-helpers.js.map
+      })({});
+    </script>
+
+    <script
       src="https://unpkg.com/netlify-cms@2.10.182/dist/netlify-cms.js"
       integrity="sha384-5FC4sgOmj7+Xv3CzlEJNVa9saxBL50/uq5BZd1t6QzvBvGe7tbaK8YDY9bPLIowU"
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"
+      integrity="sha384-e2kr3z94YEVTtgf8bBbR3EHF3Oi1yLDp7GdxIRn6upe2VFHnSRQe0brjEOeRKCoj"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      (() => {
+        const { registerMdxEditorComponent } = window.CMSHelpers.init({
+          CMS: window.CMS,
+          createElement: window.h,
+          uuid: window.uuidv4,
+          preview: {
+            blockProps: {
+              className: "custom-component-preview-box",
+            },
+          },
+        });
+        registerMdxEditorComponent({
+          id: `mdx-alert`,
+          label: `Mdx Alert`,
+          tagName: `MdxAlert`,
+          children: {
+            name: `message`,
+            label: `Message`,
+            widget: `markdown`,
+          },
+          props: [
+            {
+              name: `status`,
+              label: `Status`,
+              widget: `select`,
+              options: [`info`, `success`, `warning`, `error`],
+              default: `info`,
+            },
+            {
+              name: `displayIcon`,
+              label: `Display Icon`,
+              widget: `select`,
+              options: [`Yes`, `No`],
+              default: `Yes`,
+            },
+          ],
+        });
+
+        registerMdxEditorComponent({
+          id: `mdx-quote`,
+          label: `Mdx Quote`,
+          tagName: `MdxQuote`,
+          children: {
+            name: `message`,
+            label: `Message`,
+            widget: `markdown`,
+          },
+          props: [
+            {
+              name: `author`,
+              label: `Author`,
+              widget: `string`,
+              required: false,
+            },
+          ],
+        });
+      })();
+    </script>
   </body>
 </html>
